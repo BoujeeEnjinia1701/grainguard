@@ -1,6 +1,8 @@
 # GrainGuard
 
-**Area:** Agriculture · **Status:** Concept · **Prototype budget:** about $250 USD · **Difficulty:** 2 of 5
+![TRL 2](https://img.shields.io/badge/TRL-2%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827)
+
+**Area:** Agriculture · **TRL:** 2 of 9 (concept formulated) · **Prototype budget:** about $250 USD · **Difficulty:** 2 of 5
 
 Cable of moisture and temperature probes strung through the bin, plus a controller that runs aeration fans only when ambient air will dry the grain.
 
