@@ -1,6 +1,21 @@
-# GrainGuard: design precis
+---
+doc_id: GGD-PRC-001
+title: GrainGuard design precis
+project: GrainGuard
+doc_type: Design precis
+version: "0.1"
+status: Draft
+date: '2026-09-24'
+author: Amish Chadha
+license: CERN-OHL-S-2.0
+revisions:
+- version: "0.1"
+  date: '2026-09-24'
+  author: Amish Chadha
+  change: Initial scaffold
+---
 
-> Status: concept. This precis is a working draft and will be expanded before prototyping.
+# GrainGuard design precis
 
 ## Summary
 
