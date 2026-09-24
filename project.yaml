@@ -1,0 +1,17 @@
+# Card metadata consumed by https://amishchadha.com
+name: GrainGuard
+slug: grainguard
+area: Agriculture
+status: concept          # concept | design | prototype | tested | released
+shortlisted: false
+pitch: >-
+  Cable of moisture and temperature probes strung through the bin, plus a controller that runs aeration fans only when ambient air will dry the grain.
+problem: >-
+  Stored grain spoils when bins are aerated at the wrong times.
+budget_usd: 250
+difficulty: 2  # 1 easiest, 5 hardest
+hero_image: media/hero.png
+licenses:
+  hardware: CERN-OHL-S-2.0
+  software: MIT
+tags: [agriculture, open-hardware, cern-ohl-s]
