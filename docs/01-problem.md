@@ -3,7 +3,7 @@ doc_id: GGD-PRB-001
 title: GrainGuard problem statement
 project: GrainGuard
 doc_type: Problem statement
-version: "0.2"
+version: "0.3"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -17,6 +17,10 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Populate to TRL 2 (problem, users, context, constraints, prior work with sources)
+- version: "0.3"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: TRL 3 decisions (GGD-DDR-001); reference case corrected to 88.8 t; budget per bin with the receiver per farm; open questions updated
 ---
 
 # GrainGuard problem statement
@@ -48,11 +52,11 @@ The stakes are higher where storage is poorer. Reviews report storage losses of 
 | Cooperative or storage manager (later) | A low-cost, repairable monitor for small steel silos | Emerging markets with aerated storage; out of scope for the first prototype |
 | Open hardware community | A documented design to build, audit and adapt | Makerspaces, extension programs, agricultural engineering courses |
 
-**Reference case.** A 5.49 m (18 ft) diameter bin with a 5.6 m eave, filled level to the eave with shelled corn: about 132 m³, about 3,760 bu or 95 t (estimate), with a full perforated floor and one existing aeration fan.
+**Reference case.** A 5.49 m (18 ft) diameter bin with a 5.6 m eave, a full perforated floor 0.4 m above the pad and one existing aeration fan, filled level to the eave with shelled corn: 5.2 m of grain, about 123 m³, 3,493 bu or 88.8 t (GGD-CAL-001). The first region and crop are corn in a small US Midwest bin (GGD-DDR-001, D11).
 
 ## Constraints
 
-- Garage-buildable prototype, about $250 USD in parts per bin (see GGD-REQ-001 R12).
+- Garage-buildable prototype, $250 USD or less in parts per bin, with the farmhouse receiver costed once per farm (see GGD-REQ-001 R13 and GGD-DDR-001 D1).
 - Retrofit to existing bins and fans with no welding or cutting of bin sheets and no change to the fan motor.
 - Installation and service without entering a bin that contains grain.
 - No mains voltage inside the GrainGuard controller; the only mains-connected item is a small relay kit installed by a licensed electrician in or beside the existing fan starter.
@@ -69,6 +73,6 @@ The stakes are higher where storage is poorer. Reviews report storage losses of 
 
 ## Open questions
 
-- First region and crop: US Corn Belt corn, northern Plains wheat, or a cooperative partner abroad? Proposed: corn in a small Midwest bin first, awaiting Amish.
-- Is a headspace CO₂ sensor needed in the first prototype, given that CO₂ detects spoilage earlier than a single temperature cable? Proposed, awaiting Amish (see GGD-PRC-001).
-- Which farm and electrician would host a first co-design visit?
+- First region and crop: decided as corn in a small US Midwest bin (GGD-DDR-001, D11; decided by Amish, 2026-09-25).
+- Headspace CO₂ sensor: decided as an option, not in the base kit (GGD-DDR-001, D10; decided by Amish, 2026-09-25).
+- Which farm and electrician would host a first co-design visit? Proposed, awaiting Amish (GGD-DDR-001, O1); partners are to be picked per area later.

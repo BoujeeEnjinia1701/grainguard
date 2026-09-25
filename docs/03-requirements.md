@@ -3,7 +3,7 @@ doc_id: GGD-REQ-001
 title: GrainGuard requirements
 project: GrainGuard
 doc_type: Requirements
-version: "0.2"
+version: "0.3"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -17,13 +17,17 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: First measurable requirements for TRL 2, with status against the concept
+- version: "0.3"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: TRL 3 decisions (GGD-DDR-001); R13 redefined per bin with the receiver per farm; R4 plenum EMC basis; reference case corrected; status from GGD-CAL-001
 ---
 
 # GrainGuard requirements
 
-These are first-pass requirements for the concept. Targets are proposals for review, not yet validated with farmers, and will be checked by calculation at TRL 3 and revised after co-design visits (see GGD-PRB-001). Three requirements are not met by the current concept (R8, R10 roof capacity, R13), and two are at risk (R6 coverage, R9 fumigation); Table 2 gives the status of each.
+These requirements were checked by calculation at TRL 3 in GGD-CAL-001. Targets are not yet validated with farmers and will be revised after co-design visits (see GGD-PRB-001). One requirement is not met (R8, battery recovery), four are at risk (R2, R4, R6, R9) and two cannot be verified at TRL 3 (R3, R10); Table 2 gives the status of each. Version 0.3 records the decisions in GGD-DDR-001: R13 is redefined per bin with the farmhouse receiver costed per farm (D1), and R4 states how the plenum-air EMC is found (D3, D9).
 
-The **reference case** is a 5.49 m (18 ft) diameter corrugated steel bin with a 5.6 m eave and a full perforated floor, filled with about 95 t (3,760 bu) of shelled corn stored at a target of 15.0 % moisture, wet basis, with one existing aeration fan giving about 0.36 m³/s (760 cfm, 0.2 cfm/bu).
+The **reference case** is a 5.49 m (18 ft) diameter corrugated steel bin with a 5.6 m eave above the pad, a full perforated floor 0.4 m above the pad and grain level with the eave (5.2 m deep): about 88.8 t (3,493 bu) of shelled corn stored at a target of 15.0 % moisture, wet basis, in the US Midwest (GGD-DDR-001, D11), with one existing aeration fan giving about 0.330 m³/s (699 cfm, 0.2 cfm/bu).
 
 *Table 1. Requirements.*
 
@@ -32,41 +36,41 @@ The **reference case** is a 5.49 m (18 ft) diameter corrugated steel bin with a 
 | R1 | Grain temperature profile | 6 or more levels on one center cable, 1.0 m or less apart; ±0.3 °C; one reading every 10 min | Sensor datasheet; geometry check in the model |
 | R2 | Grain moisture estimate from interstitial air | Within ±0.8 percentage points, wet basis, for interstitial RH of 20 % to 75 % and grain at 0 °C to 30 °C, from readings taken 6 h or more after the fan stops | EMC error analysis with sensor tolerance; later comparison with oven or meter samples |
 | R3 | Ambient air measurement | ±0.3 °C and ±2 % RH inside a radiation shield; sampled every 5 min; decisions on 30 min averages | Datasheet and shield error estimate |
-| R4 | Fan decision rule | Automatic mode runs the fan only when the predicted plenum-air EMC is at or below the target moisture (hold mode), or when plenum air is 5 °C or more below the mean grain temperature and its EMC is no more than 1.0 point above target (cool mode); minimum run 30 min, minimum off 15 min, 4 starts per hour or fewer | Logic review against extension guidance; later simulation over a season of weather data |
+| R4 | Fan decision rule | Automatic mode runs the fan only when the plenum-air EMC (from the ambient humidity ratio and the plenum temperature, which is ambient plus the fan heat: measured when the plenum probe option is fitted, otherwise predicted) is at or below the target moisture (hold mode), or when plenum air is 5 °C or more below the mean grain temperature and its EMC is no more than 1.0 point above target (cool mode); minimum run 30 min, minimum off 15 min, 4 starts per hour or fewer | Logic review against extension guidance; later simulation over a season of weather data |
 | R5 | Fail-safe control | In automatic mode the fan stops within 60 s of controller power loss or when sensor data are more than 30 min old; the hand position of the hand-off-auto switch runs the fan with GrainGuard removed; fan running is confirmed by current within 30 s and a mismatch raises an alarm | Circuit review; later bench test |
 | R6 | Heating alert | Alarm at the farmhouse within 15 min when any pod rises 3 °C or more above its 7-day minimum with the fan off, or sits 5 °C or more above the bin median | Logic review; later heated-core test |
 | R7 | Radio link | Bin to farmhouse over 1 km or more with one farm building in the path; 95 % or more of packets delivered | Link budget; later site survey |
-| R8 | Power autonomy | 5 days or more with no solar input at -20 °C with the fan running continuously; recovers from 50 % charge in 3 winter days | Power budget |
+| R8 | Power autonomy | 5 days or more with no solar input at -20 °C with the fan running continuously; recovers from 50 % charge to full in 3 winter days of 1.5 peak sun hours | Power budget |
 | R9 | Environment | Operate at -30 °C to +50 °C; controller IP66; pods dust-tight (IP6X) with a vapor-permeable membrane; survive one phosphine fumigation per season | Datasheets and design review; later exposure test |
 | R10 | Mechanical strength | Rope minimum breaking load 4 times or more the design pull-down force of 2.5 kN (estimate); roof hanger rated by the bin maker for the design force | Force estimate; bin maker's data |
 | R11 | Install and service without grain entry | Installed with the bin empty, from the roof manhole and floor under a confined-space and fall-protection procedure; no GrainGuard task needs anyone in a bin that holds grain | Installation sequence review |
 | R12 | Electrical isolation | Controller, cable and pods at 15 V DC or less; the relay kit is the only mains-connected item, installed by a licensed electrician, with 2.5 kV or more isolation between control input and contacts | Circuit review; relay datasheet |
-| R13 | Affordable | $250 or less in parts per bin | Priced BOM (`bom/bom.csv`) |
+| R13 | Affordable | $250 or less in parts per bin, with the farmhouse receiver (one per farm) costed per farm and excluded; priced options excluded | Priced BOM (`bom/bom.csv`) |
 | R14 | Local data | All readings and fan hours stored on the farm; no cloud account needed | Architecture review |
 
-*Table 2. Status of the concept against each requirement (estimates, see GGD-PRC-001).*
+*Table 2. Status at TRL 3 (GGD-CAL-001, Table 3). Not met items first.*
 
-| ID | Status at TRL 2 | Basis |
+| ID | Status at TRL 3 | Basis |
 | --- | --- | --- |
-| R1 | Met on paper | Six SHT45 pods at 1.0 m pitch; ±0.1 °C typical sensor accuracy |
-| R2 | Met on paper for 20 % to 75 % RH; not met above about 80 % RH | Published EMC prediction error of 0.25 to 0.65 points (dry basis) with ±2 % RH sensors; error grows fast above 70 % to 80 % RH, that is for wet grain |
-| R3 | Met on paper | Sensor accuracy; shield error unverified |
-| R4 | Met by design | Rule in GGD-PRC-001 |
-| R5 | Met by design | Normally open relay and hand-off-auto switch |
-| R6 | At risk | Met for the center core only; heating more than about 0.5 m from the cable is not detected |
-| R7 | Met on paper | About 48 dB of margin over free space at 2 km (estimate) |
-| R8 | **Not met** | About 4.8 days with the fan running continuously; about 7.6 days at 8 h of fan time per day |
-| R9 | At risk | Phosphine corrodes copper; pod and connector protection unverified |
-| R10 | Rope met; **roof capacity not met until confirmed** | 6 mm rope about 20 kN, 8 times the design force; older bin roofs may not have a rated hanger |
-| R11 | Met by design | Installation sequence in GGD-PRC-001 |
-| R12 | Met by design | Solar 12 V controller; DIN relay kit |
-| R13 | **Not met** | About $271 per bin, about $293 with the shared farmhouse receiver |
-| R14 | Met by design | Farmhouse receiver stores data locally |
+| R8 | **Not met** | Autonomy 7.7 days with the fan continuous and a 3 mA relay input (met); refill from 50 % takes 7.3 days with the 10 W panel (not met); a panel of about 19 W would meet it (open, GGD-DDR-001 O2) |
+| R2 | At risk | Sensor-only error 0.23 points (SHT45) and 0.42 points (SHT40) worst case over 20 % to 75 % RH, 0.81 at the SHT40 maximum tolerance; equation fit error, drift and membrane lag not included |
+| R4 | At risk | Rule met by design; fan heat is 0.5 to 2.7 °C depending on the fan and moves the plenum EMC about 1 point per °C; the plenum probe option removes this |
+| R6 | At risk | Alarm latency about 13 min (met); only the center core, 3.3 % of the cross-section, is watched |
+| R9 | At risk | AGM electrolyte may freeze near -25 °C at 50 % charge; phosphine protection unverified |
+| R3 | Not verifiable at TRL 3 | SHT45 meets the target; the radiation error of the shield needs a test |
+| R10 | Not verifiable at TRL 3 | Rope 8 times the 2.5 kN design force (estimate 2.08 kN); the roof hanger rating comes from the bin maker |
+| R1 | Met | Six pods at 0.94 m pitch; ±0.1 °C (SHT45) and ±0.2 °C (SHT40) typical |
+| R5 | Met | Normally open relay, stale-data timeout and hand-off-auto switch |
+| R7 | Met | 17.6 dB margin at 1 km past one farm building (plane-earth model); 24-byte packets fit the 400 ms dwell limit |
+| R11 | Met | Empty-bin installation sequence in GGD-PRC-001 |
+| R12 | Met | 12 V system with charging clamped at 15.0 V; optically isolated relay input |
+| R13 | Met | $247.00 per bin; receiver $22.00 per farm |
+| R14 | Met | Farmhouse receiver stores data locally |
 
 ## Assumptions
 
-- Grain properties: shelled corn at 721 kg/m³ (25.4 kg per 0.0352 m³ bushel) and a specific heat of about 1.9 kJ/(kg·K).
+- Grain properties: shelled corn at 721 kg/m³ (25.4 kg per 0.0352 m³ bushel) and a specific heat of about 2.0 kJ/(kg·K) at 15 % moisture.
 - EMC from the ASABE D245.6 modified Henderson equation for corn; accuracy of RH-based moisture prediction as reported by [USDA ARS](https://www.ars.usda.gov/ARSUserFiles/30200525/362AccuracyGrainMoistureContentPrediction.pdf).
-- The fan warms the air about 1 °C (estimate); to be measured at TRL 3.
-- Cooling front time of 75 to 120 h at 0.2 cfm/bu, from extension guidance and a sensible-heat balance.
-- Design pull-down force of 2.5 kN for a thin 6 mm cable is an estimate. Forces up to 4.7 kN were measured on the largest commercial cable during unloading ([Illinois Experts, ASABE](https://experts.illinois.edu/en/publications/forces-on-monitoring-cables-during-grain-bin-filling-and-emptying/)); thinner cables see less force, but this is unverified.
+- The fan warms the air by its input power over the air's heat capacity rate: about 1.0 °C for a 0.40 kW fan, 0.5 to 2.7 °C for 0.2 to 1.1 kW (GGD-CAL-001, section A).
+- Cooling front time of 75 to 119 h at 0.2 cfm/bu, from extension guidance and a sensible-heat balance.
+- Design pull-down force of 2.5 kN for a thin 6 mm cable is kept; GGD-CAL-001 estimates about 2.08 kN with an unloading overpressure factor of 2.0. Forces up to 4.7 kN were measured on the largest commercial cable during unloading ([Illinois Experts, ASABE](https://experts.illinois.edu/en/publications/forces-on-monitoring-cables-during-grain-bin-filling-and-emptying/)); thinner cables see less force, but this is unverified.

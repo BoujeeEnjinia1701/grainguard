@@ -3,7 +3,7 @@ doc_id: GGD-PRC-001
 title: GrainGuard design precis
 project: GrainGuard
 doc_type: Design precis
-version: "0.2"
+version: "0.3"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -17,11 +17,15 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Populate to TRL 2 (architecture, control rule, first-order numbers, safety, media)
+- version: "0.3"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: TRL 3 decisions (GGD-DDR-001) recorded; design choices no longer proposed; numbers checked against GGD-CAL-001; pod split, smaller enclosure, 3 mA relay input, 15.0 V charge clamp, plenum probe option; model, drawing GGD-DWG-001 and media refreshed
 ---
 
 # GrainGuard design precis
 
-GrainGuard hangs one cable of six temperature and humidity pods down the center of an existing grain bin, measures the outside air beside the bin, and switches the existing aeration fan through a small relay kit only when the air entering the grain will cool it or dry it rather than rewet it. A solar-powered 12 V controller on a mast by the bin makes the decision and reports to a receiver in the farmhouse by LoRa radio. First-order numbers for an 18 ft (5.49 m) bin of about 95 t of corn suggest a moisture estimate within about 0.7 points of moisture in normal storage conditions, about 4.8 to 7.6 days of battery autonomy in winter, and a parts cost of about $271 per bin, about 8 % over the $250 target.
+GrainGuard hangs one cable of six temperature and humidity pods down the center of an existing grain bin, measures the outside air beside the bin, and switches the existing aeration fan through a small relay kit only when the air entering the grain will cool it or dry it without rewetting it. A solar-powered 12 V controller on a mast by the bin makes the decision and reports to a receiver in the farmhouse by LoRa radio. The TRL 3 calculations (GGD-CAL-001) for an 18 ft (5.49 m) bin of about 88.8 t of corn give a sensor-induced moisture error of 0.23 to 0.42 points, 7.7 days of battery autonomy with no sun, and a parts cost of $247.00 per bin against the $250 budget. Two gaps remain: the 10 W panel refills the battery too slowly in winter (R8 not met), and the fan's own heat, worth about one point of moisture per degree, is not measured in the base kit.
 
 ![Hero render](../media/hero.png)
 
@@ -29,46 +33,48 @@ GrainGuard hangs one cable of six temperature and humidity pods down the center 
 
 ## How it works
 
-1. **Sense the grain.** A 6 mm galvanized wire rope hangs from the bin's center roof hanger. Six sealed pods clamped to it, about 1 m apart, each carry a Sensirion SHT45 sensor ([Sensirion](https://sensirion.com/products/catalog/SHT45)) behind a vapor-permeable filter. Once the fan has been off for some hours, the air between the kernels comes to equilibrium with the grain, so each pod's temperature and relative humidity give the local grain temperature and, through the EMC equation, an estimate of grain moisture ([USDA ARS](https://www.ars.usda.gov/ARSUserFiles/30200525/362AccuracyGrainMoistureContentPrediction.pdf)). While the fan runs, the pods track the cooling front as it passes.
-2. **Sense the air.** A seventh SHT45 in a louvered radiation shield on the mast measures outside air. The controller adds the fan's heat of compression (about 1 °C, estimate) to predict the temperature and RH of the air in the plenum, and from that its EMC for the stored crop.
+1. **Sense the grain.** A 6 mm galvanized wire rope hangs from the bin's center roof hanger. Six sealed pods clamped to it, 0.94 m apart, each carry a Sensirion temperature and humidity sensor behind a vapor-permeable membrane: an SHT45 ([Sensirion](https://sensirion.com/products/catalog/SHT45)) in the bottom and top pods, where spoilage usually starts, and an SHT40 ([Sensirion](https://sensirion.com/products/catalog/SHT40)) in the four middle pods. Once the fan has been off for some hours, the air between the kernels comes to equilibrium with the grain, so each pod's temperature and relative humidity give the local grain temperature and, through the EMC equation, an estimate of grain moisture ([USDA ARS](https://www.ars.usda.gov/ARSUserFiles/30200525/362AccuracyGrainMoistureContentPrediction.pdf)). While the fan runs, the pods track the cooling front as it passes.
+2. **Sense the air.** An SHT45 in a louvered radiation shield on the mast measures outside air. Heating does not change the air's humidity ratio, so the controller finds the plenum RH from the ambient humidity ratio and the plenum temperature, which is ambient plus the fan heat. In the base kit the fan heat is a setting for the installed fan (about 1.0 °C for a 0.40 kW fan, GGD-CAL-001 section A); with the plenum probe option (item 14) it is measured.
 3. **Decide.** Every 10 min, on 30 min averages, the controller applies the rule below and asks for the fan on or off.
-4. **Switch.** A 12 V signal line runs to an interposing relay kit in or beside the existing fan starter. Its relay, powered by its own 24 V supply, closes the starter's control circuit. A hand-off-auto switch keeps manual control, and a current transformer on one fan lead confirms that the fan runs.
-5. **Report.** The controller sends readings, fan state and fan hours by LoRa to a small receiver in the farmhouse, which shows the bin status, logs data locally and raises heating and fault alarms.
+4. **Switch.** A 12 V signal line runs to an interposing relay kit in or beside the existing fan starter. Its optically isolated input draws 3 mA or less, and its relay, powered by its own 24 V supply, closes the starter's control circuit. A hand-off-auto switch keeps manual control, and a current transformer on one fan lead confirms that the fan runs.
+5. **Report.** The controller sends readings, fan state and fan hours by LoRa, in packets of 24 bytes or less, to a small receiver in the farmhouse, which shows the bin status, logs data locally and raises heating and fault alarms.
 
 ![Air and control flow](../media/flow.png)
 
-*Figure 2. Air and control flow for one example decision. All values are estimates for the reference case.*
+*Figure 2. Air and control flow for one example decision. Values are estimates from GGD-CAL-001 for the reference case with a 0.40 kW fan.*
 
-### Control rule (proposed, awaiting Amish)
+### Control rule
 
-The farmer sets the crop, the target moisture (for example 15.0 % wet basis for corn held to spring) and a mode.
+The control rule was decided by Amish on 2026-09-25 (GGD-DDR-001, D3). The farmer sets the crop, the target moisture (for example 15.0 % wet basis for corn held to spring) and a mode.
 
-- **Cool mode** (after harvest and in fall): run when the plenum air is at least 5 °C (about 10 °F) cooler than the mean grain temperature and its EMC is no more than 1.0 point above target. This follows the extension rule of running when outside air is well below grain temperature ([University of Minnesota Extension](https://extension.umn.edu/corn-harvest/managing-stored-grain-aeration); [Oklahoma State University](https://extension.okstate.edu/fact-sheets/aeration-management-knowing-when-to-run-aeration-fans.html)), with a limit on rewetting.
+- **Cool mode** (after harvest and in fall): run when the plenum air is at least 5 °C (about 10 °F) cooler than the mean grain temperature and its EMC is no more than 1.0 point above target. This follows the extension rule of running when outside air is well below grain temperature ([University of Minnesota Extension](https://extension.umn.edu/corn-harvest/managing-stored-grain-aeration); [Oklahoma State University](https://extension.okstate.edu/fact-sheets/aeration-management-knowing-when-to-run-aeration-fans.html)), with a limit on rewetting. At the full allowance, one cooling cycle can add at most about 74 kg of water, enough to raise the bottom 0.37 m of grain by one point (GGD-CAL-001, section B).
 - **Hold mode** (winter and spring): run only when the plenum-air EMC is at or below target and the air is within a set band of the grain temperature, so the fan never rewets or rewarms grain.
 - **Stop when done.** The controller counts fan hours and watches the pods. When every pod has reached the new air temperature, the front has passed and the fan stops.
 - **Protect the motor.** Minimum run 30 min, minimum off 15 min, no more than 4 starts per hour.
 - **Fail off.** If the controller loses power or its sensor data are more than 30 min old, the relay drops out and the fan stops. The hand position of the switch always runs the fan.
 
-The example in Figure 2 shows why the fan heat matters: outside air at 10 °C and 70 % RH has an EMC of about 15.7 % and would rewet 15 % corn, but warmed 1 °C by the fan it drops to about 65 % RH and an EMC of about 14.7 %, so the controller runs the fan.
+The example in Figure 2 shows why the fan heat matters: outside air at 10 °C and 70 % RH has an EMC of 15.70 % and would rewet 15 % corn, but warmed 1.0 °C by a 0.40 kW fan it drops to 65.5 % RH and an EMC of 14.73 %, so the controller runs the fan. With a 1.1 kW fan the same air would reach the grain at 13.36 %.
 
 ## Main components
 
-Numbers match the exploded view (Figure 3) and `bom/bom.csv`.
+Numbers match the exploded view (Figure 3), drawing GGD-DWG-001 and `bom/bom.csv`.
 
-| # | Component | Proposed choice | Notes |
+| # | Component | Choice | Notes |
 | --- | --- | --- | --- |
-| 1 | Suspension wire rope and hanger | 6 mm galvanized 7x19 rope, 8 m, thimble, clips, shackle | Hangs from the bin maker's rated center hanger only |
-| 2 | Sensor pods (6) | SHT45 behind PTFE membrane, small bus microcontroller, RS-485, potted pod 76 mm by 140 mm | About 1 m apart; bottom pod about 0.2 m above the floor |
-| 3 | Bus cable | 4-core shielded UV-rated cable, 20 m, 12 V and RS-485 | Down the rope, out the peak cap, over the roof and down the wall |
-| 4 | Controller enclosure | IP66 polycarbonate, about 380 x 300 x 150 mm | On the mast, shaded side of the bin |
+| 1 | Suspension wire rope and hanger | 6 mm galvanized 7x19 rope, 6.6 m hung, thimble, clips, shackle | Hangs from the bin maker's rated center hanger only |
+| 2 | Sensor pods (6) | 2a: SHT45 (bottom and top, two); 2b: SHT40 (middle four); PTFE membrane, bus microcontroller, RS-485, potted pod 76 mm by 140 mm | 0.94 m apart; bottom pod 0.25 m above the floor, top pod 0.25 m below a level surface |
+| 3 | Bus cable | 4-core shielded UV-rated cable, 16 m, 12 V and RS-485 | Down the rope, out the peak cap, over the roof and down the wall; route 14.6 m |
+| 4 | Controller enclosure | IP66 polycarbonate, about 280 x 230 x 130 mm | On the mast, shaded side of the bin |
 | 5 | LoRa microcontroller and bus board | nRF52840 plus SX1262 class module, RS-485 transceiver, buck regulator | 915 MHz in the Americas |
-| 6 | Battery | 12 V 7 Ah AGM lead-acid | Accepts charge below 0 °C, unlike most lithium iron phosphate cells |
-| 7 | Solar charge controller | 12 V PWM with temperature compensation and low-voltage disconnect | |
-| 8 | Solar panel | 10 W, tilted about 45 degrees | On top of the mast |
-| 9 | Ambient sensor | SHT45 in a louvered radiation shield on a 330 mm arm | About 1.8 m above the pad, away from the bin wall's reflected heat |
-| 10 | Mast and brackets | 25 mm galvanized pipe, 2.3 m, base plate on the pad, one stay to the bin | No drilling of bin sheets |
-| 11 | Interposing relay kit | DIN 24 V supply, relay with isolated 12 V input, hand-off-auto switch, current transformer | Only mains-connected item; licensed electrician installs |
-| 12 | Farmhouse receiver | ESP32 plus LoRa with display and Wi-Fi | One per farm; not shown in the model |
+| 6 | Battery | 12 V 7 Ah AGM lead-acid | Accepts charge below 0 °C; capacity open (GGD-DDR-001, O2) |
+| 7 | Solar charge controller | 12 V PWM, temperature compensation clamped at 15.0 V, low-voltage disconnect, 6 mA or less self-use | Clamp keeps the system at 15 V or less (R12) |
+| 8 | Solar panel | 10 W, tilted 45 degrees | On top of the mast |
+| 9 | Ambient sensor | SHT45 in a louvered radiation shield on a 330 mm arm | 1.8 m above the pad, away from the bin wall's reflected heat |
+| 10 | Mast and brackets | DN25 (33.7 x 3.2 mm) galvanized pipe, 2.3 m, base plate on the pad, one stay to the bin | No drilling of bin sheets |
+| 11 | Interposing relay kit | DIN 24 V supply, relay with optically isolated 12 V input of 3 mA or less, hand-off-auto switch, current transformer | Only mains-connected item; licensed electrician installs |
+| 12 | Farmhouse receiver | ESP32 plus LoRa with display and Wi-Fi | One per farm, costed per farm; not shown in the model |
+| 13 | Hardware and consumables | Ties, anchors, sealant, conformal coating | Not shown |
+| 14 | Plenum temperature probe (option) | DS18B20 probe in the fan transition, downstream of the fan | Priced option; not in the per-bin total (GGD-DDR-001, D9 and O3) |
 
 ![Exploded view](../media/exploded.png)
 
@@ -76,86 +82,45 @@ Numbers match the exploded view (Figure 3) and `bom/bom.csv`.
 
 ![Cutaway](../media/cutaway.png)
 
-*Figure 4. Cutaway on the bin axis showing the sensor cable hanging from the roof peak through about 5 m of grain.*
+*Figure 4. Cutaway on the bin axis showing the sensor cable hanging from the roof peak through 5.2 m of grain.*
 
-## First-order numbers
+## Key numbers
 
-All values are estimates for concept review and will be checked at TRL 3.
+All numbers below come from GGD-CAL-001, which also gives the status of every requirement. Tags in brackets refer to lines of `docs/04-calcs/sizing.py`.
 
-### Bin and airflow (reference case)
+*Table 1. Key numbers for the reference case.*
 
-| Quantity | Estimate | Basis |
+| Quantity | TRL 3 value | Requirement |
 | --- | --- | --- |
-| Grain volume, level to the eave | about 132 m³ | π x 2.745² x 5.6 m |
-| Grain held | about 3,760 bu, about 95 t of corn | 0.0352 m³ and 25.4 kg per bushel |
-| Airflow at 0.2 cfm/bu | about 0.36 m³/s (760 cfm) | Existing fan assumed sized for this |
-| Superficial air speed | about 0.015 m/s | 0.36 m³/s over 23.7 m² |
-| Air heat capacity rate | about 0.43 kW/K | 0.36 m³/s x 1.2 kg/m³ x 1.006 kJ/(kg·K) |
-| Heat to cool the grain 10 °C | about 500 kWh | 95 t x 1.9 kJ/(kg·K) x 10 K |
-| Time for a cooling front to pass | about 75 to 120 h of fan time | 75 h from extension guidance at 0.2 cfm/bu; about 120 h from a sensible-heat balance |
-| Fan energy per cooling cycle | about 110 kWh (about $14 at $0.13/kWh) | 1.1 kW fan (assumed) for about 100 h |
+| Grain held, level to the eave | 123.1 m³, 3,493 bu, 88.8 t of corn [A2] | |
+| Airflow at 0.2 cfm/bu; static pressure | 0.330 m³/s (699 cfm); 139 Pa (0.56 in wc) [A3], [A4] | |
+| Fan heat rise | 1.0 °C at 0.40 kW; 0.5 to 2.7 °C for 0.2 to 1.1 kW [A7] | R4 at risk |
+| Cooling front time | 75 to 119 h of fan time [A8] | |
+| Plenum EMC change per °C of fan heat | 0.97 points [B1] | R4 at risk |
+| Sensor-induced EMC error, worst case 20 % to 75 % RH | 0.23 points (SHT45), 0.42 points (SHT40) [B5] | R2 at risk |
+| Hot spot coverage, one center cable | 3.3 % of the cross-section [C2] | R6 at risk |
+| Daily energy, fan continuous | 3.28 Wh [D3] | |
+| Autonomy with no sun at -20 °C, fan continuous | 7.7 days [D5] | R8 autonomy met |
+| Refill from 50 % at 1.5 winter peak sun hours | 7.3 days [D6] | **R8 not met** |
+| Radio margin at 1 km past one building | 17.6 dB [E3] | R7 met |
+| Cable pull-down estimate; rope factor on 2.5 kN | 2.08 kN; 8.0 [F2], [F3] | R10 rope met; hanger per bin |
+| Per-bin kit; receiver per farm | $247.00; $22.00 [H1], [H2] | R13 met |
 
-### Moisture sensing
-
-| Quantity | Estimate | Basis |
-| --- | --- | --- |
-| EMC error with ±2 % RH sensors, 20 % to 70 % RH | 0.25 to 0.65 points, dry basis | [USDA ARS](https://www.ars.usda.gov/ARSUserFiles/30200525/362AccuracyGrainMoistureContentPrediction.pdf) |
-| SHT45 accuracy | ±1.0 % RH, ±0.1 °C typical | [Sensirion](https://sensirion.com/products/catalog/SHT45) |
-| EMC of corn, 15 °C and 65 % RH | about 14.2 % wet basis | ASABE D245.6 modified Henderson |
-| EMC of corn, 10 °C and 70 % RH | about 15.7 % | Same |
-| Same air after 1 °C fan heat | about 14.7 % | Same, RH recalculated at 11 °C |
-| Moisture change per 1 °C of fan heat near 10 °C and 70 % RH | about 1 point of EMC | Difference of the two lines above |
-
-The last line is the key sensitivity: an error of 1 °C in the assumed fan heat shifts the decision by about one point of EMC, as much as the whole sensor error. Measuring plenum air directly would remove it (see open questions).
-
-### Hot spot detection
-
-Grain is a good insulator. Published trials found that a temperature sensor must be within about 0.5 m of a developing hot spot to see it, while headspace CO₂ rose clearly after 400 to 1,800 h ([Ileleji et al., Purdue](https://engineering.purdue.edu/ABE/people/Papers/klein.ileleji.1/hotspot)). One center cable therefore watches the center core, where fines collect under the fill spout, but not the outer ring. For a 5.49 m bin, the pods sense about 0.8 m² of a 23.7 m² cross-section (about 3 %). R6 is at risk for this reason.
-
-### Power
-
-Assumptions: controller and regulators about 25 mW average; pods powered for 3 s every 10 min; LoRa transmission about 0.3 s every 10 min; relay control input about 0.12 W while the fan runs; charge controller self-use about 6 mA at 12 V; 7 Ah AGM with 50 % usable at 20 °C and 60 % of that at -20 °C; winter solar of 1.5 peak sun hours at 60 % overall derating.
-
-| Quantity | Estimate | Requirement |
-| --- | --- | --- |
-| Daily use, fan 8 h per day | about 3.3 Wh | |
-| Daily use, fan running continuously | about 5.2 Wh | |
-| Usable battery at -20 °C | about 25 Wh | |
-| Autonomy with no sun, fan 8 h per day | about 7.6 days | |
-| Autonomy with no sun, fan continuous | about 4.8 days | R8 (5 days) **not met**, marginal |
-| Winter solar input | about 9 Wh per day | Covers the continuous case |
-
-A 12 Ah battery (about $10 more) or a charge controller with lower self-use would meet R8.
-
-### Radio
-
-Assumptions: 14 dBm transmit power, SX1262 at spreading factor 10 with about -132 dBm sensitivity, 0 dBi antennas. The budget is about 146 dB; free-space loss at 2 km and 915 MHz is about 98 dB, which leaves about 48 dB for the steel bin, buildings and ground (estimate, R7 met on paper).
-
-### Cable loads
-
-Grain drags on a hanging cable, most of all during unloading. Forces up to 4.7 kN were measured on the largest commercial cable ([Illinois Experts, ASABE](https://experts.illinois.edu/en/publications/forces-on-monitoring-cables-during-grain-bin-filling-and-emptying/)). A 6 mm rope with 76 mm pods will see less, estimated at 2.5 kN. The rope's breaking load of about 20 kN gives a factor of about 8. The weak point is the roof: the rope must hang only from a center hanger that the bin maker rates for cable loads, and many older bins have none. R10 is not met until that is confirmed for a given bin.
-
-### Cost
-
-| Group | Indicative cost | Requirement |
-| --- | --- | --- |
-| Per-bin kit (items 1 to 11 and 13) | about $271 | R13 ($250) not met, about 8 % over |
-| Farmhouse receiver (item 12, one per farm) | about $22 | |
-| **Prototype total** | **about $293** | about 17 % over |
+The largest remaining uncertainty is the fan heat. An error of 1 °C in the assumed value shifts the decision by about one point of EMC, more than the whole sensor error. The plenum probe option measures it for $9.50.
 
 ## Key design choices
 
-Every choice below is **Proposed, awaiting Amish**.
+Every choice below was decided by Amish on 2026-09-25 by adopting the TRL 2 recommendations (GGD-DDR-001).
 
-- **RH-based moisture sensing rather than capacitance probes.** Interstitial RH with an EMC equation is cheap, uses well-supported sensors and has published accuracy data from USDA ARS; its weakness is wet grain above about 80 % RH, and the need for crop-specific constants. Capacitance probes read moisture directly but cost more and depend on packing. Recommendation: RH. Proposed, awaiting Amish.
-- **One center cable with six pods.** Enough for a 5.5 m bin at this price; larger bins need more cables. Alternative: two shorter cables at mid-radius. Recommendation: one center cable. Proposed, awaiting Amish.
-- **Pod bus: RS-485 with a small microcontroller in each pod.** The SHT45 has a fixed I²C address and I²C does not suit 20 m of cable. Alternatives: a single-wire temperature bus with fewer RH points, or I²C bus extenders. Recommendation: RS-485. Proposed, awaiting Amish.
-- **Solar 12 V controller with an electrician-installed relay kit.** Keeps mains out of the GrainGuard box and matches the pitch. Alternative: power the controller from a DIN supply in the starter (no battery, but mains in the path and no data when the fan circuit is isolated). Recommendation: solar. Proposed, awaiting Amish.
-- **AGM battery rather than lithium iron phosphate.** AGM accepts charge below freezing; LiFePO₄ cells generally must not be charged below 0 °C without a heater. Proposed, awaiting Amish.
-- **Predicted plenum air rather than a plenum sensor.** Saves a pod and a cable run; costs about one point of EMC per 1 °C of error. Recommendation: add a plenum pod at TRL 3 if the budget allows. Proposed, awaiting Amish.
-- **Control rule, modes and default targets** as set out above. Proposed, awaiting Amish.
-- **Headspace CO₂ sensor.** Would catch heating the cable misses, but adds about $30 to $50. Recommendation: offer it as an option, not in the base kit. Proposed, awaiting Amish.
-- **Budget.** Options are in `docs/REVIEW.md`. The `project.yaml` budget is unchanged. Proposed, awaiting Amish.
+- **RH-based moisture sensing rather than capacitance probes** (D4). Interstitial RH with an EMC equation is cheap and has published accuracy data; its weakness is wet grain above about 80 % RH and the need for crop-specific constants.
+- **One center cable with six pods** (D5), enough for a 5.5 m bin at this price; larger bins need more cables.
+- **RS-485 pod bus with a small microcontroller in each pod** (D6). The SHT4x sensors have a fixed I²C address and I²C does not suit 15 m of cable.
+- **Solar 12 V controller with an electrician-installed relay kit** (D7). Keeps mains out of the GrainGuard box.
+- **AGM battery rather than lithium iron phosphate** (D8). AGM accepts charge below freezing; LiFePO₄ cells generally must not be charged below 0 °C without a heater.
+- **Plenum sensing if the budget allows** (D9). The lowest-cost form, a temperature-only probe, does not fit in $250, so it is a priced option; adopting it anyway is open (O3).
+- **Control rule, modes and default targets** as set out above (D3).
+- **Headspace CO₂ sensor as an option**, not in the base kit (D10).
+- **Budget** (D1): $250 per bin with the farmhouse receiver costed per farm, reached by fitting SHT40 sensors in the four middle pods and a smaller enclosure.
 
 ## Safety
 
@@ -169,17 +134,19 @@ Every choice below is **Proposed, awaiting Amish**.
 - **Lightning and surges.** A tall steel bin attracts lightning, and the cable enters from the roof. Bond the rope and cable shield to the bin, add surge protection on the bus at the controller, and keep the signal cable to the starter short.
 - **Fumigants.** Phosphine is highly toxic and corrodes copper and electronics ([FAO fumigation manual](https://www.fao.org/4/x5042e/x5042e0a.htm)). Only certified applicators fumigate. GrainGuard does not measure phosphine and must not be used to decide when a bin is safe to enter.
 - **Grain dust.** Dust in the headspace can burn or explode. The pods run at 12 V and a few milliamps, but the design has not been assessed against hazardous-location rules; keep all connections outside the bin sealed and never open pods inside a dusty bin.
-- **Battery.** The 12 V AGM battery can deliver high short-circuit current and vents hydrogen if overcharged. Fuse it at the terminal and use a temperature-compensated charger.
+- **Plenum probe option.** Fitting the probe means drilling one 12 mm hole for a gland in the fan transition. Lock out the fan at the disconnect first, keep hands out of the transition, and fit the probe downstream of the fan, never near the impeller.
+- **Battery.** The 12 V AGM battery can deliver high short-circuit current and vents hydrogen if overcharged. Fuse it at the terminal and use a temperature-compensated charger with its voltage clamped at 15.0 V. A lead-acid battery left partly discharged can freeze and crack at about -25 °C.
 
-## Open questions for TRL 3
+## Open questions
 
-- Confirm the control rule, mode defaults and target moisture values with an extension specialist and a host farmer.
-- Measure fan heat rise, or decide to add a plenum pod (about one point of EMC per 1 °C).
-- Check how long interstitial air takes to reach equilibrium after the fan stops, so the controller knows when a moisture reading is valid.
-- Protect pods and connectors against phosphine (conformal coating, sealed connectors, or pods removed before fumigation?).
-- Estimate cable pull-down force for this rope and pod size, and identify which bin makers rate their roof hangers.
-- Meet R8 with a larger battery or lower-power charger, and close the cost gap (R13).
-- Decide on the headspace CO₂ option.
-- Check LoRa coverage on a real farm with the bin in the path.
+- Battery and panel capacity to meet the recovery half of R8: a 20 W panel, a relaxed target, or accepting the miss (GGD-DDR-001, O2). Proposed, awaiting Amish.
+- Adopt the plenum probe option at $9.50, taking the kit to $256.50 (GGD-DDR-001, O3). Proposed, awaiting Amish.
+- First host farm and electrician for a co-design visit (GGD-DDR-001, O1). Proposed, awaiting Amish.
+- Confirm the control rule's defaults and target moisture values with an extension specialist and a host farmer.
+- How long interstitial air takes to reach equilibrium after the fan stops, so the controller knows when a moisture reading is valid.
+- Protect pods and connectors against phosphine (conformal coating, sealed connectors, or pods removed before fumigation).
+- Low-voltage disconnect setting that keeps the AGM battery from freezing at -30 °C.
+- Which bin makers rate their roof hangers for cable loads.
+- LoRa coverage on a real farm with the bin in the path.
 
-Concept media: [blueprint sheet](../media/concept-blueprint.pdf), [interactive 3D model](../media/viewer.html).
+Concept media: [blueprint sheet](../media/concept-blueprint.pdf), [interactive 3D model](../media/viewer.html). General arrangement: [GGD-DWG-001](../cad/drawings/GGD-DWG-001.pdf).
