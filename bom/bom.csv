@@ -1,6 +1,14 @@
 item,qty,spec,supplier,unit_cost_usd,make_buy,notes
-SHT-series sensors on steel cable,,,,,,
-LoRa node,,,,,,
-Relay board,,,,,,
-Ambient sensor,,,,,,
-Solar charger,,,,,,
+1 Suspension wire rope and hanger,1,"6 mm galvanized 7x19 steel wire rope, 8 m, with thimble, two wire rope clips and a shackle to the bin's existing center cable hanger; minimum breaking load about 20 kN",Farm or hardware supplier,15.00,buy,Indicative price; hang only from a hanger the bin maker rates for cable loads (open question)
+2 Sensor pods,6,"Sensirion SHT45 temperature and RH sensor behind a PTFE membrane or sintered filter, small bus microcontroller and RS-485 transceiver, potted in a 76 mm diameter by 140 mm pod clamped to the rope",Electronics distributor plus printed or turned pod body,10.00,make,Indicative price per pod; conformal coat against phosphine (open question)
+3 Bus cable,1,"4-core shielded outdoor cable, 20 m (8 m down the rope, 12 m over the roof and down the wall), UV-rated jacket, cable gland at the peak cap and stainless clips",Electrical supplier,22.00,buy,Indicative price; carries 12 V and RS-485 only
+4 Controller enclosure,1,"IP66 polycarbonate box about 380 x 300 x 150 mm with mounting plate, cable glands and a breather vent",Electrical supplier,18.00,buy,Indicative price
+5 LoRa microcontroller and bus board,1,"915 MHz LoRa module (nRF52840 plus SX1262 class), RS-485 transceiver, 12 V to 3.3 V buck, 12 V output to the relay signal line",Electronics distributor,30.00,buy,Indicative price; 868 MHz variant outside the Americas
+6 Battery,1,"12 V 7 Ah sealed AGM lead-acid",Battery or hardware supplier,20.00,buy,Indicative price; AGM chosen because it accepts charge below 0 °C (proposed)
+7 Solar charge controller,1,"12 V PWM, 5 to 10 A, with battery temperature compensation and low-voltage disconnect",Solar supplier,10.00,buy,Indicative price
+8 Solar panel,1,"10 W monocrystalline, about 350 x 250 x 25 mm, tilted about 45 degrees",Solar supplier,18.00,buy,Indicative price
+9 Ambient T and RH sensor,1,"Sensirion SHT45 pod in a louvered radiation shield on a 330 mm arm, about 1.8 m above the pad on the shaded side",Electronics distributor plus printed or bought shield,18.00,make,Indicative price
+10 Mast and brackets,1,"25 mm galvanized pipe, 2.3 m, base plate anchored to the pad, one stay to the bin wall stiffener, U-bolts",Farm or hardware supplier,15.00,buy,Indicative price; no drilling of bin sheets
+11 Interposing relay kit,1,"DIN-rail 24 V DC supply, 24 V relay with 12 V DC isolated control input, hand-off-auto selector and split-core current transformer on one fan lead, in the fan starter or a small adjacent box, plus signal cable to the controller",Electrical supplier,35.00,buy,Indicative price; installed by a licensed electrician; the only mains-connected item
+12 Farmhouse receiver,1,"ESP32 plus LoRa board with small display and Wi-Fi, USB supply",Electronics distributor,22.00,buy,Indicative price; one per farm serves several bins; no exploded-view callout
+13 Hardware and consumables,1,"Cable ties, anchors, sealant, heat-shrink, conformal coating",Hardware supplier,10.00,buy,Indicative price; no exploded-view callout

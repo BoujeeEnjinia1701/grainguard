@@ -6,29 +6,34 @@
 
 Cable of moisture and temperature probes strung through the bin, plus a controller that runs aeration fans only when ambient air will dry the grain.
 
+![GrainGuard concept](media/hero.png)
+
+[Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [Review note](docs/REVIEW.md)
+
 ## Problem
 
-Stored grain spoils when bins are aerated at the wrong times.
+Stored grain spoils when bins are aerated at the wrong times. Humid fall air can rewet grain, heating starts where no one can see it, and checking a bin by climbing it is dangerous. Commercial monitoring with fan control costs thousands of dollars per bin. Full problem statement: [docs/01-problem.md](docs/01-problem.md)
 
 ## Concept
 
-Cable of moisture and temperature probes strung through the bin, plus a controller that runs aeration fans only when ambient air will dry the grain.
+One cable of six temperature and humidity pods hangs down the center of an existing bin. A solar-powered 12 V controller beside the bin compares the grain with the outside air, allows for the fan's own heat, and switches the existing fan through a small relay kit only when the air will cool or dry the grain rather than rewet it. It reports to a farmhouse receiver by LoRa radio. First-order estimates for an 18 ft (5.49 m) bin of about 95 t of corn: moisture estimate within about 0.7 points in normal storage conditions, about $271 in parts per bin (over the $250 target), and 4.8 to 7.6 days of winter battery autonomy.
 
 Full design precis: [docs/02-concept.md](docs/02-concept.md)
 
 ## Key components
 
-- SHT-series sensors on steel cable
-- LoRa node
-- Relay board
-- Ambient sensor
-- Solar charger
+- Six Sensirion SHT45 pods on a 6 mm steel wire rope, RS-485 bus
+- LoRa controller in an IP66 box on a mast
+- Interposing relay kit with hand-off-auto switch, installed by an electrician in the fan starter
+- Ambient temperature and humidity sensor in a radiation shield
+- 10 W solar panel, charge controller and 12 V AGM battery
+- Farmhouse LoRa receiver with display
 
 The working bill of materials is in [bom/bom.csv](bom/bom.csv).
 
 ## Safety
 
-> Never enter a grain bin to install or service sensors without lockout and a trained spotter.
+> **Safety:** Never enter a bin that holds grain. Install the cable only in an empty bin, with unloading equipment locked out, a confined-space procedure and a trained spotter. The fan starts automatically: lock out at the disconnect before touching it. Only a licensed electrician connects the relay kit to the fan starter. Hang the cable only from a roof hanger the bin maker rates for cable loads. See the safety section of [docs/02-concept.md](docs/02-concept.md).
 
 ## Repository layout
 
