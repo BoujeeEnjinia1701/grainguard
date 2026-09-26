@@ -21,7 +21,7 @@ pitch: >-
   Cable of moisture and temperature probes strung through the bin, plus a controller that runs aeration fans only when the air will cool or dry the grain without rewetting it.
 problem: >-
   Stored grain spoils when bins are aerated at the wrong times.
-budget_usd: 250
+budget_usd: 260
 difficulty: 2  # 1 easiest, 5 hardest
 hero_image: media/hero.png
 licenses:

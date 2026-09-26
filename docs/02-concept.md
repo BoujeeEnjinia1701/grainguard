@@ -3,9 +3,9 @@ doc_id: GGD-PRC-001
 title: GrainGuard design precis
 project: GrainGuard
 doc_type: Design precis
-version: "0.4"
+version: "0.5"
 status: Draft
-date: '2026-09-25'
+date: '2026-09-26'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -25,11 +25,15 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002). Plenum probe moved into the base kit; kit $247.00 to $256.50 with the overrun accepted; R4 met; drawing GGD-DWG-001 Rev P2 and media refreshed
+- version: "0.5"
+  date: '2026-09-26'
+  author: Amish Chadha
+  change: Budget approved by Amish ($260, GGD-DDR-002); cost figures restated against it
 ---
 
 # GrainGuard design precis
 
-GrainGuard hangs one cable of six temperature and humidity pods down the center of an existing grain bin, measures the outside air beside the bin, and switches the existing aeration fan through a small relay kit only when the air entering the grain will cool it or dry it without rewetting it. A solar-powered 12 V controller on a mast by the bin makes the decision and reports to a receiver in the farmhouse by LoRa radio. The TRL 3 calculations (GGD-CAL-001) for an 18 ft (5.49 m) bin of about 88.8 t of corn give a sensor-induced moisture error of 0.23 to 0.42 points, 7.7 days of battery autonomy with no sun, and a parts cost of $256.50 per bin. That is $6.50 over the $250 budget because a $9.50 plenum probe, which measures the fan's own heat (worth about one point of moisture per degree), is now in the base kit; Amish accepted the overrun on 2026-09-25 (GGD-DDR-002). One gap remains: the 10 W panel refills the battery too slowly in winter (R8 not met).
+GrainGuard hangs one cable of six temperature and humidity pods down the center of an existing grain bin, measures the outside air beside the bin, and switches the existing aeration fan through a small relay kit only when the air entering the grain will cool it or dry it without rewetting it. A solar-powered 12 V controller on a mast by the bin makes the decision and reports to a receiver in the farmhouse by LoRa radio. The TRL 3 calculations (GGD-CAL-001) for an 18 ft (5.49 m) bin of about 88.8 t of corn give a sensor-induced moisture error of 0.23 to 0.42 points, 7.7 days of battery autonomy with no sun, and a parts cost of $256.50 per bin, within the $260 budget. The kit includes a $9.50 plenum probe, which measures the fan's own heat (worth about one point of moisture per degree); Amish accepted its $6.50 overrun against the former $250 budget on 2026-09-25 and set the budget to $260 on 2026-09-26 (GGD-DDR-002). One gap remains: the 10 W panel refills the battery too slowly in winter (R8 not met).
 
 ![Hero render](../media/hero.png)
 
@@ -109,7 +113,7 @@ All numbers below come from GGD-CAL-001, which also gives the status of every re
 | Refill from 50 % at 1.5 winter peak sun hours | 7.3 days [D6] | **R8 not met** |
 | Radio margin at 1 km past one building | 17.6 dB [E3] | R7 met |
 | Cable pull-down estimate; rope factor on 2.5 kN | 2.08 kN; 8.0 [F2], [F3] | R10 rope met; hanger per bin |
-| Per-bin kit with the probe; receiver per farm | $256.50; $22.00 [H1], [H2] | R13 not met, $6.50 overrun accepted |
+| Per-bin kit with the probe; receiver per farm | $256.50; $22.00 [H1], [H2] | R13 met ($260 budget) |
 
 The fan heat was the largest uncertainty at TRL 3: an error of 1 °C in an assumed value shifts the decision by about one point of EMC, more than the whole sensor error. The plenum probe measures it for $9.50 and cuts that error to about ±0.5 points.
 
@@ -122,10 +126,10 @@ Every choice below was decided by Amish on 2026-09-25 by adopting the TRL 2 reco
 - **RS-485 pod bus with a small microcontroller in each pod** (D6). The SHT4x sensors have a fixed I²C address and I²C does not suit 15 m of cable.
 - **Solar 12 V controller with an electrician-installed relay kit** (D7). Keeps mains out of the GrainGuard box.
 - **AGM battery rather than lithium iron phosphate** (D8). AGM accepts charge below freezing; LiFePO₄ cells generally must not be charged below 0 °C without a heater.
-- **Plenum sensing** (GGD-DDR-001 D9; GGD-DDR-002). The lowest-cost form, a temperature-only probe, does not fit in $250, but Amish adopted it into the base kit and accepted the $6.50 overrun, since no other $9.50 buys as much decision accuracy.
+- **Plenum sensing** (GGD-DDR-001 D9; GGD-DDR-002). The lowest-cost form, a temperature-only probe, did not fit in the former $250 budget, but Amish adopted it into the base kit and accepted the $6.50 overrun, since no other $9.50 buys as much decision accuracy; the budget is now $260.
 - **Control rule, modes and default targets** as set out above (D3).
 - **Headspace CO₂ sensor as an option**, not in the base kit (D10).
-- **Budget** (D1): $250 per bin with the farmhouse receiver costed per farm, reached by fitting SHT40 sensors in the four middle pods and a smaller enclosure ($247.00); with the plenum probe the kit is $256.50, an overrun accepted under GGD-DDR-002.
+- **Budget** (D1): per bin with the farmhouse receiver costed per farm. SHT40 sensors in the four middle pods and a smaller enclosure brought the kit to $247.00; with the plenum probe it is $256.50, within the $260 budget Amish set on 2026-09-26 (GGD-DDR-002).
 - **Relay input of 3 mA or less and charging clamped at 15.0 V**, set in GGD-CAL-001 to meet R8 autonomy and R12 at no cost (GGD-DDR-002).
 
 ## Safety

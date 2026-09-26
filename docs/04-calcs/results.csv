@@ -11,5 +11,5 @@ R9,Environment,AGM may freeze near -25 °C at 50 % charge; phosphine unverified,
 R10,Mechanical strength,Rope 8 times 2.5 kN; estimate 2.08 kN; roof hanger rating per bin,Rope 4 times; hanger rated,Not verifiable at TRL 3
 R11,Install without grain entry,Empty-bin installation sequence,No entry into a bin holding grain,Met
 R12,Electrical isolation,"12 V system, charge clamped at 15.0 V; relay input 2.5 kV",15 V or less; 2.5 kV,Met
-R13,Cost per bin,"$256.50 per bin, receiver per farm","$250 per bin, receiver per farm","Not met, overrun accepted"
+R13,Cost per bin,"$256.50 per bin, receiver per farm","$260 per bin, receiver per farm",Met
 R14,Local data,Farmhouse receiver logs locally,No cloud account,Met

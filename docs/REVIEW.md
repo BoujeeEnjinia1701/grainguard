@@ -146,7 +146,7 @@ On 2026-09-25 Amish wrote, in chat: "i accept all your recommendations, go with 
 | Item | Decision | Before | After |
 | --- | --- | --- | --- |
 | O3 (now N1): plenum probe | Adopt into the base kit and accept the overrun | Priced option; kit $247.00; first prototype with receiver $269.00; R4 at risk (fan heat 0.5 to 2.7 °C unmeasured, 1.85-point EMC spread across fans) | BOM item 14 in the kit; kit $256.50 (+2.6 %, $6.50 over $250); prototype $278.50; fan heat measured within ±0.51 °C, plenum EMC within about ±0.50 points (new check B10); R4 met on paper |
-| Budget | Accept the $6.50 overrun rather than raise the budget | `budget_usd` 250; R13 met | `budget_usd` 250 (unchanged); R13 "not met, overrun accepted" |
+| Budget | Accept the $6.50 overrun rather than raise the budget | `budget_usd` 250; R13 met | `budget_usd` 250 (unchanged); R13 "not met, overrun accepted". Decided by Amish, 2026-09-26: budget set to $260 (GGD-DDR-002 v0.2); R13 met |
 | N2: relay input 3 mA or less | Keep as specified | Flagged for Amish | Decided; no change |
 | N3: charger clamped at 15.0 V | Keep as specified | Flagged for Amish | Decided; no change |
 
@@ -185,3 +185,12 @@ TRL 4 remains on hold by Amish's instruction. The TRL 4 items in the previous se
 ### Safety concerns
 
 Unchanged. Fitting the plenum probe, now in every kit, means drilling the fan transition with the fan locked out at the disconnect.
+
+## Session 2026-09-26: budget approved
+
+On 2026-09-26 Amish wrote: "i approve all the budget items." The budget item is decided: budget set to $260 to cover the priced BOM, recorded in GGD-DDR-002 v0.2.
+
+- `project.yaml`: `budget_usd` 250 to 260. The priced per-bin kit is $256.50 with the farmhouse receiver costed per farm, so the figure covers it with $3.50 to spare.
+- R13: **not met, overrun accepted** ($6.50 over $250) to **met**. Requirement status is now met 8, at risk 3, not met 1 (R8) and not verifiable 2.
+- `docs/04-calcs/sizing.py` reads the budget from `project.yaml` and was rerun (`results.csv` updated); the accepted-overrun wording was replaced in GGD-CAL-001 v0.3, GGD-REQ-001 v0.5, GGD-PRC-001 v0.5, GGD-PRB-001 v0.4, `README.md` and `bom/bom-notes.md`. The concept blueprint key figures quote the kit cost, not the budget, so `media/` was not regenerated.
+- Still awaiting Amish: O1 host farm, O2 panel capacity for R8 (a 20 W panel, about $265 to $267, would exceed $260), O4 pitch wording.

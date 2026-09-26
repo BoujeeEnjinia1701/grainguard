@@ -3,9 +3,9 @@ doc_id: GGD-DDR-002
 title: GrainGuard recommendations accepted
 project: GrainGuard
 doc_type: Design decision record
-version: "0.1"
+version: "0.2"
 status: Draft
-date: '2026-09-25'
+date: '2026-09-26'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -13,12 +13,16 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Record Amish's acceptance of all recommendations and the changes made in the repo
+- version: "0.2"
+  date: '2026-09-26'
+  author: Amish Chadha
+  change: "Budget set to $260 to cover the priced BOM: decided by Amish, 2026-09-26; R13 met"
 ---
 
 # 0002: Recommendations accepted
 
 - **Date:** 2026-09-25
-- **Status:** accepted. Every item below that carried a recommendation is "Decided by Amish, 2026-09-25: go with recommendation". Items without a recommendation remain "Proposed, awaiting Amish".
+- **Status:** accepted. Every item below that carried a recommendation is "Decided by Amish, 2026-09-25: go with recommendation". Items without a recommendation remain "Proposed, awaiting Amish". The budget was decided by Amish on 2026-09-26 (see Budget, 2026-09-26).
 
 ## Context
 
@@ -51,8 +55,12 @@ On 2026-09-25 Amish wrote, in chat: "i accept all your recommendations, go with 
 
 No cross-repo action arises: GrainGuard does not use SwapCell or any other portfolio module.
 
+### Budget, 2026-09-26
+
+On 2026-09-26 Amish wrote: "i approve all the budget items." Budget set to $260 to cover the priced BOM: decided by Amish, 2026-09-26. The priced per-bin kit is $256.50 (`bom/bom.csv`, items 1 to 11, 13 and 14, with the farmhouse receiver costed per farm under GGD-DDR-001 D1), so `budget_usd` in `project.yaml` moves from 250 to 260. This supersedes the N1 choice to keep $250 and record the overrun: R13 moves from "not met, overrun accepted" to met. `docs/04-calcs/sizing.py` reads the budget from `project.yaml` and was rerun; GGD-CAL-001 v0.3, GGD-REQ-001 v0.5, GGD-PRC-001 v0.5, GGD-PRB-001 v0.4, `README.md` and `bom/bom-notes.md` were updated. Requirement status is now met 8, at risk 3, not met 1 (R8) and not verifiable 2.
+
 ## Consequences
 
 - Requirement status (GGD-CAL-001 v0.2): not met 1 (R8); not met with an accepted overrun 1 (R13); at risk 3 (R2, R6, R9); not verifiable at TRL 3 2 (R3, R10); met 7 (R1, R4, R5, R7, R11, R12, R14). Before this record: not met 1, at risk 4, not verifiable 2, met 7.
 - Controlled documents bumped: GGD-PRC-001 v0.4, GGD-REQ-001 v0.4, GGD-CAL-001 v0.2, GGD-DDR-001 v0.2; drawing GGD-DWG-001 Rev P2.
-- `project.yaml`: `budget_usd` stays 250, pitch and problem unchanged, `trl: 3` and `trl_target: 3` unchanged.
+- `project.yaml`: `budget_usd` stayed 250 under N1 (set to 260 on 2026-09-26, see above), pitch and problem unchanged, `trl: 3` and `trl_target: 3` unchanged.

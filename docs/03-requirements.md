@@ -3,9 +3,9 @@ doc_id: GGD-REQ-001
 title: GrainGuard requirements
 project: GrainGuard
 doc_type: Requirements
-version: "0.4"
+version: "0.5"
 status: Draft
-date: '2026-09-25'
+date: '2026-09-26'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -25,11 +25,15 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002). R4 restated with the plenum probe in the base kit; R13 status records the accepted $6.50 overrun; status from GGD-CAL-001 v0.2
+- version: "0.5"
+  date: '2026-09-26'
+  author: Amish Chadha
+  change: Budget approved by Amish
 ---
 
 # GrainGuard requirements
 
-These requirements were checked by calculation at TRL 3 in GGD-CAL-001. Targets are not yet validated with farmers and will be revised after co-design visits (see GGD-PRB-001). One requirement is not met (R8, battery recovery), one is missed by an overrun that Amish has accepted (R13, $6.50 over), three are at risk (R2, R6, R9) and two cannot be verified at TRL 3 (R3, R10); Table 2 gives the status of each. Version 0.3 recorded the decisions in GGD-DDR-001: R13 is redefined per bin with the farmhouse receiver costed per farm (D1), and R4 states how the plenum-air EMC is found (D3, D9). Version 0.4 records GGD-DDR-002: the plenum probe is in the base kit, so R4 uses the measured plenum temperature and is met on paper, and the $6.50 cost overrun it causes is accepted.
+These requirements were checked by calculation at TRL 3 in GGD-CAL-001. Targets are not yet validated with farmers and will be revised after co-design visits (see GGD-PRB-001). One requirement is not met (R8, battery recovery), three are at risk (R2, R6, R9) and two cannot be verified at TRL 3 (R3, R10); Table 2 gives the status of each. Version 0.3 recorded the decisions in GGD-DDR-001: R13 is redefined per bin with the farmhouse receiver costed per farm (D1), and R4 states how the plenum-air EMC is found (D3, D9). Version 0.4 records GGD-DDR-002: the plenum probe is in the base kit, so R4 uses the measured plenum temperature and is met on paper, and the $6.50 cost overrun it causes is accepted. Version 0.5 records the budget Amish approved on 2026-09-26: R13's target is $260 per bin, which covers the priced kit, so R13 is met.
 
 The **reference case** is a 5.49 m (18 ft) diameter corrugated steel bin with a 5.6 m eave above the pad, a full perforated floor 0.4 m above the pad and grain level with the eave (5.2 m deep): about 88.8 t (3,493 bu) of shelled corn stored at a target of 15.0 % moisture, wet basis, in the US Midwest (GGD-DDR-001, D11), with one existing aeration fan giving about 0.330 m³/s (699 cfm, 0.2 cfm/bu).
 
@@ -49,15 +53,14 @@ The **reference case** is a 5.49 m (18 ft) diameter corrugated steel bin with a 
 | R10 | Mechanical strength | Rope minimum breaking load 4 times or more the design pull-down force of 2.5 kN (estimate); roof hanger rated by the bin maker for the design force | Force estimate; bin maker's data |
 | R11 | Install and service without grain entry | Installed with the bin empty, from the roof manhole and floor under a confined-space and fall-protection procedure; no GrainGuard task needs anyone in a bin that holds grain | Installation sequence review |
 | R12 | Electrical isolation | Controller, cable and pods at 15 V DC or less; the relay kit is the only mains-connected item, installed by a licensed electrician, with 2.5 kV or more isolation between control input and contacts | Circuit review; relay datasheet |
-| R13 | Affordable | $250 or less in parts per bin, with the farmhouse receiver (one per farm) costed per farm and excluded; priced options excluded | Priced BOM (`bom/bom.csv`) |
+| R13 | Affordable | $260 or less in parts per bin (budget approved by Amish, 2026-09-26; was $250), with the farmhouse receiver (one per farm) costed per farm and excluded; priced options excluded | Priced BOM (`bom/bom.csv`) |
 | R14 | Local data | All readings and fan hours stored on the farm; no cloud account needed | Architecture review |
 
-*Table 2. Status at TRL 3 (GGD-CAL-001 v0.2, Table 3). Not met items first.*
+*Table 2. Status at TRL 3 (GGD-CAL-001 v0.3, Table 3). Not met items first.*
 
 | ID | Status at TRL 3 | Basis |
 | --- | --- | --- |
 | R8 | **Not met** | Autonomy 7.7 days with the fan continuous and a 3 mA relay input (met); refill from 50 % takes 7.3 days with the 10 W panel (not met); a panel of about 19 W would meet it (open, GGD-DDR-001 O2) |
-| R13 | **Not met, overrun accepted** | $256.50 per bin with the plenum probe, $6.50 (2.6 %) over $250; receiver $22.00 per farm; overrun accepted by Amish (GGD-DDR-002) |
 | R2 | At risk | Sensor-only error 0.23 points (SHT45) and 0.42 points (SHT40) worst case over 20 % to 75 % RH, 0.81 at the SHT40 maximum tolerance; equation fit error, drift and membrane lag not included |
 | R6 | At risk | Alarm latency about 13 min (met); only the center core, 3.3 % of the cross-section, is watched |
 | R9 | At risk | AGM electrolyte may freeze near -25 °C at 50 % charge; phosphine protection unverified |
@@ -69,6 +72,7 @@ The **reference case** is a 5.49 m (18 ft) diameter corrugated steel bin with a 
 | R7 | Met | 17.6 dB margin at 1 km past one farm building (plane-earth model); 24-byte packets fit the 400 ms dwell limit |
 | R11 | Met | Empty-bin installation sequence in GGD-PRC-001 |
 | R12 | Met | 12 V system with charging clamped at 15.0 V; optically isolated relay input |
+| R13 | Met | $256.50 per bin with the plenum probe, $3.50 (1.3 %) under the $260 budget; receiver $22.00 per farm (was not met, overrun accepted, against $250) |
 | R14 | Met | Farmhouse receiver stores data locally |
 
 ## Assumptions

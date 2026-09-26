@@ -3,9 +3,9 @@ doc_id: GGD-CAL-001
 title: GrainGuard sizing calculations
 project: GrainGuard
 doc_type: Calculation
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-09-25'
+date: '2026-09-26'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,11 +17,15 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002). Plenum probe in the base kit; new check B10 on measured fan heat; R4 from at risk to met; kit $247.00 to $256.50 with the $6.50 overrun accepted (R13)
+- version: "0.3"
+  date: '2026-09-26'
+  author: Amish Chadha
+  change: Budget approved by Amish ($250 to $260, GGD-DDR-002); script rerun; R13 not met, overrun accepted, to met
 ---
 
 # GrainGuard sizing calculations
 
-On paper, GrainGuard meets seven of its fourteen requirements, has three at risk, misses one, misses one more by an overrun Amish has accepted, and has two that cannot be verified at TRL 3. The miss is power (R8): with the relay input specified at 3 mA the battery now lasts 7.7 days with no sun, but a 10 W panel needs about 7.3 winter days, not 3, to refill the battery from half charge. The accepted overrun is cost (R13): Amish adopted the plenum temperature probe into the base kit on 2026-09-25 (GGD-DDR-002), which takes the per-bin kit from $247.00 to $256.50, $6.50 over the $250 budget, with the farmhouse receiver costed per farm. In return the fan's own heat, worth about one point of moisture per degree, is now measured, and the fan decision (R4) moves from at risk to met. The three at risk are the moisture estimate (R2), heating detection away from the center (R6) and the environment (R9). The calculations also corrected three TRL 2 figures: the reference bin holds about 88.8 t, not 95 t, because the aeration floor sits 0.4 m above the pad; the fan heat of "about 1 °C" is right only for a 0.4 kW fan; and the radio margin at 1 km past a building is about 18 dB, not 48 dB. Every number in this note is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [A3], is the line of that script's output that carries it.
+On paper, GrainGuard meets eight of its fourteen requirements, has three at risk, misses one, and has two that cannot be verified at TRL 3. The miss is power (R8): with the relay input specified at 3 mA the battery now lasts 7.7 days with no sun, but a 10 W panel needs about 7.3 winter days, not 3, to refill the battery from half charge. Cost (R13) is now met: Amish adopted the plenum temperature probe into the base kit on 2026-09-25 (GGD-DDR-002), which took the per-bin kit from $247.00 to $256.50, $6.50 over the former $250 budget, and on 2026-09-26 he set the budget to $260 to cover it, with the farmhouse receiver costed per farm. In return the fan's own heat, worth about one point of moisture per degree, is now measured, and the fan decision (R4) moves from at risk to met. The three at risk are the moisture estimate (R2), heating detection away from the center (R6) and the environment (R9). The calculations also corrected three TRL 2 figures: the reference bin holds about 88.8 t, not 95 t, because the aeration floor sits 0.4 m above the pad; the fan heat of "about 1 °C" is right only for a 0.4 kW fan; and the radio margin at 1 km past a building is about 18 dB, not 48 dB. Every number in this note is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [A3], is the line of that script's output that carries it.
 
 > **Safety:** These are first-principles estimates for a paper proof of concept. They do not replace the bin maker's roof and hanger ratings, a licensed electrician's design of the starter interface, or a confined-space entry procedure. Nothing may be installed in a bin on the strength of this note. GrainGuard must never be used to judge whether a bin is safe to enter. See GGD-PRC-001, Safety.
 
@@ -106,7 +110,7 @@ Lead-acid electrolyte freezes near -25 °C at 50 % state of charge and below -50
 
 ## H. Cost (R13)
 
-- The per-bin kit (items 1 to 11, 13 and 14) costs $256.50, 2.6 % ($6.50) over the $250 budget [H1]. The TRL 2 cost of about $271 fell to $247.00 after the cost trims decided in GGD-DDR-001 (D1): SHT40 sensors in the four middle pods, a smaller enclosure, and bus cable cut to the model's route length. The plenum probe ($9.50), adopted into the kit by Amish with its overrun accepted (GGD-DDR-002), adds the rest [H3]. R13 is therefore **not met, overrun accepted**; `budget_usd` stays $250.
+- The per-bin kit (items 1 to 11, 13 and 14) costs $256.50, 1.3 % ($3.50) under the $260 budget [H1]. The TRL 2 cost of about $271 fell to $247.00 after the cost trims decided in GGD-DDR-001 (D1): SHT40 sensors in the four middle pods, a smaller enclosure, and bus cable cut to the model's route length. The plenum probe ($9.50), adopted into the kit by Amish with its $6.50 overrun against the former $250 budget accepted (GGD-DDR-002), adds the rest [H3]. Amish approved the budget on 2026-09-26 and `budget_usd` is now $260 (GGD-DDR-002), so R13 is **met** (it was not met, overrun accepted, in v0.2).
 - The farmhouse receiver adds $22.00 once per farm; a first prototype with one bin costs $278.50 [H2].
 
 ## Requirement status
@@ -116,7 +120,6 @@ Lead-acid electrolyte freezes near -25 °C at 50 % state of charge and below -50
 | ID | Requirement | Value at TRL 3 | Target | Status |
 | --- | --- | --- | --- | --- |
 | R8 | Power autonomy | 7.7 days with no sun and the fan continuous; refill from 50 % in 7.3 days | 5 days; refill in 3 days | **Not met** |
-| R13 | Cost per bin | $256.50 per bin with the plenum probe; receiver $22.00 per farm | $250 per bin, receiver per farm | **Not met, overrun accepted** (GGD-DDR-002) |
 | R2 | Moisture estimate | Sensor-only error 0.23 points (SHT45) and 0.42 points (SHT40) worst case; 0.81 at the SHT40 maximum; equation error not included | ±0.8 points, 20 % to 75 % RH | At risk |
 | R6 | Heating alert | Center core only, 3.3 % of the section; latency about 13 min | Any pod, alarm within 15 min | At risk |
 | R9 | Environment | AGM may freeze near -25 °C at 50 % charge; phosphine unverified | -30 °C to +50 °C; IP66; one fumigation | At risk |
@@ -128,6 +131,7 @@ Lead-acid electrolyte freezes near -25 °C at 50 % state of charge and below -50
 | R7 | Radio link | 17.6 dB margin at 1 km past one building | 1 km, one building, 95 % delivery | Met |
 | R11 | Install without grain entry | Empty-bin installation sequence | No entry into a bin holding grain | Met |
 | R12 | Electrical isolation | 12 V system, charging clamped at 15.0 V; relay input 2.5 kV | 15 V or less; 2.5 kV | Met |
+| R13 | Cost per bin | $256.50 per bin with the plenum probe; receiver $22.00 per farm | $260 per bin, receiver per farm | Met (budget approved by Amish, 2026-09-26; not met, overrun accepted, in v0.2) |
 | R14 | Local data | Farmhouse receiver logs locally | No cloud account | Met |
 
 ## Corrections to the TRL 2 documents

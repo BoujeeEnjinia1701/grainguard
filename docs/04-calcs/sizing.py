@@ -266,11 +266,12 @@ per_farm = [k for k in cost if k.startswith("12 ")]
 option = [k for k in cost if "(option)" in k]
 probe = [k for k in cost if k.startswith("14 ")]
 kit = sum(v for k, v in cost.items() if k not in per_farm + option)
-ACCEPTED_OVERRUN = 6.50   # GGD-DDR-002: plenum probe adopted and its overrun accepted by Amish
-say("H1", f"Per-bin kit (items 1 to 11, 13 and 14): ${kit:.2f} against ${budget_usd:.0f} ({100 * (kit / budget_usd - 1):+.1f} %, +${kit - budget_usd:.2f})")
+ACCEPTED_OVERRUN = 6.50   # GGD-DDR-002: overrun against the former $250 budget; budget_usd set to $260 by Amish on 2026-09-26
+diff = kit - budget_usd
+say("H1", f"Per-bin kit (items 1 to 11, 13 and 14): ${kit:.2f} against ${budget_usd:.0f} ({100 * (kit / budget_usd - 1):+.1f} %, ${abs(diff):.2f} {'over' if diff > 0 else 'under'})")
 say("H2", f"Farmhouse receiver, one per farm: ${sum(cost[k] for k in per_farm):.2f}; first prototype with receiver ${kit + sum(cost[k] for k in per_farm):.2f}")
 pr = sum(cost[k] for k in probe)
-say("H3", f"Plenum probe (item 14, in the kit since GGD-DDR-002): ${pr:.2f}; kit without it ${kit - pr:.2f}; accepted overrun ${ACCEPTED_OVERRUN:.2f}")
+say("H3", f"Plenum probe (item 14, in the kit since GGD-DDR-002): ${pr:.2f}; kit without it ${kit - pr:.2f}; overrun of ${ACCEPTED_OVERRUN:.2f} accepted against the former $250 budget")
 
 # ---------------------------------------------------------------- I. requirement status
 REQ = [

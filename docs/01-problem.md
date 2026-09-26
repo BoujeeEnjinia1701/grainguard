@@ -3,9 +3,9 @@ doc_id: GGD-PRB-001
 title: GrainGuard problem statement
 project: GrainGuard
 doc_type: Problem statement
-version: "0.3"
+version: "0.4"
 status: Draft
-date: '2026-09-25'
+date: '2026-09-26'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -21,6 +21,10 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: TRL 3 decisions (GGD-DDR-001); reference case corrected to 88.8 t; budget per bin with the receiver per farm; open questions updated
+- version: "0.4"
+  date: '2026-09-26'
+  author: Amish Chadha
+  change: Budget approved by Amish ($260, GGD-DDR-002)
 ---
 
 # GrainGuard problem statement
@@ -56,7 +60,7 @@ The stakes are higher where storage is poorer. Reviews report storage losses of 
 
 ## Constraints
 
-- Garage-buildable prototype, $250 USD or less in parts per bin, with the farmhouse receiver costed once per farm (see GGD-REQ-001 R13 and GGD-DDR-001 D1).
+- Garage-buildable prototype, $260 USD or less in parts per bin (budget approved by Amish, 2026-09-26), with the farmhouse receiver costed once per farm (see GGD-REQ-001 R13 and GGD-DDR-001 D1).
 - Retrofit to existing bins and fans with no welding or cutting of bin sheets and no change to the fan motor.
 - Installation and service without entering a bin that contains grain.
 - No mains voltage inside the GrainGuard controller; the only mains-connected item is a small relay kit installed by a licensed electrician in or beside the existing fan starter.

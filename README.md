@@ -2,7 +2,7 @@
 
 ![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827)
 
-**Area:** Agriculture · **TRL:** 3 of 9 (proof of concept on paper) · **Prototype budget:** $250 USD per bin (kit $256.50, overrun accepted) · **Difficulty:** 2 of 5
+**Area:** Agriculture · **TRL:** 3 of 9 (proof of concept on paper) · **Prototype budget:** $260 USD per bin (kit $256.50) · **Difficulty:** 2 of 5
 
 Cable of moisture and temperature probes strung through the bin, plus a controller that runs aeration fans only when the air will cool or dry the grain without rewetting it.
 
@@ -54,7 +54,7 @@ Stored grain spoils when bins are aerated at the wrong times. Humid fall air can
 
 ## Concept
 
-One cable of six temperature and humidity pods hangs down the center of an existing bin. A solar-powered 12 V controller beside the bin compares the grain with the outside air, allows for the fan's own heat, and switches the existing fan through a small relay kit only when the air will cool or dry the grain rather than rewet it. It reports to a farmhouse receiver by LoRa radio. TRL 3 calculations for an 18 ft (5.49 m) bin of about 88.8 t of corn: a sensor-induced moisture error of 0.23 to 0.42 points, $256.50 in parts per bin with the farmhouse receiver costed per farm, and 7.7 days of winter battery autonomy with no sun. The kit includes a $9.50 plenum probe that measures the fan's own heat, which takes it $6.50 over the $250 budget; that overrun has been accepted ([GGD-DDR-002](docs/decisions/0002-recommendations-accepted.md)). The 10 W panel still refills the battery too slowly in winter; see [docs/04-calcs/01-sizing.md](docs/04-calcs/01-sizing.md).
+One cable of six temperature and humidity pods hangs down the center of an existing bin. A solar-powered 12 V controller beside the bin compares the grain with the outside air, allows for the fan's own heat, and switches the existing fan through a small relay kit only when the air will cool or dry the grain rather than rewet it. It reports to a farmhouse receiver by LoRa radio. TRL 3 calculations for an 18 ft (5.49 m) bin of about 88.8 t of corn: a sensor-induced moisture error of 0.23 to 0.42 points, $256.50 in parts per bin with the farmhouse receiver costed per farm, and 7.7 days of winter battery autonomy with no sun. The kit includes a $9.50 plenum probe that measures the fan's own heat and stays within the $260 budget that Amish approved to cover the priced BOM ([GGD-DDR-002](docs/decisions/0002-recommendations-accepted.md)). The 10 W panel still refills the battery too slowly in winter; see [docs/04-calcs/01-sizing.md](docs/04-calcs/01-sizing.md).
 
 Full design precis: [docs/02-concept.md](docs/02-concept.md)
 
@@ -91,6 +91,12 @@ The working bill of materials is in [bom/bom.csv](bom/bom.csv).
 ## Documentation
 
 Controlled documents follow the portfolio [documentation standard](.kit/STANDARDS.md). Each carries a document ID (GGD-PRC-001 for the precis), a version and a revision history. Branded PDFs are built with `python .kit/render.py` and attached to GitHub Releases when a document is tagged, for example `GGD-PRC-001/v1.0`.
+
+## Credits
+
+Designed by Amish Chadha. See [CONTRIBUTORS.md](CONTRIBUTORS.md) for roles. To cite this design, use [CITATION.cff](CITATION.cff) (GitHub shows it as "Cite this repository").
+
+AI assistance (Claude) was used to accelerate concept renders, prototype documentation and first-pass sizing calculations. Design direction and all decisions are Amish Chadha's, recorded in this repository's decision records (`docs/decisions/`).
 
 ## Licenses
 
