@@ -2,7 +2,7 @@ id,requirement,value,target,status
 R1,Temperature profile,6 levels at 0.94 m; ±0.1 to ±0.2 °C typical; 10 min,"6 or more, 1.0 m or less; ±0.3 °C",Met
 R2,Moisture estimate,"SHT45 0.23, SHT40 0.42 points worst case, sensor only","±0.8 points, 20 % to 75 % RH",At risk
 R3,Ambient air,"SHT45 ±0.1 °C, ±1.0 % RH; shield error unknown","±0.3 °C, ±2 % RH",Not verifiable at TRL 3
-R4,Fan decision rule,"Logic as specified; fan heat 0.5 to 2.7 °C unmeasured, 1.0 points per °C","Rule, run and start limits",At risk
+R4,Fan decision rule,"Logic as specified; fan heat measured by the plenum probe within ±0.51 °C, about ±0.5 points of EMC","Rule, run and start limits",Met
 R5,Fail-safe control,"Normally open relay, stale-data timeout, hand position independent",Stop in 60 s; hand runs fan,Met
 R6,Heating alert,"Center core only, 3.3 % of the section; latency about 13 min","Any pod, alarm in 15 min",At risk
 R7,Radio link,17.6 dB margin at 1 km with one building,"1 km, one building, 95 % delivery",Met
@@ -11,5 +11,5 @@ R9,Environment,AGM may freeze near -25 °C at 50 % charge; phosphine unverified,
 R10,Mechanical strength,Rope 8 times 2.5 kN; estimate 2.08 kN; roof hanger rating per bin,Rope 4 times; hanger rated,Not verifiable at TRL 3
 R11,Install without grain entry,Empty-bin installation sequence,No entry into a bin holding grain,Met
 R12,Electrical isolation,"12 V system, charge clamped at 15.0 V; relay input 2.5 kV",15 V or less; 2.5 kV,Met
-R13,Cost per bin,"$247.00 per bin, receiver per farm","$250 per bin, receiver per farm",Met
+R13,Cost per bin,"$256.50 per bin, receiver per farm","$250 per bin, receiver per farm","Not met, overrun accepted"
 R14,Local data,Farmhouse receiver logs locally,No cloud account,Met

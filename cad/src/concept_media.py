@@ -49,22 +49,22 @@ kit = [
     Part("Ambient T and RH in radiation shield", kp["ambient"][1], "#F8FAFC", 9),
     Part("Mast and brackets", kp["mast"][1], "#A16207", 10),
     Part("Interposing relay kit and signal cable", relay_all, "#D4A017", 11),
-    Part("Plenum temperature probe (option)", kp["probe"][1], "#DB2777", 14),
+    Part("Plenum temperature probe", kp["probe"][1], "#DB2777", 14),
 ]
 parts = existing + kit
 
 KEY = ["5.49 m (18 ft) bin, 3,493 bu (88.8 t) corn (reference case)",
        f"6 T and RH pods at {D['pod_pitch']:.0f} mm pitch on one center cable",
-       "Fan runs only if plenum-air EMC suits the mode (GGD-CAL-001)",
+       "Fan runs only if plenum-air EMC suits the mode; fan heat measured",
        "12 V solar controller; 7.7 days with no sun; no mains inside",
-       "$247.00 per bin; receiver $22.00 per farm (GGD-CAL-001)"]
+       "$256.50 per bin with plenum probe; receiver $22.00 per farm"]
 
 render_all(
     parts, project="GrainGuard", title="Bin aeration controller concept", dwg_no="GGD-DWG-010",
     key_figures=KEY, cut=False,
     flow={"title": "air and control flow in one example decision, 0.40 kW fan (values are estimates)", "unit": "",
           "stages": [("Ambient air", "10 °C, 70 % RH"), ("Raw EMC check", "15.70 %: would rewet"),
-                     ("After fan heat", "+1.0 °C: 65.5 % RH"), ("Plenum EMC", "14.73 % vs 15.0 %: RUN"),
+                     ("Measured fan heat", "+1.0 °C: 65.5 % RH"), ("Plenum EMC", "14.73 % vs 15.0 %: RUN"),
                      ("Through grain", "0.33 m³/s, 75 to 119 h"), ("Pods confirm", "front passed, fan off")]},
 )
 
@@ -131,7 +131,7 @@ x_parts = [
     Part("Ambient T and RH in radiation shield", x_shield, "#CBD5E1", 9),
     Part("Mast and brackets", x_mast, "#A16207", 10),
     Part("Interposing relay kit (at the fan starter)", x_relay, "#D4A017", 11),
-    Part("Plenum temperature probe (option)", x_probe, "#DB2777", 14),
+    Part("Plenum temperature probe", x_probe, "#DB2777", 14),
 ]
 concept._render(x_parts, concept.ROOT / "media" / "exploded.png", labels=True,
                 title="GrainGuard: exploded view",

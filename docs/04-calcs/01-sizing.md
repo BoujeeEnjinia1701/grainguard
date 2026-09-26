@@ -3,7 +3,7 @@ doc_id: GGD-CAL-001
 title: GrainGuard sizing calculations
 project: GrainGuard
 doc_type: Calculation
-version: "0.1"
+version: "0.2"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -13,17 +13,21 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: First issue for TRL 3 (bin and airflow, fan heat, moisture error, rewetting in cool mode, coverage, power, radio, cable loads, mast, cost, requirement status)
+- version: "0.2"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: Recommendations accepted by Amish (DDR-002). Plenum probe in the base kit; new check B10 on measured fan heat; R4 from at risk to met; kit $247.00 to $256.50 with the $6.50 overrun accepted (R13)
 ---
 
 # GrainGuard sizing calculations
 
-On paper, GrainGuard meets seven of its fourteen requirements, has four at risk, misses one and has two that cannot be verified at TRL 3. The miss is power (R8): with the relay input specified at 3 mA the battery now lasts 7.7 days with no sun, but a 10 W panel needs about 7.3 winter days, not 3, to refill the battery from half charge. The four at risk are the moisture estimate (R2), the fan decision (R4), because the fan's own heat is unmeasured and worth about one point of moisture per degree, heating detection away from the center (R6), and the environment (R9). The per-bin kit costs $247.00 against the $250 budget, with the farmhouse receiver costed per farm. The calculations also corrected three TRL 2 figures: the reference bin holds about 88.8 t, not 95 t, because the aeration floor sits 0.4 m above the pad; the fan heat of "about 1 °C" is right only for a 0.4 kW fan; and the radio margin at 1 km past a building is about 18 dB, not 48 dB. Every number in this note is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [A3], is the line of that script's output that carries it.
+On paper, GrainGuard meets seven of its fourteen requirements, has three at risk, misses one, misses one more by an overrun Amish has accepted, and has two that cannot be verified at TRL 3. The miss is power (R8): with the relay input specified at 3 mA the battery now lasts 7.7 days with no sun, but a 10 W panel needs about 7.3 winter days, not 3, to refill the battery from half charge. The accepted overrun is cost (R13): Amish adopted the plenum temperature probe into the base kit on 2026-09-25 (GGD-DDR-002), which takes the per-bin kit from $247.00 to $256.50, $6.50 over the $250 budget, with the farmhouse receiver costed per farm. In return the fan's own heat, worth about one point of moisture per degree, is now measured, and the fan decision (R4) moves from at risk to met. The three at risk are the moisture estimate (R2), heating detection away from the center (R6) and the environment (R9). The calculations also corrected three TRL 2 figures: the reference bin holds about 88.8 t, not 95 t, because the aeration floor sits 0.4 m above the pad; the fan heat of "about 1 °C" is right only for a 0.4 kW fan; and the radio margin at 1 km past a building is about 18 dB, not 48 dB. Every number in this note is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [A3], is the line of that script's output that carries it.
 
 > **Safety:** These are first-principles estimates for a paper proof of concept. They do not replace the bin maker's roof and hanger ratings, a licensed electrician's design of the starter interface, or a confined-space entry procedure. Nothing may be installed in a bin on the strength of this note. GrainGuard must never be used to judge whether a bin is safe to enter. See GGD-PRC-001, Safety.
 
 ## Scope and method
 
-The note checks every requirement in GGD-REQ-001 v0.3 against the design in GGD-PRC-001 v0.3 and the parametric model `cad/src/model.py`. The script imports the model's `PARAMS` and `derived()`, so the bin, pod positions, rope length, cable route and mast dimensions used here are the ones in the STEP files and on drawing GGD-DWG-001. It also reads `bom/bom.csv` and `budget_usd` in `project.yaml`, and writes the requirement table to `docs/04-calcs/results.csv`. Run it from the repo root with `python docs/04-calcs/sizing.py`.
+The note checks every requirement in GGD-REQ-001 v0.4 against the design in GGD-PRC-001 v0.4 and the parametric model `cad/src/model.py`. The script imports the model's `PARAMS` and `derived()`, so the bin, pod positions, rope length, cable route and mast dimensions used here are the ones in the STEP files and on drawing GGD-DWG-001. It also reads `bom/bom.csv` and `budget_usd` in `project.yaml`, and writes the requirement table to `docs/04-calcs/results.csv`. Run it from the repo root with `python docs/04-calcs/sizing.py`.
 
 The reference case is unchanged from TRL 2: a 5.49 m (18 ft) corrugated steel bin with a 5.6 m eave, a full perforated floor and one aeration fan, holding shelled corn at a target of 15.0 % moisture, wet basis, in the US Corn Belt (GGD-DDR-001, D11).
 
@@ -38,7 +42,7 @@ The reference case is unchanged from TRL 2: a 5.49 m (18 ft) corrugated steel bi
 | Moisture | ASABE D245.6 modified Henderson equation for corn (K 8.6541e-5, N 1.8634, C 49.81) | ASABE standard |
 | Airflow | 0.2 cfm/bu; Shedd resistance for corn (ASABE D272, a 2.07e4, b 30.4), packing factor 1.5, 50 Pa for duct and floor | ASABE standard; packing and duct losses assumed |
 | Fan | 0.37 kW (1/2 hp) class, 0.40 kW input, motor in the air stream, so all input power heats the air; range 0.2 to 1.1 kW checked | Assumed; fans on real bins vary |
-| Sensors | SHT45 ±1.0 % RH and ±0.1 °C typical ([Sensirion](https://sensirion.com/products/catalog/SHT45)); SHT40 ±1.8 % RH typical, ±3.5 % RH maximum ([Sensirion](https://sensirion.com/products/catalog/SHT40)), ±0.2 °C typical ([SHT4x datasheet](https://sensirion.com/resource/datasheet/sht4x)) | Datasheets |
+| Sensors | SHT45 ±1.0 % RH and ±0.1 °C typical ([Sensirion](https://sensirion.com/products/catalog/SHT45)); SHT40 ±1.8 % RH typical, ±3.5 % RH maximum ([Sensirion](https://sensirion.com/products/catalog/SHT40)), ±0.2 °C typical ([SHT4x datasheet](https://sensirion.com/resource/datasheet/sht4x)); plenum probe DS18B20 ±0.5 °C from -10 °C to +85 °C ([Analog Devices](https://www.analog.com/en/products/ds18b20.html)) | Datasheets |
 | Power | Controller 25 mW; pod bus 0.72 W for 3 s every 10 min; LoRa 0.15 W for 0.37 s every 10 min; charge controller 6 mA; relay input 3 mA at 12 V; 7 Ah AGM, 50 % usable, 60 % of that at -20 °C; winter 1.5 peak sun hours, 60 % derating | As at TRL 2, except the relay input (was 10 mA) |
 | Radio | 14 dBm, -132 dBm at SF10 and 125 kHz, 0 dBi antennas, 1 dB cable loss each end; antennas 2.4 m (mast) and 2.0 m (farmhouse); 20 dB for one farm building; plane-earth path loss | Typical SX1262 figures; building loss assumed |
 | Cable loads | Janssen pressures with K 0.5 and wall friction 0.4; grain on steel 0.3; pod drag = vertical pressure on the pod face plus side friction; unloading overpressure factor 2.0 | Screening values, not a bin-load standard |
@@ -53,8 +57,8 @@ The reference case is unchanged from TRL 2: a 5.49 m (18 ft) corrugated steel bi
 
 ## B. Moisture estimate and the decision rule (R2, R3, R4)
 
-- **The key sensitivity.** Air at 10 °C and 70 % RH has an EMC for corn of 15.70 %; warmed 1.0 °C by the fan it drops to 65.5 % RH and 14.73 %, so each degree of fan heat moves the plenum EMC by about 0.97 points [B1], [B2]. Across fans of 0.2 to 1.1 kW the same outside air gives a plenum EMC from 13.36 % to 15.21 %, a spread of 1.85 points [B3]. That is more than twice the whole moisture tolerance in R2, so an unmeasured fan heat is the largest error in the decision rule. R4 is **at risk** for this reason.
-- **Plenum probe option.** Heating does not change the air's humidity ratio, so the plenum RH follows from the ambient humidity ratio and the plenum temperature alone. A temperature-only probe in the fan transition (BOM item 14, $9.50) therefore removes the fan heat error without a second RH pod. It is carried as a priced option because it takes the kit over $250 (section H); adopting it is proposed and awaiting Amish.
+- **The key sensitivity.** Air at 10 °C and 70 % RH has an EMC for corn of 15.70 %; warmed 1.0 °C by the fan it drops to 65.5 % RH and 14.73 %, so each degree of fan heat moves the plenum EMC by about 0.97 points [B1], [B2]. Across fans of 0.2 to 1.1 kW the same outside air gives a plenum EMC from 13.36 % to 15.21 %, a spread of 1.85 points [B3]. That is more than twice the whole moisture tolerance in R2, so an unmeasured fan heat would be the largest error in the decision rule.
+- **Plenum probe, now in the base kit.** Heating does not change the air's humidity ratio, so the plenum RH follows from the ambient humidity ratio and the plenum temperature alone. A temperature-only probe in the fan transition (BOM item 14, $9.50) therefore removes the fan heat error without a second RH pod. Amish adopted it into the base kit on 2026-09-25 (GGD-DDR-002). With the DS18B20 at ±0.5 °C and the ambient SHT45 at ±0.1 °C, the measured fan heat is known within ±0.51 °C, so the plenum EMC is known within about ±0.50 points, against the 1.85-point spread when the fan heat is only a setting [B10]. The probe's ±0.5 °C rating applies from -10 °C to +85 °C; below -10 °C its error is larger and not quantified here; checking the probe against the ambient sensor with the fan off is a TRL 4 bench task. The fan heat is measured during each run; the controller uses the last measured rise to decide whether to start the fan. R4 is **met** on paper.
 - **Sensor error.** The sensor-induced EMC error at 15 °C and 60 % RH is 0.17 points for the SHT45 and 0.31 points for the SHT40 (typical accuracy). Over 20 % to 75 % RH and 0 to 30 °C, the worst case is 0.23 and 0.42 points, both at 0 °C and 75 % RH. At the SHT40's maximum tolerance of ±3.5 % RH it reaches 0.81 points, just over the 0.8-point target [B5]. At 85 % RH (wet grain) the SHT45 error is still only 0.29 points, but this is where the equation itself is least reliable [B6].
 - **What is not included.** Membrane lag, sensor hysteresis and drift, and the fit error of the EMC equation are not in these figures [B7]. The equation's fit error for a given corn lot is not known at TRL 3 and is likely to be of the same order as the target. R2 is therefore **at risk**, not met.
 - **Rewetting in cool mode.** The cool-mode allowance lets the fan run with plenum air up to 1.0 point of EMC above target. At an 11.0 °C plenum, air at 66.9 % RH holds corn at 15.0 % and air at 72.1 % RH holds it at 16.0 %; the difference is 0.42 g of water per kilogram of air [B8]. Over one 119 h cooling cycle at the full allowance, that is at most 74 kg of water, enough to raise the bottom 0.37 m of grain (7 % of the depth) by one point [B9]. The reworded pitch ("without rewetting it") is therefore true for hold mode and for cool mode within this bound; see `docs/REVIEW.md`.
@@ -102,29 +106,28 @@ Lead-acid electrolyte freezes near -25 °C at 50 % state of charge and below -50
 
 ## H. Cost (R13)
 
-- The per-bin kit (items 1 to 11 and 13) costs $247.00, 1.2 % under the $250 budget [H1]. The TRL 2 cost of about $271 fell after the cost trims decided in GGD-DDR-001 (D1): SHT40 sensors in the four middle pods, a smaller enclosure, and bus cable cut to the model's route length. R13, now defined per bin with the receiver costed per farm, is **met**.
-- The farmhouse receiver adds $22.00 once per farm; a first prototype with one bin costs $269.00 [H2].
-- The plenum probe option costs $9.50 and would take the kit to $256.50, 2.6 % over [H3].
+- The per-bin kit (items 1 to 11, 13 and 14) costs $256.50, 2.6 % ($6.50) over the $250 budget [H1]. The TRL 2 cost of about $271 fell to $247.00 after the cost trims decided in GGD-DDR-001 (D1): SHT40 sensors in the four middle pods, a smaller enclosure, and bus cable cut to the model's route length. The plenum probe ($9.50), adopted into the kit by Amish with its overrun accepted (GGD-DDR-002), adds the rest [H3]. R13 is therefore **not met, overrun accepted**; `budget_usd` stays $250.
+- The farmhouse receiver adds $22.00 once per farm; a first prototype with one bin costs $278.50 [H2].
 
 ## Requirement status
 
-*Table 3. Status of every requirement in GGD-REQ-001 v0.3 [I1], [I2]. Not met items first.*
+*Table 3. Status of every requirement in GGD-REQ-001 v0.4 [I1], [I2]. Not met items first.*
 
 | ID | Requirement | Value at TRL 3 | Target | Status |
 | --- | --- | --- | --- | --- |
 | R8 | Power autonomy | 7.7 days with no sun and the fan continuous; refill from 50 % in 7.3 days | 5 days; refill in 3 days | **Not met** |
+| R13 | Cost per bin | $256.50 per bin with the plenum probe; receiver $22.00 per farm | $250 per bin, receiver per farm | **Not met, overrun accepted** (GGD-DDR-002) |
 | R2 | Moisture estimate | Sensor-only error 0.23 points (SHT45) and 0.42 points (SHT40) worst case; 0.81 at the SHT40 maximum; equation error not included | ±0.8 points, 20 % to 75 % RH | At risk |
-| R4 | Fan decision rule | Rule as specified; fan heat 0.5 to 2.7 °C unmeasured, about 1.0 point of EMC per °C | Rule, minimum run and off times, starts per hour | At risk |
 | R6 | Heating alert | Center core only, 3.3 % of the section; latency about 13 min | Any pod, alarm within 15 min | At risk |
 | R9 | Environment | AGM may freeze near -25 °C at 50 % charge; phosphine unverified | -30 °C to +50 °C; IP66; one fumigation | At risk |
 | R3 | Ambient air | SHT45 ±0.1 °C and ±1.0 % RH; shield error unknown | ±0.3 °C, ±2 % RH | Not verifiable at TRL 3 |
 | R10 | Mechanical strength | Rope 8 times 2.5 kN; estimate 2.08 kN; hanger rating per bin | Rope 4 times; hanger rated | Not verifiable at TRL 3 |
+| R4 | Fan decision rule | Rule as specified; fan heat measured by the plenum probe within ±0.51 °C, about ±0.5 points of EMC | Rule, minimum run and off times, starts per hour | Met |
 | R1 | Temperature profile | 6 levels at 0.94 m; ±0.1 to ±0.2 °C; every 10 min | 6 or more, 1.0 m or less; ±0.3 °C | Met |
 | R5 | Fail-safe control | Normally open relay, stale-data timeout, hand position independent of GrainGuard | Stop in 60 s; hand runs the fan | Met |
 | R7 | Radio link | 17.6 dB margin at 1 km past one building | 1 km, one building, 95 % delivery | Met |
 | R11 | Install without grain entry | Empty-bin installation sequence | No entry into a bin holding grain | Met |
 | R12 | Electrical isolation | 12 V system, charging clamped at 15.0 V; relay input 2.5 kV | 15 V or less; 2.5 kV | Met |
-| R13 | Cost per bin | $247.00 per bin; receiver $22.00 per farm | $250 per bin, receiver per farm | Met |
 | R14 | Local data | Farmhouse receiver logs locally | No cloud account | Met |
 
 ## Corrections to the TRL 2 documents
@@ -136,4 +139,4 @@ Lead-acid electrolyte freezes near -25 °C at 50 % state of charge and below -50
 - Hot spot coverage: 3.3 % (was about 3 %) [C2].
 - Autonomy: 7.7 days with the fan continuous and the 3 mA relay input (was 4.8 days) [D5]; recovery not met [D6].
 - Radio margin: 17.6 dB at 1 km past a building (was about 48 dB over free space at 2 km) [E3].
-- Cost: $247.00 per bin (was about $271) [H1].
+- Cost: $247.00 per bin at TRL 3 (was about $271); $256.50 with the plenum probe adopted under GGD-DDR-002 [H1], [H3].

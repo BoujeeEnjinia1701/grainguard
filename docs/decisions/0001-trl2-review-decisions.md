@@ -3,7 +3,7 @@ doc_id: GGD-DDR-001
 title: GrainGuard TRL 2 review decisions
 project: GrainGuard
 doc_type: Design decision record
-version: "0.1"
+version: "0.2"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -13,12 +13,16 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Record Amish's decisions on the TRL 2 review items and the items that remain open
+- version: "0.2"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: Recommendations accepted by Amish (DDR-002). O3 decided (plenum probe adopted into the base kit)
 ---
 
 # 0001: TRL 2 review decisions
 
 - **Date:** 2026-09-25
-- **Status:** accepted for items D1 to D11; items O1 to O3 remain proposed
+- **Status:** accepted for items D1 to D11 and, since GGD-DDR-002, O3; items O1 and O2 remain proposed
 
 ## Context
 
@@ -48,13 +52,13 @@ The options for each item are those listed in `docs/REVIEW.md` (session 2026-09-
 | D10 | Headspace CO₂ sensor | Offer as an option, not in the base kit. Decided by Amish, 2026-09-25: go with recommendation. |
 | D11 | First region and crop | Shelled corn in a small US Midwest bin for the first co-design. Decided by Amish, 2026-09-25: go with recommendation. |
 
-*Table 2. Items that remain open.*
+*Table 2. Items left open by this record (O3 has since been decided in GGD-DDR-002).*
 
 | # | Item | Status |
 | --- | --- | --- |
 | O1 | First host farm and electrician for a co-design visit | Proposed, awaiting Amish. No partner was recommended; co-design partners are to be picked per area later, as Amish directed for community designs. |
 | O2 | Battery and panel capacity for R8 | Proposed, awaiting Amish. The TRL 2 review asked whether to move to a 12 Ah battery but made no single recommendation. At TRL 3 a 3 mA relay input meets the autonomy half of R8 at no cost, but the 3-day recovery half needs a panel of about 19 W (GGD-CAL-001, section D). Options: a 20 W panel (about $8 to $10, kit over $250), relax the recovery target to 7 days at 1.5 peak sun hours, or accept the miss. No recommendation is recorded here. |
-| O3 | Adopt the plenum probe despite the budget | Proposed, awaiting Amish. It removes the largest decision error (about 1 point of EMC per °C of fan heat) for $9.50 and would put the kit at $256.50, 2.6 % over $250. Recommendation: adopt it and accept the $6.50 overrun, since no other $9.50 buys as much decision accuracy. |
+| O3 | Adopt the plenum probe despite the budget | Decided by Amish, 2026-09-25: go with recommendation (GGD-DDR-002). It removes the largest decision error (about 1 point of EMC per °C of fan heat) for $9.50 and would put the kit at $256.50, 2.6 % over $250. Recommendation: adopt it and accept the $6.50 overrun, since no other $9.50 buys as much decision accuracy. The probe is now BOM item 14 in the base kit, and the kit is $256.50. |
 
 ## Consequences
 

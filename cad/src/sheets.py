@@ -1,4 +1,4 @@
-"""GrainGuard general arrangement sheet GGD-DWG-001, Rev P1 (TRL 3).
+"""GrainGuard general arrangement sheet GGD-DWG-001, Rev P2 (TRL 3).
 
 Run from the repo root:  python cad/src/sheets.py
 Writes cad/drawings/GGD-DWG-001.svg, .pdf and .png from the parametric model in
@@ -97,10 +97,11 @@ def main():
     asm = assembly()
     views = safe_project_views(asm, work / "ga")
     bb = asm.bounding_box()
-    s = Sheet(project="GrainGuard", title="General arrangement", dwg_no="GGD-DWG-001", rev="P1",
+    s = Sheet(project="GrainGuard", title="General arrangement", dwg_no="GGD-DWG-001", rev="P2",
               author="Amish Chadha", date=DATE, scale=None, theme="technical",
               material="Bin, floor, fan and starter existing (reference only); kit parts per bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
-              revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", DATE, "AC")])
+              revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", DATE, "AC"),
+                         ("P2", "Plenum probe in base kit; kit cost note (GGD-DDR-002)", DATE, "AC")])
     s.add_ortho(views)
     k = s.scale
     c = ortho_cells(s, views)
@@ -161,8 +162,8 @@ def main():
         f"Bus cable route {D['cable_len'] / 1000:.1f} m via peak cap; 16 m supplied",
         f"Mast DN25 x {P['mast_h']:,.0f}, {P['mast_off']:.0f} outside wall; stay at {P['stay_z']:,.0f}",
         f"Enclosure {eh:.0f} x {ew:.0f} x {ed:.0f} IP66 at {P['enc_z']:,.0f}; panel 10 W at {P['panel_tilt']:.0f} deg",
-        "Relay kit at existing starter; plenum probe (option) in fan transition",
-        "Design pull-down 2.5 kN (GGD-CAL-001); kit $247 per bin",
+        "Relay kit at existing starter; 14 plenum probe in fan transition",
+        "Design pull-down 2.5 kN (GGD-CAL-001); kit $256.50 per bin",
     ], x=276, y=158, width=146)
     out = s.save(ROOT / "cad" / "drawings" / "GGD-DWG-001")
     shutil.rmtree(work, ignore_errors=True)

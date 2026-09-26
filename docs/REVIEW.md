@@ -136,3 +136,52 @@ None found. `build-log/` holds only its README, and `electronics/` and `firmware
 ### Recommended next step
 
 TRL 4 is on hold by Amish's instruction; do not start it. Next: decide O2 and O3, then review the pitch wording against the cool-mode rewet bound. For the record only, TRL 4 would need: a bench pod and plenum probe with a lab test report (TST, environment: lab) on sensor accuracy through the membrane and equilibration time after the fan stops; a fan heat measurement on a real fan; a relay kit bench test of the fail-off timing; a cold-soak check of the battery and charger; and build log entries.
+
+## Session 2026-09-25: recommendations accepted
+
+On 2026-09-25 Amish wrote, in chat: "i accept all your recommendations, go with them across all repos." Every open GrainGuard item that carried a recommendation is now "Decided by Amish, 2026-09-25: go with recommendation"; items without one stay "Proposed, awaiting Amish". The record is `docs/decisions/0002-recommendations-accepted.md` (GGD-DDR-002 v0.1).
+
+### Decisions applied and what changed
+
+| Item | Decision | Before | After |
+| --- | --- | --- | --- |
+| O3 (now N1): plenum probe | Adopt into the base kit and accept the overrun | Priced option; kit $247.00; first prototype with receiver $269.00; R4 at risk (fan heat 0.5 to 2.7 °C unmeasured, 1.85-point EMC spread across fans) | BOM item 14 in the kit; kit $256.50 (+2.6 %, $6.50 over $250); prototype $278.50; fan heat measured within ±0.51 °C, plenum EMC within about ±0.50 points (new check B10); R4 met on paper |
+| Budget | Accept the $6.50 overrun rather than raise the budget | `budget_usd` 250; R13 met | `budget_usd` 250 (unchanged); R13 "not met, overrun accepted" |
+| N2: relay input 3 mA or less | Keep as specified | Flagged for Amish | Decided; no change |
+| N3: charger clamped at 15.0 V | Keep as specified | Flagged for Amish | Decided; no change |
+
+Files changed: `bom/bom.csv`, `bom/bom-notes.md`, `docs/04-calcs/sizing.py` and `results.csv`, GGD-CAL-001 v0.2, GGD-REQ-001 v0.4 (R4 restated), GGD-PRC-001 v0.4, GGD-DDR-001 v0.2 (O3 marked decided), `cad/src/model.py` (comment only; STEP and STL re-exported), `cad/src/sheets.py` and GGD-DWG-001 Rev P2 (revision row and notes), `cad/src/concept_media.py` and all of `media/` (probe no longer labeled an option; key figures and flow updated), `project.yaml` (DDR-002 added to the TRL evidence), `README.md`.
+
+The README now has "Concept rationale", "Burning platform", "Where it could be used" and "What sparked the idea" before "## Problem". The inspiration point is the July 2010 grain bin engulfment at Mount Carroll, Illinois, where wet, crusted corn led to two teenagers being sent in to walk it down (NPR; US Department of Labor). All generated files were re-rendered after the switch to designmolecule.com.
+
+### Requirement status (GGD-CAL-001 v0.2)
+
+| ID | Status | Key figure |
+| --- | --- | --- |
+| R8 Power | **Not met** | Autonomy 7.7 days (met); refill from 50 % in 7.3 days against 3 with the 10 W panel |
+| R13 Cost | **Not met, overrun accepted** | $256.50 per bin against $250 |
+| R2 Moisture | At risk | Sensor-only error 0.23 (SHT45) and 0.42 points (SHT40); equation error not known |
+| R6 Heating alert | At risk | Center core only, 3.3 % of the section |
+| R9 Environment | At risk | AGM freezing near -25 °C at 50 % charge; phosphine protection unverified |
+| R3, R10 | Not verifiable at TRL 3 | Shield error needs a test; hanger rating per bin |
+| R1, R4, R5, R7, R11, R12, R14 | Met | R4 now met with the probe |
+
+Before: met 7, at risk 4, not met 1, not verifiable 2. After: met 7, at risk 3, not met 1, not met with accepted overrun 1, not verifiable 2.
+
+### Still awaiting Amish
+
+1. **O1:** first host farm and electrician (no recommendation).
+2. **O2:** battery and panel capacity for R8 recovery (20 W panel, relaxed target or accept the miss; no recommendation). A 20 W panel would now take the kit to about $265 to $267.
+3. **O4:** pitch wording against the cool-mode rewet bound (keep "without rewetting it", say "cool it or dry it", or cut the cool-mode allowance to zero; no recommendation).
+
+### Cross-repo actions
+
+None. GrainGuard uses no other portfolio module.
+
+### TRL 4
+
+TRL 4 remains on hold by Amish's instruction. The TRL 4 items in the previous session (bench pod and plenum probe with a lab test report, membrane equilibration time, fan heat on a real fan, relay kit fail-off timing, battery and charger cold soak, build log entries) are decided as the next step but on hold. The probe's accuracy below -10 °C, outside its ±0.5 °C rating, is added to that list. `trl: 3` and `trl_target: 3` are unchanged.
+
+### Safety concerns
+
+Unchanged. Fitting the plenum probe, now in every kit, means drilling the fan transition with the fan locked out at the disconnect.

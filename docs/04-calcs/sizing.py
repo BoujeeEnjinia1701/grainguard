@@ -147,6 +147,11 @@ layer_m = layer_mass / (RHO_BULK * (1 - M_TARGET / 100) * area)
 say("B8", f"Cool mode at the 1.0-point allowance, plenum at {t_in:.1f} °C: RH {100 * rh_target:.1f} % holds 15.0 %, {100 * rh_allow:.1f} % holds 16.0 %; extra water {dw * 1000:.2f} g/kg of air")
 say("B9", f"Over one {t_front:.0f} h cooling cycle that is at most {water:.0f} kg of water, enough to raise {layer_mass / 1000:.1f} t of dry matter by 1 point, a bottom layer of about {layer_m:.2f} m ({100 * layer_m / depth:.0f} % of the depth)")
 
+# plenum probe in the base kit (GGD-DDR-002): fan heat measured as plenum minus ambient temperature
+S_PROBE, S_AMB = 0.5, 0.1   # DS18B20 ±0.5 °C from -10 to +85 °C; SHT45 ±0.1 °C typical
+s_dt = math.hypot(S_PROBE, S_AMB)
+say("B10", f"Plenum probe (DS18B20 ±{S_PROBE} °C) and ambient SHT45 (±{S_AMB} °C): measured fan heat within ±{s_dt:.2f} °C, so plenum EMC within about ±{s_dt * (e1 - e2):.2f} points, against a {e_lo - e_hi:.2f}-point spread when the fan heat is only a setting")
+
 # ---------------------------------------------------------------- C. sensing geometry, coverage, alarm latency
 pitch = D["pod_pitch"] / 1000
 pz = [(z - P["floor_z"]) / 1000 for z in D["pod_z"]]
@@ -259,18 +264,20 @@ budget_usd = float(yaml.safe_load((ROOT / "project.yaml").read_text())["budget_u
 cost = {r["item"]: float(r["qty"]) * float(r["unit_cost_usd"]) for r in rows}
 per_farm = [k for k in cost if k.startswith("12 ")]
 option = [k for k in cost if "(option)" in k]
+probe = [k for k in cost if k.startswith("14 ")]
 kit = sum(v for k, v in cost.items() if k not in per_farm + option)
-say("H1", f"Per-bin kit (items 1 to 11 and 13): ${kit:.2f} against ${budget_usd:.0f} ({100 * (kit / budget_usd - 1):+.1f} %)")
+ACCEPTED_OVERRUN = 6.50   # GGD-DDR-002: plenum probe adopted and its overrun accepted by Amish
+say("H1", f"Per-bin kit (items 1 to 11, 13 and 14): ${kit:.2f} against ${budget_usd:.0f} ({100 * (kit / budget_usd - 1):+.1f} %, +${kit - budget_usd:.2f})")
 say("H2", f"Farmhouse receiver, one per farm: ${sum(cost[k] for k in per_farm):.2f}; first prototype with receiver ${kit + sum(cost[k] for k in per_farm):.2f}")
-opt = sum(cost[k] for k in option)
-say("H3", f"Plenum probe option: ${opt:.2f}; kit with the probe ${kit + opt:.2f} ({100 * ((kit + opt) / budget_usd - 1):+.1f} %)")
+pr = sum(cost[k] for k in probe)
+say("H3", f"Plenum probe (item 14, in the kit since GGD-DDR-002): ${pr:.2f}; kit without it ${kit - pr:.2f}; accepted overrun ${ACCEPTED_OVERRUN:.2f}")
 
 # ---------------------------------------------------------------- I. requirement status
 REQ = [
     ("R1", "Temperature profile", f"{P['pod_n']} levels at {pitch:.2f} m; ±0.1 to ±0.2 °C typical; 10 min", "6 or more, 1.0 m or less; ±0.3 °C", "Met"),
     ("R2", "Moisture estimate", f"SHT45 {worst['SHT45 typical (±1.0 % RH, ±0.1 °C)']:.2f}, SHT40 {worst['SHT40 typical (±1.8 % RH, ±0.2 °C)']:.2f} points worst case, sensor only", "±0.8 points, 20 % to 75 % RH", "At risk"),
     ("R3", "Ambient air", "SHT45 ±0.1 °C, ±1.0 % RH; shield error unknown", "±0.3 °C, ±2 % RH", "Not verifiable at TRL 3"),
-    ("R4", "Fan decision rule", f"Logic as specified; fan heat {rises[0.2]:.1f} to {rises[1.1]:.1f} °C unmeasured, {e1 - e2:.1f} points per °C", "Rule, run and start limits", "At risk"),
+    ("R4", "Fan decision rule", f"Logic as specified; fan heat measured by the plenum probe within ±{s_dt:.2f} °C, about ±{s_dt * (e1 - e2):.1f} points of EMC", "Rule, run and start limits", "Met"),
     ("R5", "Fail-safe control", "Normally open relay, stale-data timeout, hand position independent", "Stop in 60 s; hand runs fan", "Met"),
     ("R6", "Heating alert", f"Center core only, {100 * cov:.1f} % of the section; latency about 13 min", "Any pod, alarm in 15 min", "At risk"),
     ("R7", "Radio link", f"{budget - pel(1000) - bldg:.1f} dB margin at 1 km with one building", "1 km, one building, 95 % delivery", "Met"),
@@ -279,7 +286,7 @@ REQ = [
     ("R10", "Mechanical strength", f"Rope {MBL / F_DES:.0f} times 2.5 kN; estimate {dyn / 1000:.2f} kN; roof hanger rating per bin", "Rope 4 times; hanger rated", "Not verifiable at TRL 3"),
     ("R11", "Install without grain entry", "Empty-bin installation sequence", "No entry into a bin holding grain", "Met"),
     ("R12", "Electrical isolation", "12 V system, charge clamped at 15.0 V; relay input 2.5 kV", "15 V or less; 2.5 kV", "Met"),
-    ("R13", "Cost per bin", f"${kit:.2f} per bin, receiver per farm", f"${budget_usd:.0f} per bin, receiver per farm", "Met" if kit <= budget_usd else "Not met"),
+    ("R13", "Cost per bin", f"${kit:.2f} per bin, receiver per farm", f"${budget_usd:.0f} per bin, receiver per farm", "Met" if kit <= budget_usd else ("Not met, overrun accepted" if kit - budget_usd <= ACCEPTED_OVERRUN + 1e-9 else "Not met")),
     ("R14", "Local data", "Farmhouse receiver logs locally", "No cloud account", "Met"),
 ]
 with (ROOT / "docs" / "04-calcs" / "results.csv").open("w", newline="") as fh:

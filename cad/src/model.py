@@ -67,7 +67,7 @@ PARAMS = {
     "st_ang": -104.0,
     # 11 relay kit beside the starter
     "relay_box": (120.0, 200.0, 260.0),
-    # 14 plenum temperature probe in the fan transition, downstream of the fan
+    # 14 plenum temperature probe in the fan transition, downstream of the fan (base kit, GGD-DDR-002)
     "probe_d": 6.0, "probe_l": 50.0,
 }
 
