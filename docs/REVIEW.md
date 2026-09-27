@@ -194,3 +194,61 @@ On 2026-09-26 Amish wrote: "i approve all the budget items." The budget item is 
 - R13: **not met, overrun accepted** ($6.50 over $250) to **met**. Requirement status is now met 8, at risk 3, not met 1 (R8) and not verifiable 2.
 - `docs/04-calcs/sizing.py` reads the budget from `project.yaml` and was rerun (`results.csv` updated); the accepted-overrun wording was replaced in GGD-CAL-001 v0.3, GGD-REQ-001 v0.5, GGD-PRC-001 v0.5, GGD-PRB-001 v0.4, `README.md` and `bom/bom-notes.md`. The concept blueprint key figures quote the kit cost, not the budget, so `media/` was not regenerated.
 - Still awaiting Amish: O1 host farm, O2 panel capacity for R8 (a 20 W panel, about $265 to $267, would exceed $260), O4 pitch wording.
+
+## Session 2026-09-26: product appearance model and photoreal renders
+
+Amish chose this repo for the first batch of product renders on 2026-09-26.
+
+### What was done
+
+- `cad/src/product_model.py` (new): `product_parts()` returns 87 parts, each with a colour, a render material, a BOM line, a group and an explode offset, plus `TITLE` and `RENDER_VIEWS` (hero, exploded and a controller detail view). It imports `PARAMS`, `derived()` and `build_parts()` from `model.py`; the mast, stay and base plate are the `model.py` solids, and every other part keeps the `model.py` envelope, height and radial offset. Parts by group: shell 11 (enclosure body, lid and fittings, bracket and U-bolts), internal 19 (controller contents), accessory 44 (mast station, solar panel, shield, probe cable, plenum probe, relay kit and outside cables) and context 13. The mast station, cable and relay kit are in the accessory group so that the detail view (shell and internal) shows the controller alone.
+- It adds, as appearance detail only:
+  - Controller enclosure (items 4 to 7): filleted light grey body with side ribs and screw towers, dark gasket line, clear polycarbonate lid, four stainless lid screws, accent band and name plate, galvanized mounting plate; battery with label and terminal covers, charge controller with a lit display and status LED, LoRa bus board with shield can, terminal block and a lit status light; three bottom cable glands and a breather vent; stand-off bracket and two U-bolts on the mast.
+  - Mast station (items 8 to 10): pipe cap and anchor bolts, stay wall clamp; solar panel with an aluminium frame, dark cells, busbars, junction box and tilt bracket; radiation shield as six dished plates on three rods with the ambient sensor pod inside and a clamped arm.
+  - Probe cable (items 1 to 3): a 1.35 m length of rope with a ferrule, the in-bin bus cable and ties, and the two lowest pods at their true heights and 0.94 m pitch; each pod has a filleted body, parting seam, grip flutes, a PTFE membrane window with a guard, a colour band (teal for SHT45, grey for SHT40), a stainless rope clamp, a cable gland and a label.
+  - Plenum probe (item 14) with its M12 gland in the top of the fan transition; relay kit (item 11) with a lid line, hand-off-auto selector, lit fan-running light, label and glands; outside cable runs for the bus cable (with a drip loop), the relay signal cable and the probe lead.
+  - Context (grey, no BOM number): a compact section of corrugated bin wall with a clean radial cutaway, sectioned grain, the perforated aeration floor on legs, the concrete pad, the fan transition with flanges and a short stub of the fan housing, and the existing starter on its post with two strut rails.
+- `README.md`: hero image now `media/render-hero.png`; exploded render link added. The renders themselves are produced later by the orchestrator.
+- Self-check previews (matplotlib, clear parts left out) were reviewed for the hero, exploded and detail views.
+
+### Differences from model.py (Proposed, awaiting Amish)
+
+1. **Render layout.** For a compact product render the bin axis is moved to (0, 2770) and the mast, fan and starter are set at -92.5, -101 and -107 degrees about it instead of -40, -80 and -104 degrees; the probe cable hangs 0.24 m inside the wall in the cutaway instead of on the bin axis, and only its two lowest pods are shown. Sizes, heights and radial offsets are unchanged. Recommendation: accept as a render-only layout and say so in figure captions ("not the installed spacing").
+2. **Solar panel facing.** `model.py` rotates the panel envelope so that its face tilts toward the bin, although its comment says "facing away from the bin"; the panel 0.7 m from a 5.6 m wall would then be in shade. The appearance model faces the panel away from the bin. Recommendation: change `Rot(0, -panel_tilt, 0)` to `Rot(0, panel_tilt, 0)` in `model.py` at the next model session and regenerate the media.
+3. **Cable entries.** `model.py` brings the bus cable into the top of the enclosure. The appearance model uses three glands in the underside (bus cable with a drip loop, relay signal cable, plenum probe lead) and a breather vent, as rain-shedding practice for an IP66 box. Recommendation: adopt bottom entry in `model.py` and GGD-DWG-001.
+4. **Bin wall.** `model.py` draws a solid 25 mm wall, exaggerated for drawing scale. The appearance model uses a 2 mm corrugated sheet (68 mm pitch, 13 mm deep) inside the same envelope. Recommendation: keep `model.py` as it is; no change needed.
+5. **Relay kit mounting.** `model.py` places the relay kit box beside the starter with its post behind the boxes' bin-side faces; the appearance model faces both boxes away from the bin on two strut rails so the selector is visible. Recommendation: accept as appearance only; the electrician sets the real mounting.
+6. **Enclosure lid.** The BOM calls for an IP66 polycarbonate box; the appearance model shows a clear lid so the contents read in the render. Recommendation: keep a clear lid as the preferred option when the box is bought, at no expected cost change.
+
+### Scope
+
+This is an appearance model only: no tolerances, no fabrication detail, no PCB layout. `trl` stays 3 and TRL 4 remains on hold. No BOM, model, drawing or document other than `README.md` and this note was changed.
+
+## Session 2026-09-27: owner decision applied
+
+On 2026-09-27 Amish wrote: "resolve the challenges for ConePro, BridgePulse, Grainguard and WellSense." For this repo that decides item 2 of the 2026-09-26 appearance-model review, the solar panel facing. Decided by Amish on 2026-09-27: go with the recommendation. Recorded in GGD-DDR-002 v0.3 (Solar panel facing, 2026-09-27).
+
+### What changed
+
+- `cad/src/model.py`: panel rotation `Rot(0, -panel_tilt, 0)` changed to `Rot(0, panel_tilt, 0)`. The face now tilts 45 degrees from horizontal away from the bin (checked: the face normal has a +0.71 radial component), out of the wall's shade, as the comment always said. Size, tilt angle, height and mast position are unchanged; no other dimension or interface changed.
+- `cad/src/product_model.py`: already posed the panel away from the bin with `Rot(0, panel_tilt, 0)`. The comment describing model.py as rotated the other way was removed; the pose now simply matches model.py.
+- Regenerated: `cad/step/*.step`, `cad/stl/*.stl` (`python cad/src/model.py`); drawing GGD-DWG-001 Rev P3 (`python cad/src/sheets.py`; revision row P3 added, sheet date 2026-09-27); concept media (`python cad/src/concept_media.py`: `media/hero.png`, `concept-blueprint.*`, `cutaway.png`, `exploded.png`, `flow.png`, `model.glb`, `viewer.html`); PDFs (`python .kit/render.py`). The hero image and detail B of the drawing were inspected and show the panel facing outward.
+- Documents: GGD-PRC-001 v0.6 (component table states the facing), GGD-DDR-002 v0.3. No requirement status changed; GGD-CAL-001 already assumed a panel in sun, and the wind load uses the unchanged panel area.
+- The exploded-view pose of the panel in `cad/src/concept_media.py` is a free-standing layout position, not an installed orientation, and was left as it was.
+
+### Result
+
+The engineering model, drawing, concept media and appearance model now agree: the panel faces away from the bin.
+
+### Photoreal renders
+
+**No regeneration needed.** The product appearance model already showed the panel facing away from the bin, and no part in any RENDER_VIEWS view (hero, exploded, controller detail) changes shape, size or position.
+
+### Still awaiting Amish
+
+- Appearance-model review items 1, 3, 4, 5 and 6 (render layout, bottom cable entry, bin wall, relay kit mounting, clear lid): Proposed, awaiting Amish.
+- O1 host farm, O2 panel capacity for R8, O4 pitch wording: Proposed, awaiting Amish.
+
+### Scope
+
+`trl` stays 3 and TRL 4 remains on hold. No fabrication-level detail was added.

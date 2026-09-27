@@ -1,4 +1,4 @@
-"""GrainGuard general arrangement sheet GGD-DWG-001, Rev P2 (TRL 3).
+"""GrainGuard general arrangement sheet GGD-DWG-001, Rev P3 (TRL 3).
 
 Run from the repo root:  python cad/src/sheets.py
 Writes cad/drawings/GGD-DWG-001.svg, .pdf and .png from the parametric model in
@@ -14,7 +14,8 @@ sys.path[:0] = [str(ROOT / ".kit"), str(ROOT / "cad" / "src")]
 from drawing import Sheet, _viewbox, _t, M, TB_Y, INK, MUTED  # noqa: E402
 from model import PARAMS as P, assembly, build_parts, derived, sensor_pod, polar  # noqa: E402
 
-DATE = "2026-09-25"
+DATE = "2026-09-27"
+P_DATE = "2026-09-25"   # date of revisions P1 and P2
 
 
 def safe_project_views(part, workdir, line_weight=0.35, names=("front", "top", "right", "iso")):
@@ -97,11 +98,12 @@ def main():
     asm = assembly()
     views = safe_project_views(asm, work / "ga")
     bb = asm.bounding_box()
-    s = Sheet(project="GrainGuard", title="General arrangement", dwg_no="GGD-DWG-001", rev="P2",
+    s = Sheet(project="GrainGuard", title="General arrangement", dwg_no="GGD-DWG-001", rev="P3",
               author="Amish Chadha", date=DATE, scale=None, theme="technical",
               material="Bin, floor, fan and starter existing (reference only); kit parts per bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
-              revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", DATE, "AC"),
-                         ("P2", "Plenum probe in base kit; kit cost note (GGD-DDR-002)", DATE, "AC")])
+              revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", P_DATE, "AC"),
+                         ("P2", "Plenum probe in base kit; kit cost note (GGD-DDR-002)", P_DATE, "AC"),
+                         ("P3", "Solar panel faces away from the bin (GGD-DDR-002)", DATE, "AC")])
     s.add_ortho(views)
     k = s.scale
     c = ortho_cells(s, views)

@@ -228,10 +228,11 @@ def build_parts(p=PARAMS):
     out["board"] = ("LoRa microcontroller and bus board",
                     place(Pos(x0 + 8 + bd[0] / 2, 0, eh / 2 - 20 - bd[2] / 2) * Box(*bd), mr, ma, ez), 5)
 
-    # 8 Solar panel on the mast top, facing away from the bin
+    # 8 Solar panel on the mast top, its face tilted panel_tilt from horizontal and facing away
+    # from the bin (local +X), out of the wall's shade. Decided by Amish on 2026-09-27 (GGD-DDR-002).
     pl = p["panel"]
     out["panel"] = ("Solar panel, 10 W",
-                    place(Pos(90, 0, 0) * Rot(0, -p["panel_tilt"], 0) * Box(*pl), mr, ma, p["mast_h"] + 50), 8)
+                    place(Pos(90, 0, 0) * Rot(0, p["panel_tilt"], 0) * Box(*pl), mr, ma, p["mast_h"] + 50), 8)
 
     # 9 Ambient sensor in a louvered shield on a side arm
     sh = fuse(Pos(0, 0, k * p["shield_pitch"]) * Cylinder(p["shield_d"] / 2, 14) for k in range(p["shield_plates"]))

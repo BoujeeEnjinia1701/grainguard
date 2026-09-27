@@ -3,9 +3,9 @@ doc_id: GGD-DDR-002
 title: GrainGuard recommendations accepted
 project: GrainGuard
 doc_type: Design decision record
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-09-26'
+date: '2026-09-27'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,12 +17,16 @@ revisions:
   date: '2026-09-26'
   author: Amish Chadha
   change: "Budget set to $260 to cover the priced BOM: decided by Amish, 2026-09-26; R13 met"
+- version: "0.3"
+  date: '2026-09-27'
+  author: Amish Chadha
+  change: "Solar panel faces away from the bin: decided by Amish on 2026-09-27; model.py rotation sign flipped, drawing GGD-DWG-001 Rev P3"
 ---
 
 # 0002: Recommendations accepted
 
 - **Date:** 2026-09-25
-- **Status:** accepted. Every item below that carried a recommendation is "Decided by Amish, 2026-09-25: go with recommendation". Items without a recommendation remain "Proposed, awaiting Amish". The budget was decided by Amish on 2026-09-26 (see Budget, 2026-09-26).
+- **Status:** accepted. Every item below that carried a recommendation is "Decided by Amish, 2026-09-25: go with recommendation". Items without a recommendation remain "Proposed, awaiting Amish". The budget was decided by Amish on 2026-09-26 (see Budget, 2026-09-26). The solar panel facing was decided by Amish on 2026-09-27 (see Solar panel facing, 2026-09-27).
 
 ## Context
 
@@ -58,6 +62,15 @@ No cross-repo action arises: GrainGuard does not use SwapCell or any other portf
 ### Budget, 2026-09-26
 
 On 2026-09-26 Amish wrote: "i approve all the budget items." Budget set to $260 to cover the priced BOM: decided by Amish, 2026-09-26. The priced per-bin kit is $256.50 (`bom/bom.csv`, items 1 to 11, 13 and 14, with the farmhouse receiver costed per farm under GGD-DDR-001 D1), so `budget_usd` in `project.yaml` moves from 250 to 260. This supersedes the N1 choice to keep $250 and record the overrun: R13 moves from "not met, overrun accepted" to met. `docs/04-calcs/sizing.py` reads the budget from `project.yaml` and was rerun; GGD-CAL-001 v0.3, GGD-REQ-001 v0.5, GGD-PRC-001 v0.5, GGD-PRB-001 v0.4, `README.md` and `bom/bom-notes.md` were updated. Requirement status is now met 8, at risk 3, not met 1 (R8) and not verifiable 2.
+
+### Solar panel facing, 2026-09-27
+
+On 2026-09-27 Amish wrote: "resolve the challenges for ConePro, BridgePulse, Grainguard and WellSense." For GrainGuard the challenge was item 2 of the appearance-model review (docs/REVIEW.md, session 2026-09-26): `cad/src/model.py` rotated the solar panel envelope with `Rot(0, -panel_tilt, 0)`, which tilts its face toward the bin, although its comment says "facing away from the bin"; 0.7 m from a 5.6 m wall the panel would then sit in the wall's shade. The recommendation was to change the rotation to `Rot(0, panel_tilt, 0)` and regenerate the media. Decided by Amish on 2026-09-27: go with the recommendation.
+
+- `cad/src/model.py`: the panel rotation is now `Rot(0, panel_tilt, 0)`, so the face tilts 45 degrees from horizontal toward the outside of the bin (local +X). Panel size, tilt angle, height and position on the mast are unchanged.
+- `cad/src/product_model.py`: the appearance model already faced the panel away from the bin with the same rotation. Its comment that model.py "rotates its envelope box the other way" was removed; its pose now matches model.py with no compensation.
+- Regenerated: STEP and STL (`cad/step`, `cad/stl`), drawing GGD-DWG-001 Rev P3 (detail B and the views show the panel facing outward) and the concept media (`media/hero.png`, `concept-blueprint`, `cutaway.png`, `exploded.png`, `flow.png`, `model.glb`).
+- GGD-PRC-001 v0.6 states the facing in its component table. No requirement status changes: the R8 energy figures in GGD-CAL-001 already assumed a panel in sun, and the wind load uses the panel area, which is unchanged.
 
 ## Consequences
 

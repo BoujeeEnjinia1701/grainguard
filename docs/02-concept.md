@@ -3,9 +3,9 @@ doc_id: GGD-PRC-001
 title: GrainGuard design precis
 project: GrainGuard
 doc_type: Design precis
-version: "0.5"
+version: "0.6"
 status: Draft
-date: '2026-09-26'
+date: '2026-09-27'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -29,6 +29,10 @@ revisions:
   date: '2026-09-26'
   author: Amish Chadha
   change: Budget approved by Amish ($260, GGD-DDR-002); cost figures restated against it
+- version: "0.6"
+  date: '2026-09-27'
+  author: Amish Chadha
+  change: "Solar panel faces away from the bin, out of the wall's shade: decided by Amish on 2026-09-27 (GGD-DDR-002); model, drawing GGD-DWG-001 Rev P3 and media refreshed"
 ---
 
 # GrainGuard design precis
@@ -76,7 +80,7 @@ Numbers match the exploded view (Figure 3), drawing GGD-DWG-001 and `bom/bom.csv
 | 5 | LoRa microcontroller and bus board | nRF52840 plus SX1262 class module, RS-485 transceiver, buck regulator | 915 MHz in the Americas |
 | 6 | Battery | 12 V 7 Ah AGM lead-acid | Accepts charge below 0 °C; capacity open (GGD-DDR-001, O2) |
 | 7 | Solar charge controller | 12 V PWM, temperature compensation clamped at 15.0 V, low-voltage disconnect, 6 mA or less self-use | Clamp keeps the system at 15 V or less (R12) |
-| 8 | Solar panel | 10 W, tilted 45 degrees | On top of the mast |
+| 8 | Solar panel | 10 W, tilted 45 degrees, facing away from the bin | On top of the mast, out of the wall's shade (decided by Amish on 2026-09-27, GGD-DDR-002) |
 | 9 | Ambient sensor | SHT45 in a louvered radiation shield on a 330 mm arm | 1.8 m above the pad, away from the bin wall's reflected heat |
 | 10 | Mast and brackets | DN25 (33.7 x 3.2 mm) galvanized pipe, 2.3 m, base plate on the pad, one stay to the bin | No drilling of bin sheets |
 | 11 | Interposing relay kit | DIN 24 V supply, relay with optically isolated 12 V input of 3 mA or less, hand-off-auto switch, current transformer | Only mains-connected item; licensed electrician installs |
