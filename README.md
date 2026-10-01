@@ -2,13 +2,13 @@
 
 ![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827) [![DOI](https://zenodo.org/badge/1386351914.svg)](https://zenodo.org/badge/latestdoi/1386351914) [![REUSE compliant](https://github.com/BoujeeEnjinia1701/grainguard/actions/workflows/reuse.yml/badge.svg)](https://github.com/BoujeeEnjinia1701/grainguard/actions/workflows/reuse.yml) [![Archived in Software Heritage](https://archive.softwareheritage.org/badge/origin/https://github.com/BoujeeEnjinia1701/grainguard/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/BoujeeEnjinia1701/grainguard)
 
-**Area:** Agriculture · **TRL:** 3 of 9 (proof of concept on paper) · **Prototype budget:** $260 USD per bin (kit $256.50) · **Difficulty:** 2 of 5
+**Area:** Agriculture · **TRL:** 3 of 9 (proof of concept on paper) · **Value-engineering target:** USD 260 per bin (estimated cost of the constructable design USD 389.50) · **Difficulty:** 2 of 5
 
 Cable of moisture and temperature probes strung through the bin, plus a controller that runs aeration fans only when the air will cool or dry the grain without rewetting it.
 
 ![GrainGuard: grain bin sensor cable and aeration fan controller, product render](media/render-hero.png)
 
-[Exploded render](media/render-exploded.png) · [Detail render](media/render-detail.png) · [Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement GGD-DWG-001 (PDF)](cad/drawings/GGD-DWG-001.pdf) · [Sizing calculations](docs/04-calcs/01-sizing.md) · [Review note](docs/REVIEW.md)
+[Exploded render](media/render-exploded.png) · [Detail render](media/render-detail.png) · [Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement GGD-DWG-001 (PDF)](cad/drawings/GGD-DWG-001.pdf) · [Sizing calculations](docs/04-calcs/01-sizing.md) · [Prototype build plan](docs/05-build-plan.md) · [Design decisions](docs/06-design-decisions.md) · [Review note](docs/REVIEW.md)
 
 ## Concept rationale
 
@@ -54,21 +54,27 @@ Stored grain spoils when bins are aerated at the wrong times. Humid fall air can
 
 ## Concept
 
-One cable of six temperature and humidity pods hangs down the center of an existing bin. A solar-powered 12 V controller beside the bin compares the grain with the outside air, allows for the fan's own heat, and switches the existing fan through a small relay kit only when the air will cool or dry the grain rather than rewet it. It reports to a farmhouse receiver by LoRa radio. TRL 3 calculations for an 18 ft (5.49 m) bin of about 88.8 t of corn: a sensor-induced moisture error of 0.23 to 0.42 points, $256.50 in parts per bin with the farmhouse receiver costed per farm, and 7.7 days of winter battery autonomy with no sun. The kit includes a $9.50 plenum probe that measures the fan's own heat and stays within the $260 budget that Amish approved to cover the priced BOM ([GGD-DDR-002](docs/decisions/0002-recommendations-accepted.md)). The 10 W panel still refills the battery too slowly in winter; see [docs/04-calcs/01-sizing.md](docs/04-calcs/01-sizing.md).
+One cable of six temperature and humidity pods hangs down the center of an existing bin. A solar-powered 12 V controller beside the bin compares the grain with the outside air, allows for the fan's own heat, and switches the existing fan through a small relay kit only when the air will cool or dry the grain rather than rewet it. It reports to a farmhouse receiver by LoRa radio. TRL 3 calculations for an 18 ft (5.49 m) bin of about 88.8 t of corn: a sensor-induced moisture error of 0.23 to 0.42 points and 7.7 days of winter battery autonomy with no sun. Value-engineering target: USD 260 per bin. Estimated cost of the constructable design: USD 389.50 per bin (USD 129.50 over the target), with the farmhouse receiver costed per farm. The kit includes a USD 9.50 plenum probe that measures the fan's own heat ([GGD-DDR-002](docs/decisions/0002-recommendations-accepted.md)). The 10 W panel still refills the battery too slowly in winter; see [docs/04-calcs/01-sizing.md](docs/04-calcs/01-sizing.md).
 
 Full design precis: [docs/02-concept.md](docs/02-concept.md)
 
 ## Key components
 
 - Six Sensirion SHT45 and SHT40 pods on a 6 mm steel wire rope, RS-485 bus
-- LoRa controller in an IP66 box on a mast
-- Interposing relay kit with hand-off-auto switch, installed by an electrician in the fan starter
+- LoRa controller in an IP66 box on a stayed steel mast, with its antenna
+- Interposing relay kit with hand-off-auto switch, installed by an electrician at the fan starter
 - Ambient temperature and humidity sensor in a radiation shield
 - Plenum temperature probe in the fan transition, to measure the fan's own heat
 - 10 W solar panel, charge controller and 12 V AGM battery
 - Farmhouse LoRa receiver with display
 
 The working bill of materials is in [bom/bom.csv](bom/bom.csv).
+
+## Building the prototype
+
+The prototype build plan ([docs/05-build-plan.md](docs/05-build-plan.md)) shows how to make and fit every component, in order, with a making sketch for each made part, close-ups of the joints and a picture for every assembly step. Writing it made the design buildable: the pods became printed, openable bodies on rope stops, the mast a welded and stayed weldment, and every part on the mast got a clamp or bracket ([GGD-DDR-003](docs/decisions/0003-design-for-construction.md)). The work is metal cutting and drilling, one simple weldment, 3D printing and low-voltage wiring; the relay kit at the fan starter is fitted by a licensed electrician. Open decisions are kept in the [design decisions register](docs/06-design-decisions.md).
+
+![GrainGuard prototype: every component, pulled apart and numbered in build order](docs/05-build-plan/overview.png)
 
 ## Safety
 

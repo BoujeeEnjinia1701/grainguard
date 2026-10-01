@@ -3,9 +3,9 @@ doc_id: GGD-CAL-001
 title: GrainGuard sizing calculations
 project: GrainGuard
 doc_type: Calculation
-version: "0.3"
+version: "0.4"
 status: Draft
-date: '2026-09-26'
+date: '2026-10-01'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -21,17 +21,21 @@ revisions:
   date: '2026-09-26'
   author: Amish Chadha
   change: Budget approved by Amish ($250 to $260, GGD-DDR-002); script rerun; R13 not met, overrun accepted, to met
+- version: "0.4"
+  date: '2026-10-01'
+  author: Amish Chadha
+  change: Design for construction (GGD-DDR-003). Radio uses the modelled antenna height; mast check uses the modelled panel and shield heights; new checks F5 (stay) and F6 (mast with the stay off); cable and conduit lengths; cost reported against the value-engineering target
 ---
 
 # GrainGuard sizing calculations
 
-On paper, GrainGuard meets eight of its fourteen requirements, has three at risk, misses one, and has two that cannot be verified at TRL 3. The miss is power (R8): with the relay input specified at 3 mA the battery now lasts 7.7 days with no sun, but a 10 W panel needs about 7.3 winter days, not 3, to refill the battery from half charge. Cost (R13) is now met: Amish adopted the plenum temperature probe into the base kit on 2026-09-25 (GGD-DDR-002), which took the per-bin kit from $247.00 to $256.50, $6.50 over the former $250 budget, and on 2026-09-26 he set the budget to $260 to cover it, with the farmhouse receiver costed per farm. In return the fan's own heat, worth about one point of moisture per degree, is now measured, and the fan decision (R4) moves from at risk to met. The three at risk are the moisture estimate (R2), heating detection away from the center (R6) and the environment (R9). The calculations also corrected three TRL 2 figures: the reference bin holds about 88.8 t, not 95 t, because the aeration floor sits 0.4 m above the pad; the fan heat of "about 1 °C" is right only for a 0.4 kW fan; and the radio margin at 1 km past a building is about 18 dB, not 48 dB. Every number in this note is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [A3], is the line of that script's output that carries it.
+On paper, GrainGuard meets seven of its fourteen requirements, has three at risk, misses one, and has two that cannot be verified at TRL 3; cost (R13) is reported against a value-engineering target. The miss is power (R8): with the relay input specified at 3 mA the battery lasts 7.7 days with no sun, but a 10 W panel needs about 7.3 winter days, not 3, to refill the battery from half charge. Version 0.4 follows the design for construction (GGD-DDR-003): the constructable design costs USD 389.50 per bin against a value-engineering target of USD 260 (USD 129.50 over the target), with the farmhouse receiver costed per farm; the radio margin, mast stresses and cable lengths now come from the modelled antenna, bracket and route, and all still meet their requirements. Amish adopted the plenum temperature probe into the base kit on 2026-09-25 (GGD-DDR-002), so the fan's own heat, worth about one point of moisture per degree, is measured and the fan decision (R4) is met. The three at risk are the moisture estimate (R2), heating detection away from the center (R6) and the environment (R9). The calculations also corrected three TRL 2 figures: the reference bin holds about 88.8 t, not 95 t, because the aeration floor sits 0.4 m above the pad; the fan heat of "about 1 °C" is right only for a 0.4 kW fan; and the radio margin at 1 km past a building is about 18 dB, not 48 dB. Every number in this note is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [A3], is the line of that script's output that carries it.
 
 > **Safety:** These are first-principles estimates for a paper proof of concept. They do not replace the bin maker's roof and hanger ratings, a licensed electrician's design of the starter interface, or a confined-space entry procedure. Nothing may be installed in a bin on the strength of this note. GrainGuard must never be used to judge whether a bin is safe to enter. See GGD-PRC-001, Safety.
 
 ## Scope and method
 
-The note checks every requirement in GGD-REQ-001 v0.4 against the design in GGD-PRC-001 v0.4 and the parametric model `cad/src/model.py`. The script imports the model's `PARAMS` and `derived()`, so the bin, pod positions, rope length, cable route and mast dimensions used here are the ones in the STEP files and on drawing GGD-DWG-001. It also reads `bom/bom.csv` and `budget_usd` in `project.yaml`, and writes the requirement table to `docs/04-calcs/results.csv`. Run it from the repo root with `python docs/04-calcs/sizing.py`.
+The note checks every requirement in GGD-REQ-001 v0.6 against the design in GGD-PRC-001 v0.7, as made constructable in GGD-DDR-003, and the parametric model `cad/src/model.py`. The script imports the model's `PARAMS` and `derived()`, so the bin, pod positions, rope length, cable route and mast dimensions used here are the ones in the STEP files and on drawing GGD-DWG-001. It also reads `bom/bom.csv` and `budget_usd` in `project.yaml`, and writes the requirement table to `docs/04-calcs/results.csv`. Run it from the repo root with `python docs/04-calcs/sizing.py`.
 
 The reference case is unchanged from TRL 2: a 5.49 m (18 ft) corrugated steel bin with a 5.6 m eave, a full perforated floor and one aeration fan, holding shelled corn at a target of 15.0 % moisture, wet basis, in the US Corn Belt (GGD-DDR-001, D11).
 
@@ -48,9 +52,9 @@ The reference case is unchanged from TRL 2: a 5.49 m (18 ft) corrugated steel bi
 | Fan | 0.37 kW (1/2 hp) class, 0.40 kW input, motor in the air stream, so all input power heats the air; range 0.2 to 1.1 kW checked | Assumed; fans on real bins vary |
 | Sensors | SHT45 ±1.0 % RH and ±0.1 °C typical ([Sensirion](https://sensirion.com/products/catalog/SHT45)); SHT40 ±1.8 % RH typical, ±3.5 % RH maximum ([Sensirion](https://sensirion.com/products/catalog/SHT40)), ±0.2 °C typical ([SHT4x datasheet](https://sensirion.com/resource/datasheet/sht4x)); plenum probe DS18B20 ±0.5 °C from -10 °C to +85 °C ([Analog Devices](https://www.analog.com/en/products/ds18b20.html)) | Datasheets |
 | Power | Controller 25 mW; pod bus 0.72 W for 3 s every 10 min; LoRa 0.15 W for 0.37 s every 10 min; charge controller 6 mA; relay input 3 mA at 12 V; 7 Ah AGM, 50 % usable, 60 % of that at -20 °C; winter 1.5 peak sun hours, 60 % derating | As at TRL 2, except the relay input (was 10 mA) |
-| Radio | 14 dBm, -132 dBm at SF10 and 125 kHz, 0 dBi antennas, 1 dB cable loss each end; antennas 2.4 m (mast) and 2.0 m (farmhouse); 20 dB for one farm building; plane-earth path loss | Typical SX1262 figures; building loss assumed |
+| Radio | 14 dBm, -132 dBm at SF10 and 125 kHz, 0 dBi antennas, 1 dB cable loss each end; antennas 2.22 m (mast, from the model) and 2.0 m (farmhouse); 20 dB for one farm building; plane-earth path loss | Typical SX1262 figures; building loss assumed |
 | Cable loads | Janssen pressures with K 0.5 and wall friction 0.4; grain on steel 0.3; pod drag = vertical pressure on the pod face plus side friction; unloading overpressure factor 2.0 | Screening values, not a bin-load standard |
-| Mast | 45 m/s gust (1,215 Pa); drag coefficient 1.2 on the panel and 1.0 on the shield; mast pinned at the stay; S235 pipe | Screening values |
+| Mast | 45 m/s gust (1,215 Pa); drag coefficient 1.2 on the panel and 1.0 on the shield; mast welded to its base plate and propped by the stay, which is bolted twice at each end; S235 pipe and angle | Screening values |
 
 ## A. Bin, airflow and fan heat (R4)
 
@@ -94,15 +98,17 @@ The reference case is unchanged from TRL 2: a 5.49 m (18 ft) corrugated steel bi
 ## E. Radio (R7)
 
 - The link budget is 144 dB [E1]. The TRL 2 margin of about 48 dB used free-space loss at 2 km (97.7 dB) [E2], which is optimistic for antennas 2 m above the ground.
-- With plane-earth loss at 1 km (106.4 dB, well past the 59 m breakpoint) and 20 dB for one farm building, the margin is 17.6 dB [E3]. With a 10 dB fade margin the same model gives about 1.55 km [E4]. R7 is **met** on paper; the 95 % delivery figure needs a site survey.
+- With the antenna on its mast bracket (centre 2.22 m above the pad, GGD-DDR-003), plane-earth loss at 1 km is 107.1 dB, well past the 54 m breakpoint; with 20 dB for one farm building the margin is 16.9 dB [E3]. With a 10 dB fade margin the same model gives about 1.49 km [E4]. R7 is **met** on paper; the 95 % delivery figure needs a site survey.
 - A packet of 24 bytes takes 371 ms at SF10, inside the 400 ms dwell limit in the US 915 MHz band; 25 bytes would take 412 ms [E5]. The payload is therefore limited to 24 bytes.
 
 ## F. Cable loads and mast (R10)
 
 - **Pull-down force.** Janssen's method gives 25.8 kPa vertical and 12.9 kPa lateral pressure at the floor [F1]. The static drag is 213 N on the rope and 825 N on the six pods, 1,038 N in all, and about 2,076 N with an unloading overpressure factor of 2.0 [F2]. The TRL 2 design force of 2.5 kN is kept, 1.2 times this estimate [F3]. The measured maximum of 4.7 kN on the largest commercial cable ([Illinois Experts, ASABE](https://experts.illinois.edu/en/publications/forces-on-monitoring-cables-during-grain-bin-filling-and-emptying/)) is consistent with a larger cable in a larger bin.
 - **Rope.** A 20 kN rope gives a factor of 8.0 on 2.5 kN against R10's 4 [F3]. The roof hanger rating comes from the bin maker, bin by bin, so R10 as a whole is **not verifiable at TRL 3**.
-- **Mast.** At a 45 m/s gust, the panel and shield put 128 N and 31 N on the mast, a moment of 108 N·m at the stay. The DN25 pipe (section modulus 2.14 cm³) sees 50 MPa, 4.7 times below yield [F4].
-- **Lengths.** The rope hangs 6.62 m and the bus cable route is 14.6 m, 6.5 m of it inside the bin [G1]. The BOM carries 16 m of bus cable.
+- **Mast.** At a 45 m/s gust, the panel (centre 2.24 m up on its bracket) and the shield (1.89 m) put 128 N and 31 N on the mast, a moment of 94 N·m at the stay. The DN25 pipe (section modulus 2.14 cm³) sees 44 MPa, 5.3 times below yield [F4].
+- **Stay.** The stay props the mast with about 218 N. It is bolted twice at each end, so wind along the wall bends it as a guided cantilever 592 mm long: 42 MPa in the 40 x 40 x 4 angle, 5.6 times below yield. Toward the wall it is a strut with a buckling load of about 104 kN [F5].
+- **Mast with the stay off.** If the stay is removed for service, the welded base carries the mast alone: 344 N·m at the base, 161 MPa in the pipe (1.5 times below yield) and 1.15 kN of pull on each M10 anchor [F6]. The stay should be refitted before a storm.
+- **Lengths.** The rope hangs 6.51 m below its thimble. The bus cable is 16.8 m (main run 10.5 m, five pod jumpers 5.4 m, 0.9 m of ends inside the pods and the box), 7.3 m of it inside the bin; the BOM carries 18.5 m. The conduit is 6.2 m [G1].
 
 ## G. Environment (R9)
 
@@ -110,12 +116,15 @@ Lead-acid electrolyte freezes near -25 °C at 50 % state of charge and below -50
 
 ## H. Cost (R13)
 
-- The per-bin kit (items 1 to 11, 13 and 14) costs $256.50, 1.3 % ($3.50) under the $260 budget [H1]. The TRL 2 cost of about $271 fell to $247.00 after the cost trims decided in GGD-DDR-001 (D1): SHT40 sensors in the four middle pods, a smaller enclosure, and bus cable cut to the model's route length. The plenum probe ($9.50), adopted into the kit by Amish with its $6.50 overrun against the former $250 budget accepted (GGD-DDR-002), adds the rest [H3]. Amish approved the budget on 2026-09-26 and `budget_usd` is now $260 (GGD-DDR-002), so R13 is **met** (it was not met, overrun accepted, in v0.2).
-- The farmhouse receiver adds $22.00 once per farm; a first prototype with one bin costs $278.50 [H2].
+`budget_usd` is a hypothetical value-engineering target, not a limit (Amish, 2026-10-01).
+
+- Value-engineering target: USD 260. Estimated cost of the constructable design: USD 389.50 per bin, items 1 to 11 and 13 to 17 (USD 129.50 over the target) [H1].
+- The concept kit was USD 256.50 (USD 247.00 after the GGD-DDR-001 trims, plus the USD 9.50 plenum probe [H3]). Making it buildable added USD 133.00 [H4]: the mast weldment, stay, wall bracket, anchors and six clamps (line 10, now USD 53.00), the pod glands and stops, the enclosure mounting plate, and three lines missing from the concept (antenna, battery fuse and surge protection, conduit). The cost drivers and savings worth trying are in the design decisions register, GGD-DEC-001.
+- The farmhouse receiver adds USD 22.00 once per farm; a first prototype with one bin costs USD 411.50 [H2].
 
 ## Requirement status
 
-*Table 3. Status of every requirement in GGD-REQ-001 v0.4 [I1], [I2]. Not met items first.*
+*Table 3. Status of every requirement in GGD-REQ-001 v0.6 [I1], [I2]. Not met items first.*
 
 | ID | Requirement | Value at TRL 3 | Target | Status |
 | --- | --- | --- | --- | --- |
@@ -128,10 +137,10 @@ Lead-acid electrolyte freezes near -25 °C at 50 % state of charge and below -50
 | R4 | Fan decision rule | Rule as specified; fan heat measured by the plenum probe within ±0.51 °C, about ±0.5 points of EMC | Rule, minimum run and off times, starts per hour | Met |
 | R1 | Temperature profile | 6 levels at 0.94 m; ±0.1 to ±0.2 °C; every 10 min | 6 or more, 1.0 m or less; ±0.3 °C | Met |
 | R5 | Fail-safe control | Normally open relay, stale-data timeout, hand position independent of GrainGuard | Stop in 60 s; hand runs the fan | Met |
-| R7 | Radio link | 17.6 dB margin at 1 km past one building | 1 km, one building, 95 % delivery | Met |
+| R7 | Radio link | 16.9 dB margin at 1 km past one building | 1 km, one building, 95 % delivery | Met |
 | R11 | Install without grain entry | Empty-bin installation sequence | No entry into a bin holding grain | Met |
 | R12 | Electrical isolation | 12 V system, charging clamped at 15.0 V; relay input 2.5 kV | 15 V or less; 2.5 kV | Met |
-| R13 | Cost per bin | $256.50 per bin with the plenum probe; receiver $22.00 per farm | $260 per bin, receiver per farm | Met (budget approved by Amish, 2026-09-26; not met, overrun accepted, in v0.2) |
+| R13 | Cost per bin | USD 389.50 per bin, constructable design; receiver USD 22.00 per farm | Value-engineering target USD 260 per bin, receiver per farm | Over the value-engineering target by USD 129.50 |
 | R14 | Local data | Farmhouse receiver logs locally | No cloud account | Met |
 
 ## Corrections to the TRL 2 documents
@@ -142,5 +151,5 @@ Lead-acid electrolyte freezes near -25 °C at 50 % state of charge and below -50
 - Fan heat: 0.5 to 2.7 °C depending on the fan (was "about 1 °C") [A7].
 - Hot spot coverage: 3.3 % (was about 3 %) [C2].
 - Autonomy: 7.7 days with the fan continuous and the 3 mA relay input (was 4.8 days) [D5]; recovery not met [D6].
-- Radio margin: 17.6 dB at 1 km past a building (was about 48 dB over free space at 2 km) [E3].
+- Radio margin: 16.9 dB at 1 km past a building with the modelled antenna (was about 48 dB over free space at 2 km) [E3].
 - Cost: $247.00 per bin at TRL 3 (was about $271); $256.50 with the plenum probe adopted under GGD-DDR-002 [H1], [H3].

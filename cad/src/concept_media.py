@@ -16,17 +16,19 @@ from build123d import Box, Cylinder, Pos, Rot, Sphere  # noqa: E402
 import concept  # noqa: E402
 from concept import Part, render_all  # noqa: E402
 import drawing  # noqa: E402
-from model import PARAMS as P, build_parts, derived, reference_parts, sensor_pod, tube  # noqa: E402
+from model import PARAMS as P, build_components, build_parts, derived, reference_parts, sensor_pod, tube  # noqa: E402
 from sheets import safe_project_views  # noqa: E402
 
 drawing.project_views = safe_project_views   # skip degenerate edges; the kit is unchanged
 
 D = derived(P)
 ref = reference_parts()
-kp = build_parts()
+CC = build_components()
+kp = build_parts(C=CC)
 pad, bin_shell, floor, grain, fan, starter_all = (ref[k] for k in ("pad", "shell", "floor", "grain", "fan", "starter"))
+starter_all = starter_all + ref["stiffener"]
 rope_all, pods, lead, relay_all = kp["rope"][1], kp["pods"][1], kp["cable"][1], kp["relay"][1]
-lead_in = tube((P["cable_off"], 0, D["pod_z"][0] + P["pod_l"] / 2), (P["cable_off"], 0, D["peak"] - 80), P["cable_d"] / 2)
+lead_in = CC["bus_in"][1] + CC["jumpers"][1]
 
 GREY_BIN = "#B8BEC6"
 existing = [
@@ -40,7 +42,7 @@ existing = [
 kit = [
     Part("Suspension wire rope and hanger", rope_all, "#374151", 1),
     Part("Sensor pods, T and RH (6)", pods, "#0F766E", 2),
-    Part("Bus cable, 4-core, 16 m", lead, "#111827", 3),
+    Part("Bus cable, 4-core, 18.5 m", lead, "#111827", 3),
     Part("Controller enclosure, IP66", kp["enclosure"][1], "#E5E7EB", 4),
     Part("LoRa microcontroller and bus board", kp["board"][1], "#7C3AED", 5),
     Part("Battery, 12 V 7 Ah AGM", kp["battery"][1], "#C2410C", 6),
@@ -50,6 +52,7 @@ kit = [
     Part("Mast and brackets", kp["mast"][1], "#A16207", 10),
     Part("Interposing relay kit and signal cable", relay_all, "#D4A017", 11),
     Part("Plenum temperature probe", kp["probe"][1], "#DB2777", 14),
+    Part("Antenna, 915 MHz", kp["antenna"][1], "#0EA5E9", 15),
 ]
 parts = existing + kit
 import os
@@ -61,7 +64,7 @@ KEY = ["5.49 m (18 ft) bin, 3,493 bu (88.8 t) corn (reference case)",
        f"6 T and RH pods at {D['pod_pitch']:.0f} mm pitch on one center cable",
        "Fan runs only if plenum-air EMC suits the mode; fan heat measured",
        "12 V solar controller; 7.7 days with no sun; no mains inside",
-       "$256.50 per bin with plenum probe; receiver $22.00 per farm"]
+       "Kit $389.50 per bin (value-engineering target $260)"]
 
 render_all(
     parts, project="GrainGuard", title="Bin aeration controller concept", dwg_no="GGD-DWG-010",
@@ -71,6 +74,25 @@ render_all(
                      ("Measured fan heat", "+1.0 °C: 65.5 % RH"), ("Plenum EMC", "14.73 % vs 15.0 %: RUN"),
                      ("Through grain", "0.33 m³/s, 75 to 119 h"), ("Pods confirm", "front passed, fan off")]},
 )
+
+# ---------------- web model at a lighter tessellation ----------------
+# The kit exports model.glb at very fine tessellation; with the cables, glands and clamps of the
+# constructable design that file grows past 14 MB. Re-export the same parts, colours and names at a
+# 1 mm / 0.3 rad tessellation, which looks the same in the viewer.
+def _light_glb(ps):
+    from build123d import Compound, Color, export_gltf
+    import matplotlib.colors as mcol
+    kids = []
+    for p in ps:
+        sh = p.shape
+        sh.color = Color(*mcol.to_rgb(p.color))
+        sh.label = p.name
+        kids.append(sh)
+    export_gltf(Compound(children=kids), str(concept.ROOT / "media" / "model.glb"), binary=True,
+                linear_deflection=1.0, angular_deflection=0.3)
+
+
+_light_glb(parts)
 
 # ---------------- cutaway ----------------
 # The kit cutaway cuts at the mean part center, which would leave grain in front of the cable.
@@ -118,6 +140,7 @@ x_enc = at(1450, 250, 1100, Box(*P["enc"]))
 x_panel = at(1450, 0, 2250, Rot(0, -P["panel_tilt"], 0) * Box(P["panel"][1], P["panel"][0], P["panel"][2]))
 x_lead = at(2050, 0, 0, Pos(0, 0, 1300) * Cylinder(9, 1800)) + at(2050, 0, 2200, Pos(0, -150, 0) * Rot(90, 0, 0) * Cylinder(9, 300))
 x_rope = at(2550, 0, 0, Pos(0, 0, 1450) * Cylinder(8, 2400) + Pos(0, 0, 2690) * Box(90, 90, 70))
+x_ant = at(1450, -250, 2100, Pos(0, 0, 100) * Cylinder(4, 200) + Pos(0, 0, -6) * Cylinder(10, 12))
 x_pods = None
 for k in range(6):
     pd = at(2950, 0, 400 + k * 380, sensor_pod())
@@ -126,7 +149,7 @@ for k in range(6):
 x_parts = [
     Part("Suspension wire rope and hanger (shortened)", x_rope, "#374151", 1),
     Part("Sensor pods, T and RH (6, spacing shortened)", x_pods, "#0F766E", 2),
-    Part("Bus cable, 4-core, 16 m (shortened)", x_lead, "#111827", 3),
+    Part("Bus cable, 4-core, 18.5 m (shortened)", x_lead, "#111827", 3),
     Part("Controller enclosure, IP66", x_enc, "#E5E7EB", 4),
     Part("LoRa microcontroller and bus board", x_board, "#7C3AED", 5),
     Part("Battery, 12 V 7 Ah AGM", x_batt, "#C2410C", 6),
@@ -136,10 +159,11 @@ x_parts = [
     Part("Mast and brackets", x_mast, "#A16207", 10),
     Part("Interposing relay kit (at the fan starter)", x_relay, "#D4A017", 11),
     Part("Plenum temperature probe", x_probe, "#DB2777", 14),
+    Part("Antenna, 915 MHz", x_ant, "#0EA5E9", 15),
 ]
 concept._render(x_parts, concept.ROOT / "media" / "exploded.png", labels=True,
                 title="GrainGuard: exploded view",
-                note="Numbers match bom/bom.csv. Rope, pods and cable shortened; not to scale. Bin, grain, fan and starter not shown.")
+                note="Numbers match bom/bom.csv. Rope, pods and cable shortened; not to scale. Brackets, clamps and conduit not shown.")
 
 # Remove the renderer's temporary view folders
 import shutil

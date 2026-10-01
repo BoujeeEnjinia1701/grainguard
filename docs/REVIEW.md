@@ -258,3 +258,59 @@ The engineering model, drawing, concept media and appearance model now agree: th
 - Kit 1.5.0 synced: STANDARDS v1.5 (sections 12 to 15: product renders, storefront images and image quality, public release, authorship and signing), `.kit/cards.py`, `.kit/image_qc.py`, `.kit/release_gate.py`, issue templates, and the `/render-product` and `/release` commands. `CLAUDE.md` now matches `.kit/CLAUDE.md`.
 - Every `media/render-*.png` recaptioned from its original render with the new layout: the title, concept label and repository sit in a band above the render and the view note in a band below it, each line wrapped to the image width, so no text overlaps other text or the render or runs off the image. `media/card.png` and `media/social-preview.png` regenerated with the same rules.
 - `python .kit/image_qc.py` and `python .kit/release_gate.py` pass. trl stays 3.
+
+## Session 2026-10-01: design for construction and prototype build plan (kit 1.7.0)
+
+Amish approved the build plan format on 2026-09-30 and asked for it in every repo, with outstanding decisions kept out of the plan and in a separate design decisions register. His instruction for the design: "If you are realising that the design cannot be built as per concept - fix the design assumptions to match and be physically feasible as you draw the illustrations." On 2026-10-01 he set budgets as value-engineering targets: "the budgets are a hypothethical control target to ensure we are thinking along a value engineering lens. its ok to ensure wording reflects that the hypothesis budget was x - the real cost being accrued is y".
+
+### What was done
+
+- Kit 1.7.0 installed (`.kit/`, `.claude/commands/`); `CLAUDE.md` now matches `.kit/CLAUDE.md`.
+- Constructability review of the concept model with build123d: the bus cable passed through all six pods, the battery and charger occupied the same space, the bus cable passed through the roof and wall, the relay cable and probe lead passed through the fan transition, the panel, enclosure, shield and relay box had no fixings, and the radio had no antenna.
+- `cad/src/model.py` rewritten as a constructable model, with `--check` (374 checks: no overlaps over 1 mm³, every joint touching; all pass). STEP and STL regenerated.
+- New decision record `docs/decisions/0003-design-for-construction.md` (GGD-DDR-003, Draft, made under Amish's 2026-09-30 instruction to make the design physically buildable; open for his review).
+- `bom/bom.csv`: lines 1 to 4, 6, 8 to 11 and 13 respecified; lines 15 (antenna), 16 (battery fuse and surge protection) and 17 (conduit) added. `bom/bom-notes.md` updated.
+- Calculations rerun: GGD-CAL-001 v0.4 (E3 antenna height, F4 to F6 mast and stay, G1 lengths, H cost against the value-engineering target). GGD-REQ-001 v0.6, GGD-PRC-001 v0.7, GGD-PRB-001 v0.5 updated.
+- General arrangement GGD-DWG-001 Rev P5. Concept media regenerated from the model.
+- `cad/src/build_plan_media.py`: overview, 11 making sketches (GGD-DWG-101 to 111), 11 joint close-ups and 15 assembly step pictures.
+- `docs/05-build-plan.md` (GGD-BLD-001) and `docs/06-design-decisions.md` (GGD-DEC-001) written; both added to `trl_evidence`; `design_state: constructable` in `project.yaml`; README links line and a "Building the prototype" section added.
+
+### Design changes made for construction (GGD-DDR-003)
+
+- P1: pods are printed, openable bodies with a gasketed lid and two M12 glands; the bus cable is a main run plus five pod-to-pod jumpers.
+- P2: a set-screw rope stop under each pod sets its height.
+- P3: rope top drawn as thimble, two clips and a shackle to the hanger eye.
+- P4: bus cable out through a gland in the peak cap, clipped over the roof, drip loop at the eave, down the wall beside the stiffener, along the stay, into the bottom of the box; 16.8 m from the model, 18.5 m bought (was 16 m).
+- P5: mast welded to its base plate with gussets and a stay lug; four M10 anchors; angle stay bolted twice at each end to the lug and to a bracket under two existing stiffener bolts; pipe cap.
+- P6: enclosure on a mounting plate with two mast clamps and the box's four lugs; battery on a shelf with a strap below the electronics (it overlapped the charger); all cable entries are bottom glands with drip loops.
+- P7: panel on a folded 135 degree aluminium bracket on two mast clamps, bolted through its frame lip; same tilt and facing.
+- P8: radiation shield of printed plates on rods under an angle arm on a mast clamp.
+- P9: relay box on the starter's post under the starter with a conduit nipple; relay cable and probe lead in a conduit along the wall foot and over the fan transition.
+- P10: antenna and bracket added (BOM line 15); radio margin now 16.9 dB from the modelled height.
+- P11: battery fuse and surge protection added (BOM line 16), as the safety case already required.
+
+### Key results
+
+- Constructability: 374 checks, 0 failed.
+- Requirement status (GGD-CAL-001 v0.4): met 7 (R1, R4, R5, R7, R11, R12, R14); at risk 3 (R2, R6, R9); **not met 1 (R8, winter recovery)**; not verifiable at TRL 3 2 (R3, R10); R13 over the value-engineering target.
+- Value-engineering target: USD 260. Estimated cost of the constructable design: USD 389.50 per bin (USD 129.50 over the target); USD 411.50 for a first prototype with the farmhouse receiver.
+- Mast: 44 MPa at the stay (5.3 times below yield); stay 42 MPa along the wall (5.6 times); mast alone with the stay off 161 MPa (1.5 times).
+
+### Decisions awaiting Amish
+
+All are in the design decisions register (GGD-DEC-001): accepting GGD-DDR-003; battery and panel for R8; pitch wording against the cool-mode rewet bound; first host farm and electrician; phosphine protection of the pods; the low-voltage disconnect setting; bringing the appearance model and renders into line; confirming the control rule defaults.
+
+### Stale media
+
+The photoreal renders (`media/render-*.png`), `media/card.png` and `media/social-preview.png` are made on Amish's Mac and were not regenerated. The design changed visibly (mast top bracket and antenna, enclosure plate and clamps, stay, shield arm, pods with glands and stops), so they are now stale. `cad/src/product_model.py` still follows the concept and needs the same changes before the next render session.
+
+### Safety concerns
+
+- The mast weldment is galvanized pipe: grind the zinc off and weld in open air (build plan S1).
+- The wall bracket uses two of the bin's own stiffener bolts; they must be refitted with bolts of the same grade at the bin maker's torque.
+- The peak cap gland is drilled from the roof: fall protection and a calm day (S3).
+- Unchanged and still essential: empty-bin entry only under a permit, lockout before any fan work, the relay kit by a licensed electrician only, and the fan's automatic start.
+
+### Recommended next step
+
+Amish reviews GGD-DDR-003 and the open decisions in GGD-DEC-001. The design is constructable on paper; building and testing to GGD-BLD-001 is TRL 4 work and stays on hold.

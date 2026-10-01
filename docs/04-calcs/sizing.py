@@ -15,7 +15,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "cad" / "src"))
-from model import PARAMS as P, derived  # noqa: E402
+from model import PARAMS as P, derived, on_panel  # noqa: E402
 
 D = derived(P)
 OUT = []
@@ -200,7 +200,7 @@ lam = 3e8 / f
 ptx, sens, cable_db = 14, -132, 1.0
 budget = ptx - sens - 2 * cable_db
 fspl = lambda d: 20 * math.log10(d) + 20 * math.log10(f) - 147.55
-h1, h2 = 2.4, 2.0
+h1, h2 = round(D["ant_mid"] / 1000, 2), 2.0   # bin end: antenna centre on the mast (model, GGD-DDR-003)
 pel = lambda d: 40 * math.log10(d) - 20 * math.log10(h1 * h2)
 bldg = 20.0
 say("E1", f"Link budget {ptx} dBm, {sens} dBm (SF10, 125 kHz), 1 dB cable loss each end: {budget:.0f} dB")
@@ -246,16 +246,35 @@ VW, QW = 45.0, 0.5 * 1.2 * 45.0 ** 2
 pl = P["panel"]
 f_panel = QW * 1.2 * pl[0] / 1000 * pl[1] / 1000
 f_shield = QW * 1.0 * P["shield_d"] / 1000 * (P["shield_plates"] * P["shield_pitch"]) / 1000
-arm_p = (P["mast_h"] + 50 - P["stay_z"]) / 1000
-arm_s = (P["shield_z"] + 84 - P["stay_z"]) / 1000
+z_panel = on_panel(125, P["pbracket"][3] + P["panel"][2] / 2, 0)[2]          # panel centre on its bracket
+z_shield = P["shield_top"] - 2 - P["shield_pitch"] * (P["shield_plates"] - 1) / 2
+arm_p = (z_panel - P["stay_z"]) / 1000
+arm_s = (z_shield - P["stay_z"]) / 1000
 m_stay = f_panel * arm_p + f_shield * arm_s
 do, di = P["mast_od"], P["mast_od"] - 2 * P["mast_wall"]
 Z = math.pi / 64 * (do ** 4 - di ** 4) / (do / 2) / 1e9
 sig = m_stay / Z / 1e6
-say("F4", f"Mast at {VW:.0f} m/s gust ({QW:.0f} Pa): panel {f_panel:.0f} N, shield {f_shield:.0f} N, moment at the stay {m_stay:.0f} N m; DN25 section modulus {Z * 1e6:.2f} cm³, stress {sig:.0f} MPa against 235 MPa yield ({235 / sig:.1f} times)")
+say("F4", f"Mast at {VW:.0f} m/s gust ({QW:.0f} Pa): panel {f_panel:.0f} N at {z_panel / 1000:.2f} m, shield {f_shield:.0f} N at {z_shield / 1000:.2f} m, moment at the stay {m_stay:.0f} N m; DN25 section modulus {Z * 1e6:.2f} cm³, stress {sig:.0f} MPa against 235 MPa yield ({235 / sig:.1f} times)")
+# F5: the stay now holds the mast in both directions (GGD-DDR-003): bolted with two M10 bolts at each end,
+# so wind along the wall bends it as a guided cantilever. Mast fixed at the base, propped at the stay.
+f_tot = f_panel + f_shield
+zs_ = P["stay_z"] / 1000
+r_stay = (f_panel * (z_panel / 1000) + f_shield * (z_shield / 1000)) / zs_     # prop force, simple lever about the base
+L_stay = (-32.0 - (-P["mast_off"] + P["wall_t"] + P["stiff"][0] + 7)) / 1000
+a_, t_ = P["stay_angle"]
+I_x, W_x, I_v = 4.47e-8, 1.55e-6, 1.84e-8     # 40 x 40 x 4 equal angle (section tables): axis parallel to a leg, and weakest axis
+m_ang = r_stay * L_stay / 2
+s_ang = m_ang / W_x / 1e6
+P_cr = math.pi ** 2 * 200e9 * I_v / L_stay ** 2
+say("F5", f"Stay: prop force {r_stay:.0f} N from the mast; along the wall it bends as a guided cantilever {L_stay * 1000:.0f} mm long, {s_ang:.0f} MPa in the 40 x 40 x 4 angle against 235 MPa ({235 / s_ang:.1f} times); toward the wall it is a strut with buckling load {P_cr / 1000:.1f} kN ({P_cr / r_stay:.0f} times)")
+# base plate anchors with the stay missing (worst case, stay removed for service): cantilever from the base
+m_cant = f_panel * z_panel / 1000 + f_shield * z_shield / 1000
+sig_c = m_cant / Z / 1e6
+t_anchor = m_cant / (2 * P["anchor_xy"] / 1000) / 2
+say("F6", f"Stay off (service case) at the same gust: base moment {m_cant:.0f} N m, pipe stress {sig_c:.0f} MPa ({235 / sig_c:.1f} times yield), anchor pull {t_anchor / 1000:.2f} kN per M10 anchor")
 
 # ---------------------------------------------------------------- G. cable lengths and environment
-say("G1", f"Rope hung length {D['rope_len'] / 1000:.2f} m; bus cable route {D['cable_len'] / 1000:.1f} m (in-bin {D['in_bin_cable'] / 1000:.1f} m); peak {D['peak'] / 1000:.2f} m above the pad")
+say("G1", f"Rope hung length {D['rope_len'] / 1000:.2f} m; bus cable {D['cable_len'] / 1000:.1f} m (main run {D['cable_main'] / 1000:.1f} m, five jumpers {sum(D['cable_jumpers']) / 1000:.1f} m, ends 0.9 m; in-bin {D['in_bin_cable'] / 1000:.1f} m); conduit {D['conduit_len'] / 1000:.1f} m; peak {D['peak'] / 1000:.2f} m above the pad")
 say("G2", "AGM electrolyte freezes near -25 °C at 50 % state of charge and below -50 °C when full (typical tables; confirm on the datasheet); R9 asks for -30 °C")
 
 # ---------------------------------------------------------------- H. cost
@@ -266,12 +285,14 @@ per_farm = [k for k in cost if k.startswith("12 ")]
 option = [k for k in cost if "(option)" in k]
 probe = [k for k in cost if k.startswith("14 ")]
 kit = sum(v for k, v in cost.items() if k not in per_farm + option)
-ACCEPTED_OVERRUN = 6.50   # GGD-DDR-002: overrun against the former $250 budget; budget_usd set to $260 by Amish on 2026-09-26
+# budget_usd is a value-engineering target, not a limit (Amish, 2026-10-01; STANDARDS section 18)
 diff = kit - budget_usd
-say("H1", f"Per-bin kit (items 1 to 11, 13 and 14): ${kit:.2f} against ${budget_usd:.0f} ({100 * (kit / budget_usd - 1):+.1f} %, ${abs(diff):.2f} {'over' if diff > 0 else 'under'})")
+say("H1", f"Per-bin kit (items 1 to 11 and 13 to 17): ${kit:.2f}; value-engineering target ${budget_usd:.0f}; ${abs(diff):.2f} ({abs(100 * (kit / budget_usd - 1)):.1f} %) {'over' if diff > 0 else 'under'} the target")
 say("H2", f"Farmhouse receiver, one per farm: ${sum(cost[k] for k in per_farm):.2f}; first prototype with receiver ${kit + sum(cost[k] for k in per_farm):.2f}")
 pr = sum(cost[k] for k in probe)
-say("H3", f"Plenum probe (item 14, in the kit since GGD-DDR-002): ${pr:.2f}; kit without it ${kit - pr:.2f}; overrun of ${ACCEPTED_OVERRUN:.2f} accepted against the former $250 budget")
+say("H3", f"Plenum probe (item 14, in the kit since GGD-DDR-002): ${pr:.2f}")
+conc = 256.50   # concept kit at TRL 3 (GGD-CAL-001 v0.3), before the design for construction
+say("H4", f"Design for construction (GGD-DDR-003) added ${kit - conc:.2f} to the concept kit of ${conc:.2f}; largest lines: " + ", ".join(f"{k.split(' ', 1)[1]} ${v:.2f}" for k, v in sorted(cost.items(), key=lambda kv: -kv[1])[:4] if not k.startswith("12 ")))
 
 # ---------------------------------------------------------------- I. requirement status
 REQ = [
@@ -287,7 +308,7 @@ REQ = [
     ("R10", "Mechanical strength", f"Rope {MBL / F_DES:.0f} times 2.5 kN; estimate {dyn / 1000:.2f} kN; roof hanger rating per bin", "Rope 4 times; hanger rated", "Not verifiable at TRL 3"),
     ("R11", "Install without grain entry", "Empty-bin installation sequence", "No entry into a bin holding grain", "Met"),
     ("R12", "Electrical isolation", "12 V system, charge clamped at 15.0 V; relay input 2.5 kV", "15 V or less; 2.5 kV", "Met"),
-    ("R13", "Cost per bin", f"${kit:.2f} per bin, receiver per farm", f"${budget_usd:.0f} per bin, receiver per farm", "Met" if kit <= budget_usd else ("Not met, overrun accepted" if kit - budget_usd <= ACCEPTED_OVERRUN + 1e-9 else "Not met")),
+    ("R13", "Cost per bin", f"${kit:.2f} per bin, ${abs(kit - budget_usd):.2f} {'over' if kit > budget_usd else 'under'} the target; receiver per farm", f"${budget_usd:.0f} value-engineering target per bin, receiver per farm", "Under the value-engineering target" if kit <= budget_usd else "Over the value-engineering target"),
     ("R14", "Local data", "Farmhouse receiver logs locally", "No cloud account", "Met"),
 ]
 with (ROOT / "docs" / "04-calcs" / "results.csv").open("w", newline="") as fh:

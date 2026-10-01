@@ -3,9 +3,9 @@ doc_id: GGD-PRC-001
 title: GrainGuard design precis
 project: GrainGuard
 doc_type: Design precis
-version: "0.6"
+version: "0.7"
 status: Draft
-date: '2026-09-27'
+date: '2026-10-01'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -33,11 +33,15 @@ revisions:
   date: '2026-09-27'
   author: Amish Chadha
   change: "Solar panel faces away from the bin, out of the wall's shade: decided by Amish on 2026-09-27 (GGD-DDR-002); model, drawing GGD-DWG-001 Rev P3 and media refreshed"
+- version: "0.7"
+  date: '2026-10-01'
+  author: Amish Chadha
+  change: "Design for construction (GGD-DDR-003): component table, cost against the value-engineering target, radio margin"
 ---
 
 # GrainGuard design precis
 
-GrainGuard hangs one cable of six temperature and humidity pods down the center of an existing grain bin, measures the outside air beside the bin, and switches the existing aeration fan through a small relay kit only when the air entering the grain will cool it or dry it without rewetting it. A solar-powered 12 V controller on a mast by the bin makes the decision and reports to a receiver in the farmhouse by LoRa radio. The TRL 3 calculations (GGD-CAL-001) for an 18 ft (5.49 m) bin of about 88.8 t of corn give a sensor-induced moisture error of 0.23 to 0.42 points, 7.7 days of battery autonomy with no sun, and a parts cost of $256.50 per bin, within the $260 budget. The kit includes a $9.50 plenum probe, which measures the fan's own heat (worth about one point of moisture per degree); Amish accepted its $6.50 overrun against the former $250 budget on 2026-09-25 and set the budget to $260 on 2026-09-26 (GGD-DDR-002). One gap remains: the 10 W panel refills the battery too slowly in winter (R8 not met).
+GrainGuard hangs one cable of six temperature and humidity pods down the center of an existing grain bin, measures the outside air beside the bin, and switches the existing aeration fan through a small relay kit only when the air entering the grain will cool it or dry it without rewetting it. A solar-powered 12 V controller on a mast by the bin makes the decision and reports to a receiver in the farmhouse by LoRa radio. The TRL 3 calculations (GGD-CAL-001) for an 18 ft (5.49 m) bin of about 88.8 t of corn give a sensor-induced moisture error of 0.23 to 0.42 points and 7.7 days of battery autonomy with no sun. Value-engineering target: USD 260. Estimated cost of the constructable design (GGD-DDR-003): USD 389.50 per bin (USD 129.50 over the target). The kit includes a USD 9.50 plenum probe, which measures the fan's own heat (worth about one point of moisture per degree; GGD-DDR-002). One gap remains: the 10 W panel refills the battery too slowly in winter (R8 not met).
 
 ![Hero render](../media/hero.png)
 
@@ -75,14 +79,14 @@ Numbers match the exploded view (Figure 3), drawing GGD-DWG-001 and `bom/bom.csv
 | --- | --- | --- | --- |
 | 1 | Suspension wire rope and hanger | 6 mm galvanized 7x19 rope, 6.6 m hung, thimble, clips, shackle | Hangs from the bin maker's rated center hanger only |
 | 2 | Sensor pods (6) | 2a: SHT45 (bottom and top, two); 2b: SHT40 (middle four); PTFE membrane, bus microcontroller, RS-485, potted pod 76 mm by 140 mm | 0.94 m apart; bottom pod 0.25 m above the floor, top pod 0.25 m below a level surface |
-| 3 | Bus cable | 4-core shielded UV-rated cable, 16 m, 12 V and RS-485 | Down the rope, out the peak cap, over the roof and down the wall; route 14.6 m |
+| 3 | Bus cable | 4-core shielded UV-rated cable, 18.5 m, 12 V and RS-485 | A main run and five pod jumpers; up the rope, out through a gland in the peak cap, over the roof, down the wall, along the stay; 16.8 m from the model |
 | 4 | Controller enclosure | IP66 polycarbonate, about 280 x 230 x 130 mm | On the mast, shaded side of the bin |
 | 5 | LoRa microcontroller and bus board | nRF52840 plus SX1262 class module, RS-485 transceiver, buck regulator | 915 MHz in the Americas |
 | 6 | Battery | 12 V 7 Ah AGM lead-acid | Accepts charge below 0 °C; capacity open (GGD-DDR-001, O2) |
 | 7 | Solar charge controller | 12 V PWM, temperature compensation clamped at 15.0 V, low-voltage disconnect, 6 mA or less self-use | Clamp keeps the system at 15 V or less (R12) |
 | 8 | Solar panel | 10 W, tilted 45 degrees, facing away from the bin | On top of the mast, out of the wall's shade (decided by Amish on 2026-09-27, GGD-DDR-002) |
 | 9 | Ambient sensor | SHT45 in a louvered radiation shield on a 330 mm arm | 1.8 m above the pad, away from the bin wall's reflected heat |
-| 10 | Mast and brackets | DN25 (33.7 x 3.2 mm) galvanized pipe, 2.3 m, base plate on the pad, one stay to the bin | No drilling of bin sheets |
+| 10 | Mast and brackets | DN25 (33.7 x 3.2 mm) galvanized pipe, 2.3 m, welded to a base plate anchored to the pad; one angle stay bolted to a bracket on a wall stiffener; six mast clamps | No drilling of bin sheets (GGD-DDR-003) |
 | 11 | Interposing relay kit | DIN 24 V supply, relay with optically isolated 12 V input of 3 mA or less, hand-off-auto switch, current transformer | Only mains-connected item; licensed electrician installs |
 | 12 | Farmhouse receiver | ESP32 plus LoRa with display and Wi-Fi | One per farm, costed per farm; not shown in the model |
 | 13 | Hardware and consumables | Ties, anchors, sealant, conformal coating | Not shown |
@@ -115,9 +119,9 @@ All numbers below come from GGD-CAL-001, which also gives the status of every re
 | Daily energy, fan continuous | 3.28 Wh [D3] | |
 | Autonomy with no sun at -20 °C, fan continuous | 7.7 days [D5] | R8 autonomy met |
 | Refill from 50 % at 1.5 winter peak sun hours | 7.3 days [D6] | **R8 not met** |
-| Radio margin at 1 km past one building | 17.6 dB [E3] | R7 met |
+| Radio margin at 1 km past one building | 16.9 dB [E3] | R7 met |
 | Cable pull-down estimate; rope factor on 2.5 kN | 2.08 kN; 8.0 [F2], [F3] | R10 rope met; hanger per bin |
-| Per-bin kit with the probe; receiver per farm | $256.50; $22.00 [H1], [H2] | R13 met ($260 budget) |
+| Per-bin kit, constructable design; receiver per farm | USD 389.50; USD 22.00 [H1], [H2] | R13: USD 129.50 over the USD 260 value-engineering target |
 
 The fan heat was the largest uncertainty at TRL 3: an error of 1 °C in an assumed value shifts the decision by about one point of EMC, more than the whole sensor error. The plenum probe measures it for $9.50 and cuts that error to about ±0.5 points.
 
@@ -130,10 +134,10 @@ Every choice below was decided by Amish on 2026-09-25 by adopting the TRL 2 reco
 - **RS-485 pod bus with a small microcontroller in each pod** (D6). The SHT4x sensors have a fixed I²C address and I²C does not suit 15 m of cable.
 - **Solar 12 V controller with an electrician-installed relay kit** (D7). Keeps mains out of the GrainGuard box.
 - **AGM battery rather than lithium iron phosphate** (D8). AGM accepts charge below freezing; LiFePO₄ cells generally must not be charged below 0 °C without a heater.
-- **Plenum sensing** (GGD-DDR-001 D9; GGD-DDR-002). The lowest-cost form, a temperature-only probe, did not fit in the former $250 budget, but Amish adopted it into the base kit and accepted the $6.50 overrun, since no other $9.50 buys as much decision accuracy; the budget is now $260.
+- **Plenum sensing** (GGD-DDR-001 D9; GGD-DDR-002). The lowest-cost form, a temperature-only probe, did not fit in the former $250 budget, but Amish adopted it into the base kit, since no other USD 9.50 buys as much decision accuracy.
 - **Control rule, modes and default targets** as set out above (D3).
 - **Headspace CO₂ sensor as an option**, not in the base kit (D10).
-- **Budget** (D1): per bin with the farmhouse receiver costed per farm. SHT40 sensors in the four middle pods and a smaller enclosure brought the kit to $247.00; with the plenum probe it is $256.50, within the $260 budget Amish set on 2026-09-26 (GGD-DDR-002).
+- **Cost** (D1): per bin with the farmhouse receiver costed per farm, reported against a value-engineering target of USD 260 (Amish, 2026-10-01). The concept kit was USD 256.50; the constructable design (GGD-DDR-003) is USD 389.50, USD 129.50 over the target.
 - **Relay input of 3 mA or less and charging clamped at 15.0 V**, set in GGD-CAL-001 to meet R8 autonomy and R12 at no cost (GGD-DDR-002).
 
 ## Safety
@@ -152,6 +156,8 @@ Every choice below was decided by Amish on 2026-09-25 by adopting the TRL 2 reco
 - **Battery.** The 12 V AGM battery can deliver high short-circuit current and vents hydrogen if overcharged. Fuse it at the terminal and use a temperature-compensated charger with its voltage clamped at 15.0 V. A lead-acid battery left partly discharged can freeze and crack at about -25 °C.
 
 ## Open questions
+
+The open decisions and the items to confirm when parts are bought are kept in the design decisions register, [GGD-DEC-001](06-design-decisions.md); the build plan is [GGD-BLD-001](05-build-plan.md).
 
 - Battery and panel capacity to meet the recovery half of R8: a 20 W panel, a relaxed target, or accepting the miss (GGD-DDR-001, O2). Proposed, awaiting Amish.
 - First host farm and electrician for a co-design visit (GGD-DDR-001, O1). Proposed, awaiting Amish.
