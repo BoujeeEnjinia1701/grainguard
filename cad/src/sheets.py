@@ -98,12 +98,13 @@ def main():
     asm = assembly()
     views = safe_project_views(asm, work / "ga")
     bb = asm.bounding_box()
-    s = Sheet(project="GrainGuard", title="General arrangement", dwg_no="GGD-DWG-001", rev="P3",
+    s = Sheet(project="GrainGuard", title="General arrangement", dwg_no="GGD-DWG-001", rev="P4",
               author="Amish Chadha", date=DATE, scale=None, theme="technical",
               material="Bin, floor, fan and starter existing (reference only); kit parts per bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
               revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", P_DATE, "AC"),
                          ("P2", "Plenum probe in base kit; kit cost note (GGD-DDR-002)", P_DATE, "AC"),
-                         ("P3", "Solar panel faces away from the bin (GGD-DDR-002)", DATE, "AC")])
+                         ("P3", "Solar panel faces away from the bin (GGD-DDR-002)", DATE, "AC"),
+                         ("P4", "Layout and labels tidied", DATE, "AC")])
     s.add_ortho(views)
     k = s.scale
     c = ortho_cells(s, views)
@@ -118,16 +119,15 @@ def main():
     L += [ext(X(-R), Z(P["eave"]), X(-R), zt - 1), ext(X(R), Z(P["eave"]), X(R), zt - 1)]
     L += dim_h(X(-R), X(R), zt, f"{2 * R:,.0f} bin ID")
     xl = X(bb.min.X) - 4
-    L += [ext(X(-R) - 1, Z(P["eave"]), xl - 1, Z(P["eave"])), ext(X(0) - 2, Z(D["peak"]), xl - 7, Z(D["peak"]))]
-    L += dim_v(xl, Z(P["eave"]), Z(0), f"{P['eave']:,.0f} eave")
-    L += dim_v(xl - 6, Z(D["peak"]), Z(0), f"{D['peak']:,.0f} peak")
+    L += [ext(X(-R) - 1, Z(P["eave"]), xl - 13, Z(P["eave"])), ext(X(0) - 2, Z(D["peak"]), xl - 19, Z(D["peak"]))]
+    L += dim_v(xl - 12, Z(P["eave"]), Z(0), f"{P['eave']:,.0f} eave")
+    L += dim_v(xl - 18, Z(D["peak"]), Z(0), f"{D['peak']:,.0f} peak")
     pz = D["pod_z"]
     xp = X(0) + 9
     L += [ext(X(0) + 1, Z(pz[0]), xp + 1, Z(pz[0])), ext(X(0) + 1, Z(pz[1]), xp + 1, Z(pz[1]))]
     L += dim_v(xp, Z(pz[1]), Z(pz[0]), f"{D['pod_pitch']:.0f}", side=1)
-    L += leader(X(0), Z(pz[3]), X(0) + 14, Z(pz[3]) - 3, f"2  {P['pod_n']} pods, {D['pod_pitch']:.0f} pitch")
-    L += leader(X(0), Z(D["rope_top"] - 300), X(0) + 14, Z(D["rope_top"] - 300) - 2, "1  rope, 6 mm")
-    L += leader(X(0), Z(P["floor_z"]), X(0) - 12, Z(P["floor_z"]) - 3, f"floor +{P['floor_z']:.0f}", "end")
+    L += leader(X(0), Z(pz[3]), X(0) - 8, Z(pz[3]) - 3, "2  pods", "end")
+    L += leader(X(0), Z(D["rope_top"] - 300), X(0) + 14, Z(D["rope_top"] - 300) - 2, "1  rope")
     mx, _, _ = polar(D["mast_r"], P["mast_ang"], 0)
     L += leader(X(mx), Z(P["mast_h"] - 400), X(mx) + 8, Z(P["mast_h"] - 400) - 10, "10  mast")
 
@@ -140,21 +140,21 @@ def main():
     fxy = polar(R + 950, P["fan_ang"], 0)
     L += leader(Xt(fxy[0]), Yt(fxy[1]), Xt(fxy[0]) - 12, Yt(fxy[1]) + 3, "existing fan", "end")
     sxy = polar(R + 1010, P["st_ang"] + 5.5, 0)
-    L += leader(Xt(sxy[0]), Yt(sxy[1]), Xt(sxy[0]) - 14, Yt(sxy[1]) - 3, "11  relay kit", "end")
+    L += leader(Xt(sxy[0]), Yt(sxy[1]), Xt(sxy[0]) - 6, Yt(sxy[1]) + 9, "11  relay", "end")
     L.append(_t(Xt(0), Yt(0) + 1, "+", 3.0, 400, INK, "middle"))
 
     s._layers += L
 
     # detail A: one sensor pod, 1:2
     pv = safe_project_views(sensor_pod(), work / "pod", names=("front",))
-    s.add_svg(pv["front"], 280, 36, 40, 95, scale=0.5, label="Detail A: sensor pod", sublabel="Scale 1:2")
+    s.add_svg(pv["front"], 280, 43, 40, 95, scale=0.5, label="Detail A: sensor pod", sublabel="Scale 1:2")
     # detail B: mast and controller, rotated so the radial direction is +X, 1:25
     parts = build_parts()
     mxp, myp, _ = polar(D["mast_r"], P["mast_ang"], 0)
     mast = Compound(children=[parts[k_][1] for k_ in ("mast", "enclosure", "battery", "charger", "board", "panel", "ambient")])
     local = Rot(0, 0, -P["mast_ang"]) * (Pos(-mxp, -myp, 0) * mast)
     mv = safe_project_views(local, work / "mast", names=("front",))
-    s.add_svg(mv["front"], 330, 36, 90, 95, scale=1 / 25, label="Detail B: mast and controller", sublabel="Scale 1:25, radial view")
+    s.add_svg(mv["front"], 330, 43, 90, 95, scale=1 / 25, label="Detail B: mast and controller", sublabel="Scale 1:25, radial view")
 
     ed, ew, eh = P["enc"]
     s.add_notes("Main dimensions and interfaces (mm)", [

@@ -52,6 +52,10 @@ kit = [
     Part("Plenum temperature probe", kp["probe"][1], "#DB2777", 14),
 ]
 parts = existing + kit
+import os
+if os.environ.get('KIND') == 'blueprint':
+    # the 8.5 m ground pad makes the top view too tall for the sheet; drop it from the blueprint views only
+    parts = [p for p in parts if not p.name.startswith('Concrete pad')]
 
 KEY = ["5.49 m (18 ft) bin, 3,493 bu (88.8 t) corn (reference case)",
        f"6 T and RH pods at {D['pod_pitch']:.0f} mm pitch on one center cable",
