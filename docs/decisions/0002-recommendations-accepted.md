@@ -3,9 +3,9 @@ doc_id: GGD-DDR-002
 title: GrainGuard recommendations accepted
 project: GrainGuard
 doc_type: Design decision record
-version: "0.3"
+version: "0.4"
 status: Draft
-date: '2026-09-27'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -21,12 +21,16 @@ revisions:
   date: '2026-09-27'
   author: Amish Chadha
   change: "Solar panel faces away from the bin: decided by Amish on 2026-09-27; model.py rotation sign flipped, drawing GGD-DWG-001 Rev P3"
+- version: "0.4"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: O1, O2 and O4 decided by Amish on 2026-10-02 as recommended in GGD-DEC-001
 ---
 
 # 0002: Recommendations accepted
 
 - **Date:** 2026-09-25
-- **Status:** accepted. Every item below that carried a recommendation is "Decided by Amish, 2026-09-25: go with recommendation". Items without a recommendation remain "Proposed, awaiting Amish". The budget was decided by Amish on 2026-09-26 (see Budget, 2026-09-26). The solar panel facing was decided by Amish on 2026-09-27 (see Solar panel facing, 2026-09-27).
+- **Status:** accepted. Every item below that carried a recommendation is "Decided by Amish, 2026-09-25: go with recommendation". Items without a recommendation (O1, O2 and O4) were given recommendations in the design decisions register (GGD-DEC-001) and decided by Amish on 2026-10-02: "i approve your recommendations for all 555 open decisions." The budget was decided by Amish on 2026-09-26 (see Budget, 2026-09-26). The solar panel facing was decided by Amish on 2026-09-27 (see Solar panel facing, 2026-09-27).
 
 ## Context
 
@@ -43,13 +47,13 @@ On 2026-09-25 Amish wrote, in chat: "i accept all your recommendations, go with 
 | N2 | Relay input of 3 mA or less (flagged in GGD-CAL-001 v0.1) | Keep as specified | No change; recorded in GGD-PRC-001 v0.4, Key design choices |
 | N3 | Charger compensation clamped at 15.0 V (flagged in GGD-CAL-001 v0.1) | Keep as specified | No change; recorded in GGD-PRC-001 v0.4, Key design choices |
 
-*Table 2. Items still open.*
+*Table 2. Items left open by this record, all decided on 2026-10-02.*
 
 | # | Item | Status |
 | --- | --- | --- |
-| O1 | First host farm and electrician for a co-design visit. No partner was recommended. | Proposed, awaiting Amish |
-| O2 | Battery and panel capacity for the recovery half of R8: a 20 W panel (about $8 to $10, further over budget), relax the recovery target to about 7 days, or accept the miss. No recommendation was made. | Proposed, awaiting Amish |
-| O4 | Pitch wording against the cool-mode rewet bound (at most 74 kg of water per cycle, one point in the bottom 0.37 m): keep "without rewetting it", say only "cool it or dry it", or cut the cool-mode allowance to zero. No recommendation was made. | Proposed, awaiting Amish |
+| O1 | First host farm and electrician for a co-design visit. No partner was recommended. | **Decided by Amish, 2026-10-02:** recruit the host farm and its electrician through a land-grant extension grain-storage specialist, for example at Purdue University or Iowa State University, choosing a farm with a small corn bin, an aeration fan and a center hanger; the route to a first candidate, not an agreed partner (GGD-DEC-001, item 4) |
+| O2 | Battery and panel capacity for the recovery half of R8: a 20 W panel (about $8 to $10, further over budget), relax the recovery target to about 7 days, or accept the miss. No recommendation was made. | **Decided by Amish, 2026-10-02:** a 20 W panel, provided the mast check with the stay removed is rerun for the larger panel and still passes (GGD-DEC-001, item 2) |
+| O4 | Pitch wording against the cool-mode rewet bound (at most 74 kg of water per cycle, one point in the bottom 0.37 m): keep "without rewetting it", say only "cool it or dry it", or cut the cool-mode allowance to zero. No recommendation was made. | **Decided by Amish, 2026-10-02:** say only "cool it or dry it" in the pitch and keep the cool-mode allowance (GGD-DEC-001, item 3) |
 
 *Table 3. Decided but on hold.*
 

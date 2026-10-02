@@ -3,9 +3,9 @@ doc_id: GGD-DDR-003
 title: GrainGuard design for construction
 project: GrainGuard
 doc_type: Design decision record
-version: "0.1"
+version: "0.2"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -13,12 +13,16 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Changes that make the concept physically buildable, with the reason for each; made under Amish's 2026-09-30 instruction to make the design physically buildable; open for his review
+- version: "0.2"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: Accepted by Amish on 2026-10-02 as drafted
 ---
 
 # 0003: Design for construction
 
 - **Date:** 2026-10-01
-- **Status:** Draft. Made under Amish's 2026-09-30 instruction to make the design physically buildable; open for his review. Nothing here changes what GrainGuard does, its pitch or its safety case. Items that would are listed in Table 3 as "Proposed, awaiting Amish".
+- **Status:** accepted. Amish, 2026-10-02: "i approve your recommendations for all 555 open decisions." This covers every change in Tables 1 and 2, as drafted, and is recorded in the design decisions register (GGD-DEC-001). Nothing here changes what GrainGuard does, its pitch or its safety case.
 
 ## Context
 
@@ -54,7 +58,7 @@ The changes keep what GrainGuard does: the same bin, cable position, six pods at
 | Drawings | GGD-DWG-001 Rev P5; making sketches GGD-DWG-101 to 111 added. | Follows the model. |
 | Media | Concept media regenerated from the model. The photoreal renders (`media/render-*.png`), `media/card.png` and `media/social-preview.png` are made on Amish's Mac and were not regenerated; they still show the concept mast top, enclosure stand-off and pods and are now stale. | Follows the model. |
 
-*Table 3. Proposed, awaiting Amish.*
+*Table 3. Items that would change what GrainGuard does.*
 
 None. No change in this record alters what GrainGuard does, its pitch or its safety case. The design decisions register (GGD-DEC-001) carries the decisions that remain open from earlier records and the items to confirm when parts are bought.
 
@@ -63,4 +67,5 @@ None. No change in this record alters what GrainGuard does, its pitch or its saf
 - `design_state: constructable` in `project.yaml`. The build plan GGD-BLD-001 shows every component and step in pictures generated from the model (`cad/src/build_plan_media.py`).
 - Requirement status: met 7 (R1, R4, R5, R7, R11, R12, R14), at risk 3 (R2, R6, R9), not met 1 (R8), not verifiable at TRL 3 2 (R3, R10); R13 is over the value-engineering target by USD 129.50 (GGD-CAL-001 v0.4).
 - The wall bracket uses two existing stiffener bolts, and the stay height is set by where those bolts are on a real bin; the peak cap gland assumes a cap that does not lift for filling. Both are items to confirm in GGD-DEC-001.
+- The decisions of 2026-10-02 that follow this record (a 20 W panel on the same mast, subject to a rerun of the mast check with the stay off, and a charge controller with an adjustable low-voltage disconnect) are recorded in GGD-DEC-001.
 - `cad/src/product_model.py` (the appearance model for the photoreal renders) still follows the concept and should be brought into line with this record before the renders are next made.

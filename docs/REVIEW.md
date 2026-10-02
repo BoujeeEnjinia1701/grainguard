@@ -314,3 +314,54 @@ The photoreal renders (`media/render-*.png`), `media/card.png` and `media/social
 ### Recommended next step
 
 Amish reviews GGD-DDR-003 and the open decisions in GGD-DEC-001. The design is constructable on paper; building and testing to GGD-BLD-001 is TRL 4 work and stays on hold.
+
+## Session 2026-10-02: open decisions decided
+
+On 2026-10-02 Amish approved every recommendation written for the open decisions: "i approve your recommendations for all 555 open decisions." trl stays 3; nothing was built or tested.
+
+### Decisions recorded
+
+8 decisions recorded in the design decisions register (GGD-DEC-001, Decisions made, dated 2026-10-02): GGD-DDR-003 accepted as drafted (1); a 20 W panel, subject to the mast check with the stay off (2); pitch says only "cool it or dry it", cool-mode allowance kept (3); host farm and electrician recruited through a land-grant extension grain-storage specialist (4), a route to a first candidate, not an agreed partner; conformal coating with a fumigation test board at TRL 4 (5); adjustable low-voltage disconnect at about 12.1 V (6); appearance model and renders to follow GGD-DDR-003 (7); control rule defaults confirmed with the specialist and farmer before automatic mode (8).
+
+### Documents changed
+
+- `docs/06-design-decisions.md` (GGD-DEC-001 v0.2): all 8 open items moved to Decisions made; Open decisions now reads "None"; items 5 and 7 of "To confirm when parts are bought" and the value-engineering estimate note updated.
+- `docs/decisions/0003-design-for-construction.md` (GGD-DDR-003 v0.2): status line records acceptance as drafted; status stays Draft.
+- `docs/decisions/0002-recommendations-accepted.md` (GGD-DDR-002 v0.4): O1, O2 and O4 recorded as decided.
+- `docs/decisions/0001-trl2-review-decisions.md` (GGD-DDR-001 v0.3): O1 and O2 recorded as decided.
+- `docs/01-problem.md` (GGD-PRB-001 v0.6): host farm route recorded.
+- `docs/02-concept.md` (GGD-PRC-001 v0.8): summary wording "cool it or dry it"; 20 W panel; adjustable low-voltage disconnect; coating test board; open questions answered.
+- `docs/03-requirements.md` (GGD-REQ-001 v0.7): R8 and R9 status notes record the decisions; no status changed.
+- `docs/04-calcs/01-sizing.md` (GGD-CAL-001 v0.5): R8 row and section D note the decided 20 W panel; section G notes the low-voltage disconnect setting; no number changed.
+- `docs/05-build-plan.md` (GGD-BLD-001 v0.2): adjustable low-voltage disconnect and its setting (section 3.11).
+- `project.yaml`, `README.md` and `CITATION.cff`: pitch reworded to "...only when the air will cool or dry the grain."
+- `bom/bom-notes.md`: the decided panel, controller and coating choices noted; BOM changes are follow-ups.
+- PDFs re-rendered with `python .kit/render.py`; superseded versions removed.
+
+No CAD model, BOM quantity or price, or picture was changed. Requirement status is unchanged: R8 not met until the 20 W panel is calculated, R2, R6 and R9 at risk, R3 and R10 not verifiable at TRL 3, R13 over the value-engineering target.
+
+### Follow-up actions to carry approved decisions into the design
+
+1. Decision 2 (calcs): Rerun the mast check with the stay off (GGD-CAL-001 F6) and the wind load for a 20 W panel; if it passes, rerun section D so R8 recovery is recalculated with the 20 W panel.
+2. Decision 2 (bom): Change BOM line 8 to a 20 W panel (size and price, about USD 8 to 10 more) and resize the panel bracket in line 8 if needed.
+3. Decision 2 (model): Update `cad/src/model.py` for the 20 W panel and its bracket, regenerate the general arrangement and the panel bracket making sketch, and the build plan pictures that show the panel (section 3.12, step 10).
+4. Decision 3 (pictures): Check the concept media and storefront text for the old "without rewetting it" wording when the media are next regenerated.
+5. Decision 5 (docs): Add the coated test board to the TRL 4 test plan when TRL 4 is opened (not now; TRL 4 is on hold).
+6. Decision 6 (bom): Change the BOM line 7 specification to an adjustable low-voltage disconnect and check the price.
+7. Decision 6 (calcs): Rerun the usable battery energy in GGD-CAL-001 section D with the disconnect at about 12.1 V.
+8. Decision 7 (pictures): Bring `cad/src/product_model.py` into line with GGD-DDR-003 (and the 20 W panel) and regenerate the photoreal renders, `media/card.png` and `media/social-preview.png` on Amish's Mac.
+
+### Points found in the review
+
+- Open decision 2 still says a 20 W panel would take the kit "over budget"; the budget is now a value-engineering target and the design is already USD 129.50 over it, so the panel should be judged on the requirement.
+- A 20 W panel roughly doubles the panel's wind area; the mast-alone check (factor 1.5 on yield with the stay off) must be rerun before adopting it.
+- Option (c) of open decision 5, lifting the pods out before fumigation, is not practical: the pods hang on the center cable buried in grain.
+- The value-engineering estimate is USD 389.50 against a USD 260 target set for the concept kit; the gap is mostly parts the concept left out (mast joints, antenna, fuse and surge protection, conduit).
+
+### Safety
+
+The 20 W panel roughly doubles the panel's wind area; it must not be fitted until the mast check with the stay off is rerun and passes. The low-voltage disconnect setting protects the battery from freezing and must be confirmed against the chosen battery's data at TRL 4. GrainGuard still does not measure phosphine and must never be used to judge whether a bin is safe to enter.
+
+### Recommended next step
+
+Rerun the mast check and section D for the 20 W panel, then update the BOM. TRL 4 remains on hold by Amish's instruction.

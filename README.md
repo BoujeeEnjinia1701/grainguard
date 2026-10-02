@@ -4,7 +4,7 @@
 
 **Area:** Agriculture · **TRL:** 3 of 9 (proof of concept on paper) · **Value-engineering target:** USD 260 per bin (estimated cost of the constructable design USD 389.50) · **Difficulty:** 2 of 5
 
-Cable of moisture and temperature probes strung through the bin, plus a controller that runs aeration fans only when the air will cool or dry the grain without rewetting it.
+Cable of moisture and temperature probes strung through the bin, plus a controller that runs aeration fans only when the air will cool or dry the grain.
 
 ![GrainGuard: grain bin sensor cable and aeration fan controller, product render](media/render-hero.png)
 

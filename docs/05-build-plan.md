@@ -3,9 +3,9 @@ doc_id: GGD-BLD-001
 title: GrainGuard prototype build plan
 project: GrainGuard
 doc_type: Build plan
-version: "0.1"
+version: "0.2"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -13,6 +13,10 @@ revisions:
     date: '2026-10-01'
     author: Amish Chadha
     change: First build plan, with pictures by component and step; design made constructable (GGD-DDR-003)
+  - version: "0.2"
+    date: '2026-10-02'
+    author: Amish Chadha
+    change: Charge controller with an adjustable low-voltage disconnect set to the 50 % figure at -20 °C (section 3.11; GGD-DEC-001, item 6)
 ---
 
 # GrainGuard prototype build plan
@@ -264,7 +268,7 @@ Six 1 in mast U-bolt clamps (M8), each with a pressed V-saddle and two nuts with
 | Item | What to buy |
 | --- | --- |
 | Radio and bus board | 915 MHz LoRa module of the nRF52840 plus SX1262 class on a carrier with an RS-485 transceiver, a 12 V to 3.3 V buck regulator and a switched 12 V output for the relay signal (868 MHz outside the Americas) |
-| Charge controller | 12 V PWM, 5 to 10 A, temperature compensation clamped at 15.0 V, low-voltage disconnect, 6 mA or less self-use |
+| Charge controller | 12 V PWM, 5 to 10 A, temperature compensation clamped at 15.0 V, adjustable low-voltage disconnect, 6 mA or less self-use |
 | Battery | 12 V 7 Ah sealed AGM, 151 x 65 x 98 |
 | Fuse and surge strip | Inline 5 A blade fuse holder; surge protector for a 12 V supply and an RS-485 pair; a small terminal strip; an earth terminal |
 
@@ -279,7 +283,7 @@ Six 1 in mast U-bolt clamps (M8), each with a pressed V-saddle and two nuts with
 7. Antenna coax to the board's antenna connector, away from the power wires.
 8. Earth lead from the earth terminal to a bin wall bolt; earth the rope and the bus cable shield to the bin at the top (step 4).
 
-**Check before moving on.** With the fuse out, every wire continues end to end and no supply reads short to 0 V.
+**Check before moving on.** With the fuse out, every wire continues end to end and no supply reads short to 0 V. Set the charge controller's low-voltage disconnect to the battery maker's figure for 50 % charge at -20 °C (about 12.1 V) so the battery cannot freeze in deep cold.
 
 ### 3.12 Panel bracket
 

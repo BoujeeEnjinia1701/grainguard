@@ -3,9 +3,9 @@ doc_id: GGD-DDR-001
 title: GrainGuard TRL 2 review decisions
 project: GrainGuard
 doc_type: Design decision record
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,12 +17,16 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002). O3 decided (plenum probe adopted into the base kit)
+- version: "0.3"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: O1 and O2 decided by Amish on 2026-10-02 (GGD-DEC-001, items 4 and 2)
 ---
 
 # 0001: TRL 2 review decisions
 
 - **Date:** 2026-09-25
-- **Status:** accepted for items D1 to D11 and, since GGD-DDR-002, O3; items O1 and O2 remain proposed
+- **Status:** accepted for items D1 to D11 and, since GGD-DDR-002, O3; items O1 and O2 were decided by Amish on 2026-10-02 as recommended in the design decisions register (GGD-DEC-001, items 4 and 2)
 
 ## Context
 
@@ -47,17 +51,17 @@ The options for each item are those listed in `docs/REVIEW.md` (session 2026-09-
 | D5 | Cable layout | One center cable with six pods for bins up to about 5.5 m; more cables for larger bins. Decided by Amish, 2026-09-25: go with recommendation. |
 | D6 | Pod bus | RS-485 with a small microcontroller in each pod. Decided by Amish, 2026-09-25: go with recommendation. |
 | D7 | Power and fan interface | Solar 12 V controller with an electrician-installed interposing relay kit, rather than powering the controller from the fan starter. Decided by Amish, 2026-09-25: go with recommendation. |
-| D8 | Battery chemistry | AGM lead-acid rather than lithium iron phosphate, because it accepts charge below 0 °C. Decided by Amish, 2026-09-25: go with recommendation. (Capacity stays open as O2.) |
+| D8 | Battery chemistry | AGM lead-acid rather than lithium iron phosphate, because it accepts charge below 0 °C. Decided by Amish, 2026-09-25: go with recommendation. (Capacity was O2, decided on 2026-10-02.) |
 | D9 | Plenum sensing | Add a plenum sensor at TRL 3 if the budget allows, in place of a predicted fan heat rise. Decided by Amish, 2026-09-25: go with recommendation. At TRL 3 the lowest-cost form, a temperature-only probe in the fan transition, costs $9.50 and does not fit in $250 with the kit at $247.00 (GGD-CAL-001, section H), so it is carried as a priced option (BOM item 14). Whether to adopt it anyway is O3. |
 | D10 | Headspace CO₂ sensor | Offer as an option, not in the base kit. Decided by Amish, 2026-09-25: go with recommendation. |
 | D11 | First region and crop | Shelled corn in a small US Midwest bin for the first co-design. Decided by Amish, 2026-09-25: go with recommendation. |
 
-*Table 2. Items left open by this record (O3 has since been decided in GGD-DDR-002).*
+*Table 2. Items left open by this record (O3 decided in GGD-DDR-002; O1 and O2 decided on 2026-10-02).*
 
 | # | Item | Status |
 | --- | --- | --- |
-| O1 | First host farm and electrician for a co-design visit | Proposed, awaiting Amish. No partner was recommended; co-design partners are to be picked per area later, as Amish directed for community designs. |
-| O2 | Battery and panel capacity for R8 | Proposed, awaiting Amish. The TRL 2 review asked whether to move to a 12 Ah battery but made no single recommendation. At TRL 3 a 3 mA relay input meets the autonomy half of R8 at no cost, but the 3-day recovery half needs a panel of about 19 W (GGD-CAL-001, section D). Options: a 20 W panel (about $8 to $10, kit over $250), relax the recovery target to 7 days at 1.5 peak sun hours, or accept the miss. No recommendation is recorded here. |
+| O1 | First host farm and electrician for a co-design visit | **Decided by Amish, 2026-10-02:** recruit the host farm and its electrician through a land-grant extension grain-storage specialist, for example at Purdue University or Iowa State University, choosing a farm with a small corn bin, an aeration fan and a center hanger; the route to a first candidate, not an agreed partner (GGD-DEC-001, item 4). |
+| O2 | Battery and panel capacity for R8 | **Decided by Amish, 2026-10-02:** a 20 W panel, provided the mast check with the stay removed is rerun for the larger panel and still passes (GGD-DEC-001, item 2). At TRL 3 a 3 mA relay input meets the autonomy half of R8 at no cost, but the 3-day recovery half needs a panel of about 19 W (GGD-CAL-001, section D). |
 | O3 | Adopt the plenum probe despite the budget | Decided by Amish, 2026-09-25: go with recommendation (GGD-DDR-002). It removes the largest decision error (about 1 point of EMC per °C of fan heat) for $9.50 and would put the kit at $256.50, 2.6 % over $250. Recommendation: adopt it and accept the $6.50 overrun, since no other $9.50 buys as much decision accuracy. The probe is now BOM item 14 in the base kit, and the kit is $256.50. |
 
 ## Consequences

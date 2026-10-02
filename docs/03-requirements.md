@@ -3,9 +3,9 @@ doc_id: GGD-REQ-001
 title: GrainGuard requirements
 project: GrainGuard
 doc_type: Requirements
-version: "0.6"
+version: "0.7"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -33,6 +33,10 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: "Design for construction (GGD-DDR-003); R13 reported against the value-engineering target (Amish, 2026-10-01); R7 margin from the modelled antenna"
+- version: "0.7"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: R8 and R9 status notes record the 2026-10-02 decisions (GGD-DEC-001, items 2, 5 and 6); no status changed
 ---
 
 # GrainGuard requirements
@@ -64,10 +68,10 @@ The **reference case** is a 5.49 m (18 ft) diameter corrugated steel bin with a 
 
 | ID | Status at TRL 3 | Basis |
 | --- | --- | --- |
-| R8 | **Not met** | Autonomy 7.7 days with the fan continuous and a 3 mA relay input (met); refill from 50 % takes 7.3 days with the 10 W panel (not met); a panel of about 19 W would meet it (open, GGD-DDR-001 O2) |
+| R8 | **Not met** | Autonomy 7.7 days with the fan continuous and a 3 mA relay input (met); refill from 50 % takes 7.3 days with the 10 W panel (not met); a panel of about 19 W would meet it. Amish decided on 2026-10-02 on a 20 W panel, provided the mast check with the stay off still passes (GGD-DEC-001, item 2); the status changes when the calculation is rerun |
 | R2 | At risk | Sensor-only error 0.23 points (SHT45) and 0.42 points (SHT40) worst case over 20 % to 75 % RH, 0.81 at the SHT40 maximum tolerance; equation fit error, drift and membrane lag not included |
 | R6 | At risk | Alarm latency about 13 min (met); only the center core, 3.3 % of the cross-section, is watched |
-| R9 | At risk | AGM electrolyte may freeze near -25 °C at 50 % charge; phosphine protection unverified |
+| R9 | At risk | AGM electrolyte may freeze near -25 °C at 50 % charge, so the adjustable low-voltage disconnect is set to the 50 % figure at -20 °C, about 12.1 V (GGD-DEC-001, item 6); phosphine protection by conformal coating, unverified until a coated test board goes through one fumigation at TRL 4 (item 5) |
 | R3 | Not verifiable at TRL 3 | SHT45 meets the target; the radiation error of the shield needs a test |
 | R10 | Not verifiable at TRL 3 | Rope 8 times the 2.5 kN design force (estimate 2.08 kN); the roof hanger rating comes from the bin maker |
 | R4 | Met | Rule met by design; fan heat measured by the plenum probe within ±0.51 °C, so the plenum EMC is known within about ±0.5 points (GGD-CAL-001, B10) |

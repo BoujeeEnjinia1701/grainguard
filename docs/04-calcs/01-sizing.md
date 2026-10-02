@@ -3,9 +3,9 @@ doc_id: GGD-CAL-001
 title: GrainGuard sizing calculations
 project: GrainGuard
 doc_type: Calculation
-version: "0.4"
+version: "0.5"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -25,6 +25,10 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Design for construction (GGD-DDR-003). Radio uses the modelled antenna height; mast check uses the modelled panel and shield heights; new checks F5 (stay) and F6 (mast with the stay off); cable and conduit lengths; cost reported against the value-engineering target
+- version: "0.5"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: R8 row, section D and section G note the 2026-10-02 decisions (GGD-DEC-001, items 2 and 6); no number changed
 ---
 
 # GrainGuard sizing calculations
@@ -92,7 +96,7 @@ The reference case is unchanged from TRL 2: a 5.49 m (18 ft) corrugated steel bi
 | **Total, fan 8 h per day / continuous** | **2.70 / 3.28** |
 
 - **Autonomy.** The TRL 2 design had a 10 mA relay input and used 5.30 Wh per day with the fan running continuously [D2]. The 7 Ah AGM battery gives 25.2 Wh usable at -20 °C [D4], so it lasted 4.8 days. With the relay input specified at 3 mA or less (an optically isolated input, BOM item 11), daily use falls to 3.28 Wh and autonomy rises to 7.7 days with the fan continuous and 9.3 days at 8 h per day [D3], [D5]. The autonomy half of R8 is met with no added cost.
-- **Recovery.** At 1.5 winter peak sun hours the 10 W panel yields 9.0 Wh per day, a net 5.7 Wh with the fan continuous, and needs 7.3 days to refill 42 Wh from half charge; at 2.5 peak sun hours it needs 3.6 days [D6]. Refilling in 3 days at 1.5 peak sun hours would take a panel of about 19 W [D7]. The recovery half of R8 is **not met**, so R8 is **not met**. A 20 W panel would add about $8 to $10 and take the kit over budget; the choice is open (see `docs/REVIEW.md`).
+- **Recovery.** At 1.5 winter peak sun hours the 10 W panel yields 9.0 Wh per day, a net 5.7 Wh with the fan continuous, and needs 7.3 days to refill 42 Wh from half charge; at 2.5 peak sun hours it needs 3.6 days [D6]. Refilling in 3 days at 1.5 peak sun hours would take a panel of about 19 W [D7]. The recovery half of R8 is **not met**, so R8 is **not met**. A 20 W panel would add about $8 to $10; Amish decided on 2026-10-02 to fit one, provided the mast check with the stay off is rerun for it and still passes (GGD-DEC-001, item 2). This section is not yet recalculated for it.
 - **Charging voltage (R12).** A temperature-compensated AGM charger raises its absorption voltage to 15.75 V at -20 °C and 16.05 V at -30 °C, over the 15 V limit in R12. The charge controller is therefore specified with its compensation clamped at 15.0 V [D8]. With that specification R12 is **met**.
 
 ## E. Radio (R7)
@@ -112,7 +116,7 @@ The reference case is unchanged from TRL 2: a 5.49 m (18 ft) corrugated steel bi
 
 ## G. Environment (R9)
 
-Lead-acid electrolyte freezes near -25 °C at 50 % state of charge and below -50 °C when full (typical manufacturer tables, to confirm on the chosen battery's datasheet) [G2]. At the -30 °C lower limit of R9, the low-voltage disconnect must keep the battery well above half charge, which cuts the usable energy assumed in section D. Phosphine resistance of the pods is still unverified. R9 is **at risk**.
+Lead-acid electrolyte freezes near -25 °C at 50 % state of charge and below -50 °C when full (typical manufacturer tables, to confirm on the chosen battery's datasheet) [G2]. At the -30 °C lower limit of R9, the low-voltage disconnect must keep the battery well above half charge, which cuts the usable energy assumed in section D. Amish decided on 2026-10-02 (GGD-DEC-001, item 6) on a controller with an adjustable disconnect set to the battery maker's 50 % figure at -20 °C, about 12.1 V, to be confirmed at TRL 4. Phosphine resistance of the pods is still unverified. R9 is **at risk**.
 
 ## H. Cost (R13)
 
@@ -128,7 +132,7 @@ Lead-acid electrolyte freezes near -25 °C at 50 % state of charge and below -50
 
 | ID | Requirement | Value at TRL 3 | Target | Status |
 | --- | --- | --- | --- | --- |
-| R8 | Power autonomy | 7.7 days with no sun and the fan continuous; refill from 50 % in 7.3 days | 5 days; refill in 3 days | **Not met** |
+| R8 | Power autonomy | 7.7 days with no sun and the fan continuous; refill from 50 % in 7.3 days with the 10 W panel (20 W decided on 2026-10-02, not yet calculated) | 5 days; refill in 3 days | **Not met** |
 | R2 | Moisture estimate | Sensor-only error 0.23 points (SHT45) and 0.42 points (SHT40) worst case; 0.81 at the SHT40 maximum; equation error not included | ±0.8 points, 20 % to 75 % RH | At risk |
 | R6 | Heating alert | Center core only, 3.3 % of the section; latency about 13 min | Any pod, alarm within 15 min | At risk |
 | R9 | Environment | AGM may freeze near -25 °C at 50 % charge; phosphine unverified | -30 °C to +50 °C; IP66; one fumigation | At risk |

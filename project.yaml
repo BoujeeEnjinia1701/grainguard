@@ -23,7 +23,7 @@ trl_evidence:
   - docs/06-design-decisions.md
 shortlisted: false
 pitch: >-
-  Cable of moisture and temperature probes strung through the bin, plus a controller that runs aeration fans only when the air will cool or dry the grain without rewetting it.
+  Cable of moisture and temperature probes strung through the bin, plus a controller that runs aeration fans only when the air will cool or dry the grain.
 problem: >-
   Stored grain spoils when bins are aerated at the wrong times.
 budget_usd: 260

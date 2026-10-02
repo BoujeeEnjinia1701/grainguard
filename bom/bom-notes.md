@@ -7,3 +7,5 @@
 - Item 14, the plenum temperature probe ($9.50), measures the fan's heat so the decision rule does not rely on an assumed value (R4, GGD-CAL-001 section B).
 - The bin, grain, aeration fan, fan starter and concrete pad already exist on the farm and are not costed.
 - Item 11 is the only part connected to mains and must be installed by a licensed electrician.
+
+Decided by Amish on 2026-10-02 (GGD-DEC-001): a 20 W panel in line 8, provided the mast check with the stay off is rerun for it and still passes (item 2); a charge controller with an adjustable low-voltage disconnect in line 7 (item 6); conformal coating in line 13 stays the phosphine protection for the prototype (item 5). The line 7 and 8 specification and price changes are follow-ups and are not yet in `bom.csv`.

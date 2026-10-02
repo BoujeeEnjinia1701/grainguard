@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use or build on this design, please cite it as below."
 type: software
 title: "GrainGuard"
-abstract: "Cable of moisture and temperature probes strung through the bin, plus a controller that runs aeration fans only when the air will cool or dry the grain without rewetting it."
+abstract: "Cable of moisture and temperature probes strung through the bin, plus a controller that runs aeration fans only when the air will cool or dry the grain."
 authors:
   - given-names: Amish
     family-names: Chadha

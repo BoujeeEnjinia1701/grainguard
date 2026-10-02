@@ -3,9 +3,9 @@ doc_id: GGD-PRB-001
 title: GrainGuard problem statement
 project: GrainGuard
 doc_type: Problem statement
-version: "0.5"
+version: "0.6"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -29,6 +29,10 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: "Cost constraint restated as a value-engineering target (Amish, 2026-10-01)"
+- version: "0.6"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: Host farm and electrician route decided on 2026-10-02 (GGD-DEC-001, item 4)
 ---
 
 # GrainGuard problem statement
@@ -83,4 +87,4 @@ The stakes are higher where storage is poorer. Reviews report storage losses of 
 
 - First region and crop: decided as corn in a small US Midwest bin (GGD-DDR-001, D11; decided by Amish, 2026-09-25).
 - Headspace CO₂ sensor: decided as an option, not in the base kit (GGD-DDR-001, D10; decided by Amish, 2026-09-25).
-- Which farm and electrician would host a first co-design visit? Proposed, awaiting Amish (GGD-DDR-001, O1); partners are to be picked per area later.
+- Which farm and electrician would host a first co-design visit? Decided by Amish, 2026-10-02 (GGD-DEC-001, item 4): recruit the host farm and its electrician through a land-grant extension grain-storage specialist, for example at Purdue University or Iowa State University, choosing a farm with a small corn bin, an aeration fan and a center hanger. No farm has been approached yet.
