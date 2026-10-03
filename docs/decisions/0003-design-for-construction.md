@@ -3,7 +3,7 @@ doc_id: GGD-DDR-003
 title: GrainGuard design for construction
 project: GrainGuard
 doc_type: Design decision record
-version: "0.2"
+version: "0.3"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -17,6 +17,10 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: Accepted by Amish on 2026-10-02 as drafted
+- version: "0.3"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: Update note for the 2026-10-02 follow-ups (20 W panel, 430 mm bracket, kit USD 406.50)
 ---
 
 # 0003: Design for construction
@@ -57,6 +61,8 @@ The changes keep what GrainGuard does: the same bin, cable position, six pods at
 | BOM | Lines 1 to 4, 6, 8 to 11 and 13 respecified; lines 15 (antenna), 16 (fuse and surge protection) and 17 (conduit) added. | Follows the model. |
 | Drawings | GGD-DWG-001 Rev P5; making sketches GGD-DWG-101 to 111 added. | Follows the model. |
 | Media | Concept media regenerated from the model. The photoreal renders (`media/render-*.png`), `media/card.png` and `media/social-preview.png` are made on Amish's Mac and were not regenerated; they still show the concept mast top, enclosure stand-off and pods and are now stale. | Follows the model. |
+
+*Update, 2026-10-02:* the 20 W panel decided that day (GGD-DEC-001, item 2) replaces the 10 W panel in P7: the bracket is 430 mm wide instead of 250 mm, and the panel is about 430 x 350 mm. With the adjustable-disconnect charge controller (item 6) the estimated cost of the constructable design is USD 406.50 per bin (USD 146.50 over the USD 260 target), and R8 is met on paper (GGD-CAL-001 v0.6). The numbers in this record are as drafted on 2026-10-01.
 
 *Table 3. Items that would change what GrainGuard does.*
 

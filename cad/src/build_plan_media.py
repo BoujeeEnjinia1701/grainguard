@@ -171,7 +171,7 @@ def overview():
         ("Inner plate, charger, board, fuse and surge strip", Pos(760, 0, 160) * M("mount_plate", "charger", "board", "protect"), COL["board"]),
         ("Enclosure lid", Pos(1050, 0, 0) * M("enc_lid"), COL["lid_box"]),
         ("Panel bracket", Pos(160, 0, 120) * M("panel_bracket", "panel_bolts"), COL["pbracket"]),
-        ("Solar panel, 10 W", Pos(330, 0, 420) * M("panel"), COL["panel"]),
+        ("Solar panel, 20 W", Pos(330, 0, 420) * M("panel"), COL["panel"]),
         ("Antenna bracket and antenna", Pos(-260, 0, 220) * M("ant_bracket", "antenna"), COL["ant"]),
         ("Shield arm", Pos(330, 250, 80) * M("arm"), COL["arm"]),
         ("Radiation shield and ambient sensor", Pos(330, 250, -220) * M("shield_plates", "shield_rods", "ambient"), COL["shield"]),
@@ -365,13 +365,13 @@ def sheets(only=None):
         out.append(bv.component_sheet(
             Part("Panel bracket", pb, COL["pbracket"]), nb, dwg_no="GGD-DWG-108", title="GrainGuard panel bracket: making sketch",
             material="Aluminium sheet 3 mm, 5052 class (bends well)", view_shape=Pos(0, 0, -2200) * pb, inset_view=(20, 40),
-            notes=["Blank 250 wide x 367 long from 3 mm 5052 aluminium.",
+            notes=["Blank 430 wide x 367 long from 3 mm 5052 aluminium.",
                    "Bend line 165 mm from one end: the short side is the upright leg,",
                    "  the long side (200 mm) carries the panel. Fold to 135 degrees so",
                    "  the legs are 45 degrees apart; a sheet metal shop can do it.",
                    "Upright leg: two pairs of 9 mm holes, 42 mm apart across the centre",
                    "  line, 42 and 132 mm below the outside of the bend.",
-                   "Panel leg: four 5.5 mm holes, 8 mm in from each side edge, 20 and",
+                   "Panel leg: four 5.5 mm holes, 10 mm in from each side edge, 20 and",
                    "  180 mm from the outside of the bend.",
                    "Fit: the upright leg sits on two V-saddles on the outer face of the",
                    "  mast top, held by two U-bolts; the panel's frame lip sits on the",
@@ -569,7 +569,7 @@ def joints(only=None):
 
     # 09 panel bracket
     if want(9):
-        box_ = (-60, 300, -117, 140, 2130, 2440)        # cut through the left-hand pair of panel bolts
+        box_ = (-60, 300, -205, 140, 2130, 2440)        # cut through the left-hand pair of panel bolts
         ps = [part("Mast pipe and cap", win(fuse([mc("mast"), mc("cap")]), *box_), COL["mast"]),
               part("Two V-saddles and U-bolts", win(mc("panel_clamps"), *box_), COL["clamp"]),
               part("Panel bracket, folded to 135 degrees", win(mc("panel_bracket"), *box_), "#2DD4BF"),

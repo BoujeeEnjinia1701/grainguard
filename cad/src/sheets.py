@@ -1,4 +1,4 @@
-"""GrainGuard general arrangement sheet GGD-DWG-001, Rev P5 (TRL 3, constructable design).
+"""GrainGuard general arrangement sheet GGD-DWG-001, Rev P6 (TRL 3, constructable design).
 
 Run from the repo root:  python cad/src/sheets.py
 Writes cad/drawings/GGD-DWG-001.svg, .pdf and .png from the parametric model in
@@ -14,7 +14,7 @@ sys.path[:0] = [str(ROOT / ".kit"), str(ROOT / "cad" / "src")]
 from drawing import Sheet, _viewbox, _t, M, TB_Y, INK, MUTED  # noqa: E402
 from model import PARAMS as P, assembly, build_parts, derived, sensor_pod, polar  # noqa: E402
 
-DATE = "2026-10-01"
+DATE = "2026-10-02"
 P_DATE = "2026-09-25"   # date of revisions P1 and P2
 P3_DATE = "2026-09-27"  # date of revisions P3 and P4
 
@@ -99,14 +99,15 @@ def main():
     asm = assembly()
     views = safe_project_views(asm, work / "ga")
     bb = asm.bounding_box()
-    s = Sheet(project="GrainGuard", title="General arrangement", dwg_no="GGD-DWG-001", rev="P5",
+    s = Sheet(project="GrainGuard", title="General arrangement", dwg_no="GGD-DWG-001", rev="P6",
               author="Amish Chadha", date=DATE, scale=None, theme="technical",
               material="Bin, floor, fan and starter existing (reference only); kit parts per bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
               revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", P_DATE, "AC"),
                          ("P2", "Plenum probe in base kit; kit cost note (GGD-DDR-002)", P_DATE, "AC"),
                          ("P3", "Solar panel faces away from the bin (GGD-DDR-002)", P3_DATE, "AC"),
                          ("P4", "Layout and labels tidied", P3_DATE, "AC"),
-                         ("P5", "Design for construction (GGD-DDR-003)", DATE, "AC")])
+                         ("P5", "Design for construction (GGD-DDR-003)", "2026-10-01", "AC"),
+                         ("P6", "20 W solar panel and wider bracket (GGD-DEC-001, item 2)", DATE, "AC")])
     s.add_ortho(views)
     k = s.scale
     c = ortho_cells(s, views)
@@ -155,7 +156,7 @@ def main():
     mast = Compound([parts[k_][1] for k_ in ("mast", "enclosure", "battery", "charger", "board", "panel", "ambient", "antenna")])
     local = Rot(0, 0, -P["mast_ang"]) * (Pos(-mxp, -myp, 0) * mast)
     mv = safe_project_views(local, work / "mast", names=("front",))
-    s.add_svg(mv["front"], 330, 43, 90, 95, scale=1 / 25, label="Detail B: mast and controller", sublabel="Scale 1:25, radial view")
+    s.add_svg(mv["front"], 330, 49, 90, 89, scale=1 / 28, label="Detail B: mast and controller", sublabel="Scale 1:28, radial view")
 
     ed, ew, eh = P["enc"]
     s.add_notes("Main dimensions and interfaces (mm)", [
@@ -164,9 +165,9 @@ def main():
         f"Pods {P['pod_d']:.0f} dia x {P['pod_l']:.0f}, printed, on rope stops; {P['pod_n']} at {D['pod_pitch']:.0f} pitch",
         f"Bus cable {D['cable_len'] / 1000:.1f} m via peak cap gland, wall, stay; 18.5 m supplied",
         f"Mast DN25 x {P['mast_h']:,.0f} welded to base plate, {P['mast_off']:.0f} out; stay at {P['stay_z']:,.0f}",
-        f"Enclosure {eh:.0f} x {ew:.0f} x {ed:.0f} IP66 at {P['enc_z']:,.0f}; panel 10 W at {P['panel_tilt']:.0f} deg",
+        f"Enclosure {eh:.0f} x {ew:.0f} x {ed:.0f} IP66 at {P['enc_z']:,.0f}; panel 20 W at {P['panel_tilt']:.0f} deg",
         "Relay kit on starter post; 14 probe in transition; 17 conduit",
-        "Pull-down 2.5 kN (GGD-CAL-001); kit $389.50, target $260",
+        "Pull-down 2.5 kN (GGD-CAL-001); kit $406.50, target $260",
     ], x=276, y=158, width=146)
     out = s.save(ROOT / "cad" / "drawings" / "GGD-DWG-001")
     shutil.rmtree(work, ignore_errors=True)

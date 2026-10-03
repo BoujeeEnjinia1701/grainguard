@@ -3,7 +3,7 @@ doc_id: GGD-DEC-001
 title: GrainGuard design decisions register
 project: GrainGuard
 doc_type: Design decisions register
-version: "0.2"
+version: "0.3"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -17,6 +17,10 @@ revisions:
     date: '2026-10-02'
     author: Amish Chadha
     change: Amish approved the recommendations of open items 1 to 8 on 2026-10-02; all moved to decisions made; panel and charge controller lines to confirm updated
+  - version: "0.3"
+    date: '2026-10-02'
+    author: Amish Chadha
+    change: Follow-ups carried out (20 W panel and adjustable-disconnect controller in the BOM and model; cost USD 406.50); one new open decision, the stay-off service limit
 ---
 
 # GrainGuard design decisions register
@@ -25,7 +29,11 @@ Every design decision still to be made, and every decision made, in one place. E
 
 ## Open decisions
 
-None. All open decisions were decided on 2026-10-02.
+*Table 1a. Open decisions.*
+
+| No. | Question | Options | Recommendation |
+| --- | --- | --- | --- |
+| 9 | The 20 W panel decided on 2026-10-02 was conditional on the stay-off mast check still passing. With the stay off, the DN25 mast alone is at 0.9 times yield at a 45 m/s gust (GGD-CAL-001 F6), under the 1.5 times margin | (a) Keep the DN25 mast and allow the stay off only in gusts under 30 m/s (2.1 times yield), by a rule in the build plan (written in section 3.6 as the proposal). (b) Move to a DN32 mast (42.4 x 3.6 mm, 1.5 times margin at 45 m/s): changes the mast, base plate, six clamps and BOM line 10. (c) Go back to the 10 W panel, and R8 recovery is not met again | (a): the stay is off only for service, on a calm day |
 
 ## To confirm when parts are bought
 
@@ -37,7 +45,7 @@ None. All open decisions were decided on 2026-10-02.
 | 2 | The position and spacing of two stiffener bolts at a sheet seam between 1.4 and 1.8 m up, near the mast position | They set the wall bracket's holes and the stay height; the mast lug must match | GGD-DDR-003 P5 |
 | 3 | The peak cap is fixed (it does not lift for filling) and has room for an M12 gland 300 from the axis | The bus cable leaves through it; if the cap lifts, the cable goes through a roof panel next to it instead | GGD-DDR-003 P4 |
 | 4 | The enclosure's lug kit, lug spacing and inner boss positions | They set the mounting plate's lug holes and the battery shelf position | GGD-DDR-003 P6 |
-| 5 | The solar panel (20 W, decided 2026-10-02) has a frame with a flat back lip at least 12 wide, and its size fits the panel bracket | The panel bolts through it; the bracket was drawn for the 10 W panel | GGD-DDR-003 P7; decision of 2026-10-02 (open item 2) |
+| 5 | The solar panel (20 W, decided 2026-10-02) has a frame with a flat back lip at least 12 wide, and its size fits the panel bracket | The panel bolts through it; the bracket was drawn for the 10 W panel and is now 430 mm wide for a panel of about 430 x 350 mm | GGD-DDR-003 P7; decision of 2026-10-02 (open item 2) |
 | 6 | The mast clamps' V-saddles fit 33.7 mm (DN25) pipe and take 3 to 4 mm plate | Every part on the mast hangs on them | GGD-DDR-003 P5 to P8 |
 | 7 | The charge controller can clamp its temperature compensation at 15.0 V, and has an adjustable low-voltage disconnect that can be set to the battery maker's 50 % figure at -20 °C (about 12.1 V) | Keeps the system at 15 V or less in the cold (R12) and the battery from freezing (R9) | GGD-CAL-001 D8 and G2; decision of 2026-10-02 (open item 6) |
 | 8 | The fan transition top is sheet steel thin enough for an M12 gland, with room 300 out from the wall clear of access panels | The plenum probe goes there | GGD-DDR-002; build plan step 14 |
@@ -45,7 +53,7 @@ None. All open decisions were decided on 2026-10-02.
 
 ## Value engineering
 
-Value-engineering target: USD 260 (a hypothetical control target, not a limit; `budget_usd` in `project.yaml`). Estimated cost of the constructable design: USD 389.50 per bin (USD 129.50 over the target), before the 20 W panel decided on 2026-10-02 (about USD 8 to 10 more), with the farmhouse receiver (USD 22.00) costed once per farm. The concept kit was USD 256.50; making it buildable added USD 133.00 (GGD-DDR-003, GGD-CAL-001 H1 and H4).
+Value-engineering target: USD 260 (a hypothetical control target, not a limit; `budget_usd` in `project.yaml`). Estimated cost of the constructable design: USD 406.50 per bin (USD 146.50 over the target), including the 20 W panel (USD 34.00, USD 9.00 more) and the adjustable-disconnect charge controller (USD 18.00, USD 8.00 more) decided on 2026-10-02, with the farmhouse receiver (USD 22.00) costed once per farm. The concept kit was USD 256.50; making it buildable added USD 133.00 and the 2026-10-02 decisions USD 17.00 (GGD-DDR-003, GGD-CAL-001 H1 and H4).
 
 Main cost drivers:
 

@@ -47,7 +47,7 @@ kit = [
     Part("LoRa microcontroller and bus board", kp["board"][1], "#7C3AED", 5),
     Part("Battery, 12 V 7 Ah AGM", kp["battery"][1], "#C2410C", 6),
     Part("Solar charge controller", kp["charger"][1], "#16A34A", 7),
-    Part("Solar panel, 10 W", kp["panel"][1], "#1E3A8A", 8),
+    Part("Solar panel, 20 W", kp["panel"][1], "#1E3A8A", 8),
     Part("Ambient T and RH in radiation shield", kp["ambient"][1], "#F8FAFC", 9),
     Part("Mast and brackets", kp["mast"][1], "#A16207", 10),
     Part("Interposing relay kit and signal cable", relay_all, "#D4A017", 11),
@@ -64,7 +64,7 @@ KEY = ["5.49 m (18 ft) bin, 3,493 bu (88.8 t) corn (reference case)",
        f"6 T and RH pods at {D['pod_pitch']:.0f} mm pitch on one center cable",
        "Fan runs only if plenum-air EMC suits the mode; fan heat measured",
        "12 V solar controller; 7.7 days with no sun; no mains inside",
-       "Kit $389.50 per bin (value-engineering target $260)"]
+       "Kit $406.50 per bin (value-engineering target $260)"]
 
 render_all(
     parts, project="GrainGuard", title="Bin aeration controller concept", dwg_no="GGD-DWG-010",
@@ -154,7 +154,7 @@ x_parts = [
     Part("LoRa microcontroller and bus board", x_board, "#7C3AED", 5),
     Part("Battery, 12 V 7 Ah AGM", x_batt, "#C2410C", 6),
     Part("Solar charge controller", x_chg, "#16A34A", 7),
-    Part("Solar panel, 10 W", x_panel, "#1E3A8A", 8),
+    Part("Solar panel, 20 W", x_panel, "#1E3A8A", 8),
     Part("Ambient T and RH in radiation shield", x_shield, "#CBD5E1", 9),
     Part("Mast and brackets", x_mast, "#A16207", 10),
     Part("Interposing relay kit (at the fan starter)", x_relay, "#D4A017", 11),

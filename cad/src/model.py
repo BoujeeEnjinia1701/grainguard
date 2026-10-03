@@ -78,8 +78,8 @@ PARAMS = {
     "board": (25.0, 100.0, 80.0),
     "protect": (30.0, 40.0, 60.0),  # battery fuse, surge protector and terminal strip
     # 8 solar panel and its bracket
-    "panel": (350.0, 250.0, 25.0), "panel_tilt": 45.0,
-    "pbracket": (250.0, 200.0, 165.0, 3.0),  # width, sloped leg, upright leg, thickness
+    "panel": (350.0, 430.0, 25.0), "panel_tilt": 45.0,
+    "pbracket": (430.0, 200.0, 165.0, 3.0),  # width, sloped leg, upright leg, thickness
     # 9 ambient sensor in a radiation shield on an arm
     "shield_d": 150.0, "shield_plates": 6, "shield_pitch": 28.0,
     "shield_arm": 330.0, "shield_z": 1800.0, "shield_top": 1960.0,
@@ -597,7 +597,7 @@ def build_components(p=PARAMS):
     zP = (2190.0, 2280.0)
     for z in zP:
         pb -= ubolt_holes(z, 26, 33)
-    pbolt_pos = [(s, y) for s in (20.0, 180.0) for y in (-117.0, 117.0)]
+    pbolt_pos = [(s, y) for s in (20.0, 180.0) for y in (-205.0, 205.0)]
     for s, y in pbolt_pos:
         pb -= _oriented(Cylinder(2.75, 30), on_panel(s, 0, y, p), (nn[0], 0, nn[1]))
     C["panel_bracket"] = ("Panel bracket, bent 3 mm aluminium", ml(pb, p), 8)
@@ -612,7 +612,7 @@ def build_components(p=PARAMS):
         pan -= Pos(s - 125, y, -pl[2] / 2 + 1) * Cylinder(2.75, 4)
     jbox = Pos(-19 - 125, 70, -pl[2] / 2 + 6 + 7.5) * Box(28, 60, 15)
     c0 = on_panel(125, pbt + pl[2] / 2, 0, p)
-    C["panel"] = ("Solar panel, 10 W", ml(Pos(*c0) * Rot(0, tilt, 0) * (pan + jbox), p), 8)
+    C["panel"] = ("Solar panel, 20 W", ml(Pos(*c0) * Rot(0, tilt, 0) * (pan + jbox), p), 8)
     pbolts = None
     for s, y in pbolt_pos:
         o = on_panel(s, 0, y, p)
@@ -721,7 +721,7 @@ GROUPS = {   # concept-level parts for the drawings and media, by BOM item
     "battery": ("Battery, 12 V 7 Ah AGM", ["battery", "shelf", "strap"], 6),
     "charger": ("Solar charge controller", ["charger"], 7),
     "board": ("LoRa microcontroller and bus board", ["board", "protect"], 5),
-    "panel": ("Solar panel, 10 W, with bracket", ["panel", "panel_bracket", "panel_bolts", "panel_lead"], 8),
+    "panel": ("Solar panel, 20 W, with bracket", ["panel", "panel_bracket", "panel_bolts", "panel_lead"], 8),
     "ambient": ("Ambient T and RH in radiation shield", ["arm", "shield_plates", "shield_rods", "ambient", "ambient_lead"], 9),
     "relay": ("Interposing relay kit and signal cable", ["relay", "relay_mount", "nipple", "relay_cable", "conduit"], 11),
     "probe": ("Plenum temperature probe and lead", ["probe", "probe_gland", "probe_lead", "probe_up"], 14),
@@ -767,6 +767,12 @@ REF_TOUCH = [("rope_top", "hanger", 2.0), ("wall_bracket", "stiffener"), ("cap_g
              ("relay_mount", "starter"), ("nipple", "starter"), ("conduit", "fan"), ("anchors", "pad"), ("mast", "pad")]
 
 
+CLEAR = [   # pairs that must keep a gap (mm) so nothing rubs: the 20 W panel (2026-10-02) against its neighbours
+    ("panel", "shield_plates", 25.0), ("panel", "antenna", 25.0), ("panel", "ant_bracket", 25.0),
+    ("panel", "arm", 25.0), ("panel", "enc_body", 25.0), ("panel_bracket", "antenna", 25.0),
+]
+
+
 def check(p=PARAMS, verbose=True):
     """Constructability checks: no two parts overlap (more than 1 mm3), no part enters the existing
     bin, fan or starter except where it is fixed to them, and every joint in TOUCH touches."""
@@ -807,6 +813,18 @@ def check(p=PARAMS, verbose=True):
         dd = C[a][1].distance_to(C[b][1])
         if dd > 0.5:
             fails.append(f"NOT TOUCHING {a} / {b}: gap {dd:.1f} mm")
+    for a, b, g in CLEAR:
+        n += 1
+        dd = C[a][1].distance_to(C[b][1])
+        if dd < g:
+            fails.append(f"TOO CLOSE {a} / {b}: gap {dd:.1f} mm, need {g:.0f} mm")
+    pl, pbw = p["panel"], p["pbracket"][0]
+    n += 1
+    if abs(pl[1] - pbw) > 0.5:
+        fails.append(f"panel bracket width {pbw:.0f} mm does not match panel width {pl[1]:.0f} mm")
+    n += 1
+    if not all(pl[1] / 2 - 15 <= abs(y) + 4.5 and abs(y) + 4.5 <= pl[1] / 2 for y in (205.0,)):
+        fails.append("panel bolts are not within the frame's back lip (15 mm wide)")
     for t in REF_TOUCH:
         a, r, tol = (t + (0.5,))[:3]
         n += 1

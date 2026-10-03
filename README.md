@@ -2,7 +2,7 @@
 
 ![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827) [![DOI](https://zenodo.org/badge/1386351914.svg)](https://zenodo.org/badge/latestdoi/1386351914) [![REUSE compliant](https://github.com/BoujeeEnjinia1701/grainguard/actions/workflows/reuse.yml/badge.svg)](https://github.com/BoujeeEnjinia1701/grainguard/actions/workflows/reuse.yml) [![Archived in Software Heritage](https://archive.softwareheritage.org/badge/origin/https://github.com/BoujeeEnjinia1701/grainguard/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/BoujeeEnjinia1701/grainguard)
 
-**Area:** Agriculture · **TRL:** 3 of 9 (proof of concept on paper) · **Value-engineering target:** USD 260 per bin (estimated cost of the constructable design USD 389.50) · **Difficulty:** 2 of 5
+**Area:** Agriculture · **TRL:** 3 of 9 (proof of concept on paper) · **Value-engineering target:** USD 260 per bin (estimated cost of the constructable design USD 406.50) · **Difficulty:** 2 of 5
 
 Cable of moisture and temperature probes strung through the bin, plus a controller that runs aeration fans only when the air will cool or dry the grain.
 
@@ -54,7 +54,7 @@ Stored grain spoils when bins are aerated at the wrong times. Humid fall air can
 
 ## Concept
 
-One cable of six temperature and humidity pods hangs down the center of an existing bin. A solar-powered 12 V controller beside the bin compares the grain with the outside air, allows for the fan's own heat, and switches the existing fan through a small relay kit only when the air will cool or dry the grain rather than rewet it. It reports to a farmhouse receiver by LoRa radio. TRL 3 calculations for an 18 ft (5.49 m) bin of about 88.8 t of corn: a sensor-induced moisture error of 0.23 to 0.42 points and 7.7 days of winter battery autonomy with no sun. Value-engineering target: USD 260 per bin. Estimated cost of the constructable design: USD 389.50 per bin (USD 129.50 over the target), with the farmhouse receiver costed per farm. The kit includes a USD 9.50 plenum probe that measures the fan's own heat ([GGD-DDR-002](docs/decisions/0002-recommendations-accepted.md)). The 10 W panel still refills the battery too slowly in winter; see [docs/04-calcs/01-sizing.md](docs/04-calcs/01-sizing.md).
+One cable of six temperature and humidity pods hangs down the center of an existing bin. A solar-powered 12 V controller beside the bin compares the grain with the outside air, allows for the fan's own heat, and switches the existing fan through a small relay kit only when the air will cool or dry the grain. It reports to a farmhouse receiver by LoRa radio. TRL 3 calculations for an 18 ft (5.49 m) bin of about 88.8 t of corn: a sensor-induced moisture error of 0.23 to 0.42 points and 7.7 days of winter battery autonomy with no sun. Value-engineering target: USD 260 per bin. Estimated cost of the constructable design: USD 406.50 per bin (USD 146.50 over the target), with the farmhouse receiver costed per farm. The kit includes a USD 9.50 plenum probe that measures the fan's own heat ([GGD-DDR-002](docs/decisions/0002-recommendations-accepted.md)). The 20 W panel refills the battery from half charge in 2.9 winter days, so power is met on paper; see [docs/04-calcs/01-sizing.md](docs/04-calcs/01-sizing.md).
 
 Full design precis: [docs/02-concept.md](docs/02-concept.md)
 
@@ -65,7 +65,7 @@ Full design precis: [docs/02-concept.md](docs/02-concept.md)
 - Interposing relay kit with hand-off-auto switch, installed by an electrician at the fan starter
 - Ambient temperature and humidity sensor in a radiation shield
 - Plenum temperature probe in the fan transition, to measure the fan's own heat
-- 10 W solar panel, charge controller and 12 V AGM battery
+- 20 W solar panel, charge controller and 12 V AGM battery
 - Farmhouse LoRa receiver with display
 
 The working bill of materials is in [bom/bom.csv](bom/bom.csv).

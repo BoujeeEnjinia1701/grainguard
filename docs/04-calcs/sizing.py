@@ -181,13 +181,17 @@ day8_3, dayc_3 = base + relay_tr3 * 8, base + relay_tr3 * 24
 say("D2", f"Relay input 10 mA (TRL 2): {day8_2:.2f} Wh/day with the fan 8 h/day, {dayc_2:.2f} Wh/day with the fan continuous")
 say("D3", f"Relay input 3 mA (specified): {day8_3:.2f} Wh/day with the fan 8 h/day, {dayc_3:.2f} Wh/day with the fan continuous")
 cap_wh = 7 * V
+V_LVD = 12.1             # adjustable low-voltage disconnect, battery maker's 50 % figure at -20 °C (GGD-DEC-001, 2026-10-02)
 usable = cap_wh * 0.5 * 0.6
-say("D4", f"Battery 7 Ah AGM: {cap_wh:.0f} Wh; 50 % usable at 20 °C and 60 % of that at -20 °C: {usable:.1f} Wh")
+say("D4", f"Battery 7 Ah AGM: {cap_wh:.0f} Wh; with the adjustable disconnect set to about {V_LVD} V (50 % state of charge at -20 °C), 50 % usable at 20 °C and 60 % of that at -20 °C: {usable:.1f} Wh, the same as the earlier assumption")
+usable_60 = cap_wh * 0.4 * 0.6
+say("D4", f"If the disconnect were raised to 60 % state of charge to protect the battery at -30 °C: {usable_60:.1f} Wh usable, {usable_60 / (0.003 * V * 24 + base):.1f} days continuous with 3 mA")
+PANEL_W = 20             # W, BOM line 8 (decided 2026-10-02); the model panel is 350 x 430 mm
 say("D5", f"Autonomy with no sun at -20 °C: {usable / dayc_2:.1f} days continuous fan at 10 mA; {usable / dayc_3:.1f} days continuous and {usable / day8_3:.1f} days at 8 h/day with 3 mA")
 for psh in (1.5, 2.5):
-    sol = 10 * psh * 0.6
+    sol = PANEL_W * psh * 0.6
     net = sol - dayc_3
-    say("D6", f"Winter solar at {psh} peak sun hours, 60 % derating: {sol:.1f} Wh/day, net {net:.1f} Wh/day with the fan continuous; refill from 50 % ({cap_wh / 2:.0f} Wh) takes {cap_wh / 2 / net:.1f} days")
+    say("D6", f"Winter solar, {PANEL_W} W panel, at {psh} peak sun hours, 60 % derating: {sol:.1f} Wh/day, net {net:.1f} Wh/day with the fan continuous; refill from 50 % ({cap_wh / 2:.0f} Wh) takes {cap_wh / 2 / net:.1f} days")
 panel_need = (cap_wh / 2 / 3 + dayc_3) / (1.5 * 0.6)
 say("D7", f"Panel needed to refill from 50 % in 3 days at 1.5 peak sun hours: {panel_need:.0f} W")
 v_abs, comp = 14.4, 0.030  # V at 25 °C; V/°C for a 12 V AGM (-5 mV/°C per cell)
@@ -271,7 +275,12 @@ say("F5", f"Stay: prop force {r_stay:.0f} N from the mast; along the wall it ben
 m_cant = f_panel * z_panel / 1000 + f_shield * z_shield / 1000
 sig_c = m_cant / Z / 1e6
 t_anchor = m_cant / (2 * P["anchor_xy"] / 1000) / 2
+V_SERVICE = 30.0   # m/s gust allowed while the stay is off (service rule proposed 2026-10-02; the stay is refitted before any stronger wind)
+f_scale = (V_SERVICE / VW) ** 2
+sig_s = sig_c * f_scale
+v_15 = VW * math.sqrt(235 / 1.5 / sig_c)
 say("F6", f"Stay off (service case) at the same gust: base moment {m_cant:.0f} N m, pipe stress {sig_c:.0f} MPa ({235 / sig_c:.1f} times yield), anchor pull {t_anchor / 1000:.2f} kN per M10 anchor")
+say("F6", f"Stay off with the 20 W panel: {sig_c:.0f} MPa at 45 m/s is over yield (0.9 times) and below the 1.5 times margin (157 MPa); the 1.5 times margin holds up to a {v_15:.0f} m/s gust; at the proposed {V_SERVICE:.0f} m/s service limit the pipe stress is {sig_s:.0f} MPa ({235 / sig_s:.1f} times yield) and the anchor pull {t_anchor * f_scale / 1000:.2f} kN")
 
 # ---------------------------------------------------------------- G. cable lengths and environment
 say("G1", f"Rope hung length {D['rope_len'] / 1000:.2f} m; bus cable {D['cable_len'] / 1000:.1f} m (main run {D['cable_main'] / 1000:.1f} m, five jumpers {sum(D['cable_jumpers']) / 1000:.1f} m, ends 0.9 m; in-bin {D['in_bin_cable'] / 1000:.1f} m); conduit {D['conduit_len'] / 1000:.1f} m; peak {D['peak'] / 1000:.2f} m above the pad")
@@ -292,7 +301,7 @@ say("H2", f"Farmhouse receiver, one per farm: ${sum(cost[k] for k in per_farm):.
 pr = sum(cost[k] for k in probe)
 say("H3", f"Plenum probe (item 14, in the kit since GGD-DDR-002): ${pr:.2f}")
 conc = 256.50   # concept kit at TRL 3 (GGD-CAL-001 v0.3), before the design for construction
-say("H4", f"Design for construction (GGD-DDR-003) added ${kit - conc:.2f} to the concept kit of ${conc:.2f}; largest lines: " + ", ".join(f"{k.split(' ', 1)[1]} ${v:.2f}" for k, v in sorted(cost.items(), key=lambda kv: -kv[1])[:4] if not k.startswith("12 ")))
+say("H4", f"Design for construction (GGD-DDR-003) and the 2026-10-02 decisions (20 W panel, adjustable-disconnect controller) added ${kit - conc:.2f} to the concept kit of ${conc:.2f}; largest lines: " + ", ".join(f"{k.split(' ', 1)[1]} ${v:.2f}" for k, v in sorted(cost.items(), key=lambda kv: -kv[1])[:4] if not k.startswith("12 ")))
 
 # ---------------------------------------------------------------- I. requirement status
 REQ = [
@@ -303,7 +312,7 @@ REQ = [
     ("R5", "Fail-safe control", "Normally open relay, stale-data timeout, hand position independent", "Stop in 60 s; hand runs fan", "Met"),
     ("R6", "Heating alert", f"Center core only, {100 * cov:.1f} % of the section; latency about 13 min", "Any pod, alarm in 15 min", "At risk"),
     ("R7", "Radio link", f"{budget - pel(1000) - bldg:.1f} dB margin at 1 km with one building", "1 km, one building, 95 % delivery", "Met"),
-    ("R8", "Power autonomy", f"{usable / dayc_3:.1f} days continuous fan; refill from 50 % in {cap_wh / 2 / (10 * 1.5 * 0.6 - dayc_3):.1f} days", "5 days; refill in 3 days", "Not met"),
+    ("R8", "Power autonomy", f"{usable / dayc_3:.1f} days continuous fan; refill from 50 % in {cap_wh / 2 / (PANEL_W * 1.5 * 0.6 - dayc_3):.1f} days with the {PANEL_W} W panel", "5 days; refill in 3 days", "Met" if cap_wh / 2 / (PANEL_W * 1.5 * 0.6 - dayc_3) <= 3 else "Not met"),
     ("R9", "Environment", "AGM may freeze near -25 °C at 50 % charge; phosphine unverified", "-30 °C to +50 °C; IP66; one fumigation", "At risk"),
     ("R10", "Mechanical strength", f"Rope {MBL / F_DES:.0f} times 2.5 kN; estimate {dyn / 1000:.2f} kN; roof hanger rating per bin", "Rope 4 times; hanger rated", "Not verifiable at TRL 3"),
     ("R11", "Install without grain entry", "Empty-bin installation sequence", "No entry into a bin holding grain", "Met"),

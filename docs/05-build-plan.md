@@ -3,7 +3,7 @@ doc_id: GGD-BLD-001
 title: GrainGuard prototype build plan
 project: GrainGuard
 doc_type: Build plan
-version: "0.2"
+version: "0.3"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -17,6 +17,10 @@ revisions:
     date: '2026-10-02'
     author: Amish Chadha
     change: Charge controller with an adjustable low-voltage disconnect set to the 50 % figure at -20 °C (section 3.11; GGD-DEC-001, item 6)
+  - version: "0.3"
+    date: '2026-10-02'
+    author: Amish Chadha
+    change: 20 W panel and a 430 wide panel bracket (section 3.12, step 10, parts list); stay taken off only in calm weather (section 3.6); pictures redrawn (GGD-DEC-001, item 2)
 ---
 
 # GrainGuard prototype build plan
@@ -187,6 +191,8 @@ The plate sits flat on the pad on four M10 anchors (step 5). The stay bolts to t
 
 **How it fits.** Two M10 bolts at each end, heads on the lug and on the bracket, nuts on the stay. Two bolts at each end make each joint rigid, so the stay holds the mast against wind both toward the wall and along it. The bus cable is tied along the stay's top leg.
 
+With the 20 W panel on top, the mast on its own is strong enough in a gust of up to about 30 m/s (65 mph), but not in a storm. Take the stay off only on a calm day with no strong wind forecast, and bolt it back on before you leave the site.
+
 **Check before moving on.** Hole pairs are 27 apart and the pairs 552 apart, within 1.
 
 ### 3.7 Mast clamps (bought, 6 sets)
@@ -291,14 +297,14 @@ Six 1 in mast U-bolt clamps (M8), each with a pressed V-saddle and two nuts with
 
 *Figure 17. Panel bracket making sketch (GGD-DWG-108).*
 
-**What it is and what it is made from.** A folded plate that holds the 10 W panel at 45 degrees on the mast top. Aluminium sheet 3 mm, 5052 class (it bends without cracking).
+**What it is and what it is made from.** A folded plate that holds the 20 W panel at 45 degrees on the mast top. Aluminium sheet 3 mm, 5052 class (it bends without cracking).
 
 **How to make it.**
 
-1. Cut a blank 250 wide x 367 long.
+1. Cut a blank 430 wide x 367 long.
 2. Mark a bend line 165 from one end. The short side is the upright leg; the long side (200 when folded) carries the panel.
 3. Upright leg: two pairs of 9 mm holes, 42 apart across the centre line, 42 and 132 below the outside of the bend.
-4. Panel leg: four 5.5 mm holes, 8 in from each side edge, 20 and 180 from the outside of the bend.
+4. Panel leg: four 5.5 mm holes, 10 in from each side edge, 20 and 180 from the outside of the bend.
 5. Fold to 135 degrees so the two legs are 45 degrees apart; a sheet metal shop with a folder can do it in one pass.
 
 ![Figure 18. Joint 9: the panel bracket on the mast top, cut through two panel bolts](05-build-plan/joint-09.png)
@@ -307,7 +313,7 @@ Six 1 in mast U-bolt clamps (M8), each with a pressed V-saddle and two nuts with
 
 **How it fits.** The upright leg sits on two V-saddles on the outer face of the mast top, held by two U-bolts, so its top is just above the pipe cap. The panel's frame has a flat back lip; the panel lies on the sloped leg with the lip on the bracket's side edges, and four M5 bolts go through the bracket and the lip, nuts inside the frame. Drill the lip through the bracket holes, keeping well clear of the glass. The panel then faces away from the bin at 45 degrees, its centre 2.24 m above the pad.
 
-**Check before moving on.** The bracket's legs are 45 degrees apart within 1 degree; the panel you bought has a flat back lip at least 12 wide.
+**Check before moving on.** The bracket's legs are 45 degrees apart within 1 degree; the panel you bought is about 430 x 350 with a flat back lip at least 12 wide, and its side edges line up with the bracket's.
 
 ### 3.13 Antenna bracket
 
@@ -395,7 +401,7 @@ Six 1 in mast U-bolt clamps (M8), each with a pressed V-saddle and two nuts with
 Buy to specification, not brand. Line numbers are those of the bill of materials.
 
 - **Lid (line 4).** Comes with the box; check its gasket is whole.
-- **Solar panel (line 8).** 10 W monocrystalline, about 350 x 250 x 25, aluminium frame with a flat back lip at least 12 wide, 1 m lead.
+- **Solar panel (line 8).** 20 W monocrystalline, about 430 x 350 x 25 (the 350 side runs up the slope), aluminium frame with a flat back lip at least 12 wide, 1 m lead.
 - **Antenna (line 15).** 915 MHz whip about 200 long with a bulkhead base, and a 1.5 m low-loss coax pigtail with the board's connector.
 - **Fixings and consumables (line 13).** Stainless: 4 x M10 x 30 bolts with nyloc nuts and washers; 2 stiffener bolts 10 longer than the bin's own, same grade; 4 x M10 concrete wedge anchors 95 long; 4 x M5 x 16 screws with nyloc nuts (lugs); 4 x M5 x 12 bolts with nuts (panel); 2 x M5 x 16 screws (shield); 2 x M5 x 16 with nuts (battery shelf); 3 x M3 x 10 per pod; cable ties, sealant, heat-shrink, conformal coating, threadlocker, zinc-rich paint.
 

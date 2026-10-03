@@ -365,3 +365,51 @@ The 20 W panel roughly doubles the panel's wind area; it must not be fitted unti
 ### Recommended next step
 
 Rerun the mast check and section D for the 20 W panel, then update the BOM. TRL 4 remains on hold by Amish's instruction.
+
+## Session 2026-10-02: approved follow-ups carried out
+
+Amish approved on 2026-10-02 that every follow-up from the open-decision sign-off be carried out. trl stays 3; nothing was built, bought or tested. Photoreal images, `media/card.png` and `media/social-preview.png` are not regenerated here; they are made on Amish's Mac next.
+
+### Approved follow-ups carried out
+
+1. Decision 2 (calcs): done. The mast check with the stay off was rerun for the 20 W panel (GGD-CAL-001 v0.6, F4 to F6). It does not pass at a 45 m/s gust: 257 MPa in the pipe, 0.9 times yield, against the 1.5 times margin the 10 W panel met (161 MPa). The 1.5 times margin holds up to a 35 m/s gust. Section D was rerun with the 20 W panel: refill from half charge in 2.9 winter days (was 7.3), so R8 changes from not met to met on paper. See "Proposed, awaiting Amish" below.
+2. Decision 2 (bom): done. BOM line 8 is a 20 W panel, about 430 x 350 x 25, USD 34.00 (USD 9.00 more, the middle of the USD 8 to 10 estimate; no quote). The bracket is 430 mm wide and is part of the line.
+3. Decision 2 (model): done. `cad/src/model.py`: panel 350 x 430 x 25 mm, bracket 430 wide, bolts moved to 205 mm each side of the centre line (within the frame's 15 mm lip), parts renamed 20 W. New checks: 25 mm clearance from the panel to the shield, arm, antenna and enclosure, bracket width equal to panel width, and bolts inside the lip; 385 checks, 0 failed. STEP and STL regenerated. Pictures regenerated: general arrangement GGD-DWG-001 (Rev P6), concept media (`media/`), and every build plan picture (overview, making sketches GGD-DWG-101 to 111 including the panel bracket sketch GGD-DWG-108, joints, steps).
+4. Decision 3 (pictures): done. No "without rewetting it" wording was found in the media or storefront text; the one remaining "rather than rewet it" in the `README.md` concept paragraph was removed. The "would rewet" label in the flow picture is a calculation illustration and stays.
+5. Decision 5 (docs): not done: it is TRL 4 test-plan work and TRL 4 is on hold.
+6. Decision 6 (bom): done. BOM line 7 now specifies an adjustable low-voltage disconnect set to about 12.1 V. Price USD 18.00 (USD 8.00 more): an allowance for the adjustable class over the USD 10.00 fixed-disconnect controller; no quote was obtained, so the price check is still to do when parts are bought.
+7. Decision 6 (calcs): done. Usable battery energy with the disconnect at about 12.1 V is unchanged at 25.2 Wh, because the earlier 50 % assumption already matched it. Raising the disconnect to 60 % state of charge to protect the battery at -30 °C would leave 20.2 Wh and 6.1 days, still over 5 days (D4).
+8. Decision 7 (pictures): done in part. `cad/src/product_model.py` is brought into line with the model: the panel takes its size, pose and centre from `cad/src/model.py`, and the folded bracket and its saddles are the model's own parts (the old block bracket is gone). Render scenes exported to `/home/claude/renders/grainguard` (hero, exploded, detail). The photoreal renders, `media/card.png` and `media/social-preview.png` are made on Amish's Mac.
+
+### Documents changed and new versions
+
+- `docs/04-calcs/01-sizing.md` GGD-CAL-001 v0.6, with `sizing.py` and `results.csv`.
+- `docs/03-requirements.md` GGD-REQ-001 v0.8; `docs/02-concept.md` GGD-PRC-001 v0.9; `docs/05-build-plan.md` GGD-BLD-001 v0.3 (20 W panel, 430 wide bracket, calm-weather rule for taking the stay off); `docs/06-design-decisions.md` GGD-DEC-001 v0.3; `docs/decisions/0003-design-for-construction.md` GGD-DDR-003 v0.3 (update note).
+- `bom/bom.csv` (lines 7 and 8), `bom/bom-notes.md`, `README.md`; `cad/src/sheets.py` (drawing GGD-DWG-001 Rev P6), `cad/src/concept_media.py` and `cad/src/build_plan_media.py` (panel names, kit cost, bolt section).
+
+### Key results
+
+- Requirement status changes: R8 not met to met (autonomy 7.7 days, refill 2.9 days). R13 stays over the target. All others unchanged: met 8, at risk 3 (R2, R6, R9), not verifiable at TRL 3 2 (R3, R10).
+- Value-engineering target: USD 260. Estimated cost of the constructable design: USD 406.50 (USD 146.50 over the target). `budget_usd` is unchanged. Receiver per farm USD 22.00; first prototype with receiver USD 428.50.
+- Mass: the BOM carries no mass column; the 20 W panel and wider bracket add an estimated 0.7 kg on the mast, not tracked in any document.
+
+### Proposed, awaiting Amish
+
+- Open decision 9 in GGD-DEC-001: the 20 W panel was approved on the condition that the stay-off mast check still passes. It does not at 45 m/s. Options: (a) keep the DN25 mast and take the stay off only in gusts under 30 m/s (2.1 times yield); the build plan section 3.6 already carries this as a calm-weather rule; (b) a DN32 mast (changes the mast, base plate, six clamps and BOM line 10); (c) back to the 10 W panel, which makes R8 recovery not met again. Recommendation: (a).
+- The 2.9-day refill leaves little margin against the 3-day target at 1.5 winter peak sun hours.
+
+### Cross-repo actions
+
+None arising from this list.
+
+### Safety
+
+Unchanged and stronger on one point: with the 20 W panel the mast alone is not strong enough for a storm. The stay is taken off only on a calm day with no strong wind forecast and refitted before leaving. The panel must not be fitted before Amish decides open decision 9.
+
+### Recommended next step
+
+Amish decides open decision 9, then renders the scenes on his Mac. TRL 4 remains on hold.
+
+## 2026-10-02: photoreal renders redone on the constructable design
+
+Rendered with Blender Cycles on Amish's Mac from the updated appearance model; captioned with `.kit/photo_caption.py`; `media/card.png` and `media/social-preview.png` regenerated with `.kit/cards.py`. Views: hero, exploded, detail. image_qc passes. Appearance deviations are those logged above as proposed, awaiting Amish.

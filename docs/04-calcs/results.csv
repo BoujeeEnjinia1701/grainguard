@@ -6,10 +6,10 @@ R4,Fan decision rule,"Logic as specified; fan heat measured by the plenum probe 
 R5,Fail-safe control,"Normally open relay, stale-data timeout, hand position independent",Stop in 60 s; hand runs fan,Met
 R6,Heating alert,"Center core only, 3.3 % of the section; latency about 13 min","Any pod, alarm in 15 min",At risk
 R7,Radio link,16.9 dB margin at 1 km with one building,"1 km, one building, 95 % delivery",Met
-R8,Power autonomy,7.7 days continuous fan; refill from 50 % in 7.3 days,5 days; refill in 3 days,Not met
+R8,Power autonomy,7.7 days continuous fan; refill from 50 % in 2.9 days with the 20 W panel,5 days; refill in 3 days,Met
 R9,Environment,AGM may freeze near -25 °C at 50 % charge; phosphine unverified,-30 °C to +50 °C; IP66; one fumigation,At risk
 R10,Mechanical strength,Rope 8 times 2.5 kN; estimate 2.08 kN; roof hanger rating per bin,Rope 4 times; hanger rated,Not verifiable at TRL 3
 R11,Install without grain entry,Empty-bin installation sequence,No entry into a bin holding grain,Met
 R12,Electrical isolation,"12 V system, charge clamped at 15.0 V; relay input 2.5 kV",15 V or less; 2.5 kV,Met
-R13,Cost per bin,"$389.50 per bin, $129.50 over the target; receiver per farm","$260 value-engineering target per bin, receiver per farm",Over the value-engineering target
+R13,Cost per bin,"$406.50 per bin, $146.50 over the target; receiver per farm","$260 value-engineering target per bin, receiver per farm",Over the value-engineering target
 R14,Local data,Farmhouse receiver logs locally,No cloud account,Met

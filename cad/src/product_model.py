@@ -32,7 +32,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from build123d import (Axis, Box, Cone, Cylinder, Face, Line, Plane, Pos, RegularPolygon, Rot,
                        Solid, Sphere, Torus, Vector, Wire, extrude, fillet, revolve)
-from model import PARAMS, derived, build_parts
+from model import PARAMS, derived, build_parts, build_components, panel_frame, on_panel
 
 TITLE = "GrainGuard: grain bin sensor cable and aeration fan controller"
 
@@ -390,17 +390,21 @@ def _mast_parts(P, parts, add):
     cells = Pos(0, 0, T / 2 - 4.5) * Box(L - 16, W - 16, 3.0)
     bars = _union(Pos(-L / 2 + 8 + (L - 16) * k / 6, 0, T / 2 - 2.8) * Box(1.6, W - 18, 0.4) for k in range(1, 6))
     bars += _union(Pos(0, -W / 2 + 8 + (W - 16) * k / 4, T / 2 - 2.8) * Box(L - 18, 0.8, 0.4) for k in range(1, 4))
-    jbox = Pos(40, 0, -T / 2 - 8) * Box(70, 60, 16)
-    brk = Pos(-40, 0, -T / 2 - 30) * Box(40, 50, 60)
-    # faces away from the bin, the same pose and rotation as model.py (GGD-DDR-002, 2026-09-27)
-    pose = lambda s: _mast(Pos(90, 0, P["mast_h"] + 50) * Rot(0, P["panel_tilt"], 0) * s)
+    jbox = Pos(-144, 70, -T / 2 - 8) * Box(28, 60, 16)
+    # faces away from the bin, the same pose, centre and rotation as model.py (GGD-DDR-002 and GGD-DEC-001 item 2:
+    # 20 W panel, 350 x 430 mm, on the folded bracket)
+    c0 = on_panel(125, P["pbracket"][3] + P["panel"][2] / 2, 0, P)
+    pose = lambda s: _mast(Pos(c0[0], 0, c0[2]) * Rot(0, P["panel_tilt"], 0) * s)
     EP = (0, 0, 260)
     add("Solar panel frame", pose(fr), C_BUSBAR, "metal", 8, "accessory", EP)
     add("Solar cells", pose(cells), C_CELL, "screen", 8, "accessory", EP)
     add("Cell busbars", pose(bars), C_BUSBAR, "metal", 8, "accessory", EP)
     add("Panel junction box", pose(jbox), C_BLACK, "plastic", 8, "accessory", EP)
-    add("Panel tilt bracket", pose(brk) + _mast(_zcyl(0, 0, P["mast_h"] + 30, rm + 4, 60)), C_GALV, "metal",
+    comp = build_components(P)       # the folded 3 mm bracket and its two saddles and U-bolts, as in model.py
+    add("Panel bracket (folded aluminium sheet)", _from_model(comp["panel_bracket"][1], ma, PHI_MAST), C_GALV, "metal",
         8, "accessory", (0, 0, 180))
+    add("Panel bracket saddles and U-bolts", _from_model(comp["panel_clamps"][1], ma, PHI_MAST), C_STEEL, "metal",
+        10, "accessory", (0, 0, 180))
 
     # ambient T and RH sensor in a louvered radiation shield (BOM 9): same plate stack and arm as model.py
     sp, n, dsh = P["shield_pitch"], P["shield_plates"], P["shield_d"]
