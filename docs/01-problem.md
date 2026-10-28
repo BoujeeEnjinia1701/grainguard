@@ -3,9 +3,9 @@ doc_id: GGD-PRB-001
 title: GrainGuard problem statement
 project: GrainGuard
 doc_type: Problem statement
-version: "0.6"
+version: "0.7"
 status: Draft
-date: '2026-10-02'
+date: '2026-10-24'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -33,6 +33,10 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: Host farm and electrician route decided on 2026-10-02 (GGD-DEC-001, item 4)
+- version: "0.7"
+  date: '2026-10-24'
+  author: Amish Chadha
+  change: "Kit 1.8 upgrade: users-and-needs and stakeholder tables (Tables 1 and 2), the source of the user requirements GGD-URS-001"
 ---
 
 # GrainGuard problem statement
@@ -56,13 +60,26 @@ The stakes are higher where storage is poorer. Reviews report storage losses of 
 
 ## Users and context
 
-| User | Need | Context |
+Table 1. Users and needs.
+
+| User type | Goals and needs | Typical use scenario | Pain points and challenges |
+| --- | --- | --- | --- |
+| Small or mid-size grain farmer | Know grain temperature and moisture without climbing the bin; have fans run only when they help; spend little per bin | 1 to 10 corrugated steel bins of 4.5 to 9 m (15 to 30 ft) diameter with existing aeration fans and manual or thermostat control; corn held from harvest to spring | Fall air is often humid; cooling takes 100 to 200 fan hours across changing weather; trouble starts in the core or at the top where no one sees it; commercial systems are priced for large sites |
+| Farm worker or family member | Fewer trips up the bin ladder and no need to enter a bin to check grain; status from the house | Harvest and winter holding, often in cold and dark | Climbing and probing bins is dangerous; grain entrapment was the leading agricultural confined-space incident in the United States in 2023 |
+| Farm electrician | A small, clearly isolated interface to an existing fan starter | Existing single-phase or three-phase fan motor of about 0.75 to 2.2 kW (1 to 3 hp) in a starter on a post by the fan | Unknown third-party electronics in a mains starter; fans that start automatically |
+| Cooperative or storage manager (later) | A low-cost, repairable monitor for small steel silos | Emerging markets with aerated storage; out of scope for the first prototype | Losses of 20 % to 40 % where storage is poor; no budget for commercial cables |
+| Open hardware community | A documented design to build, audit and adapt | Makerspaces, extension programs, agricultural engineering courses | Existing open projects monitor temperature only and do not control fans |
+
+Table 2. Stakeholders.
+
+| Stakeholder group | Role or interest | Engagement needed |
 | --- | --- | --- |
-| Small or mid-size grain farmer | Know grain temperature and moisture without climbing the bin; have fans run only when they help | 1 to 10 corrugated steel bins of 4.5 to 9 m (15 to 30 ft) diameter with existing aeration fans and manual or thermostat control |
-| Farm worker or family member | Fewer trips up the bin ladder and no need to enter a bin to check grain | Harvest and winter holding, often in cold and dark |
-| Farm electrician | A small, clearly isolated interface to an existing fan starter | Existing single-phase or three-phase fan motor of about 0.75 to 2.2 kW (1 to 3 hp) |
-| Cooperative or storage manager (later) | A low-cost, repairable monitor for small steel silos | Emerging markets with aerated storage; out of scope for the first prototype |
-| Open hardware community | A documented design to build, audit and adapt | Makerspaces, extension programs, agricultural engineering courses |
+| Land-grant extension grain-storage specialist (for example Purdue University or Iowa State University) | Aeration guidance, crop targets and the route to a host farm (GGD-DEC-001, item 4) | Review the control rule and targets before automatic mode is used; recruit the host farm |
+| Bin maker | Rates the roof's center hanger for cable loads; owns the bin's warranty | Confirm the hanger rating and the stiffener bolts used for the wall bracket, bin by bin |
+| Licensed fumigator | Applies phosphine to the bin | Agree that GrainGuard is never used to judge whether a bin is safe to enter; handle the TRL 4 coated test board |
+| Radio regulator (in the United States, the FCC) | Sets the rules for the 902 to 928 MHz band | Use radio modules certified for the band and keep within the dwell limit (GGD-REG-001) |
+| Electrical inspector or utility (where they apply) | Inspects mains work at the starter | The relay kit is installed by a licensed electrician to the local code |
+| Farm insurer | Interest in fewer spoiled bins and fewer bin entries | None at TRL 3 |
 
 **Reference case.** A 5.49 m (18 ft) diameter bin with a 5.6 m eave, a full perforated floor 0.4 m above the pad and one existing aeration fan, filled level to the eave with shelled corn: 5.2 m of grain, about 123 m³, 3,493 bu or 88.8 t (GGD-CAL-001). The first region and crop are corn in a small US Midwest bin (GGD-DDR-001, D11).
 

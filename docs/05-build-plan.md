@@ -3,9 +3,9 @@ doc_id: GGD-BLD-001
 title: GrainGuard prototype build plan
 project: GrainGuard
 doc_type: Build plan
-version: "0.3"
+version: "0.4"
 status: Draft
-date: '2026-10-02'
+date: '2026-10-24'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -21,6 +21,10 @@ revisions:
     date: '2026-10-02'
     author: Amish Chadha
     change: 20 W panel and a 430 wide panel bracket (section 3.12, step 10, parts list); stay taken off only in calm weather (section 3.6); pictures redrawn (GGD-DEC-001, item 2)
+  - version: "0.4"
+    date: '2026-10-24'
+    author: Amish Chadha
+    change: "Kit 1.8 and 1.9 upgrade (GGD-DDR-005): mast south of the bin (step 5, D13); stay-off rule decided (D12); two labyrinth vents (3.9, D10); D3 model details (gussets and lug to the pipe face, countersunk shelf screws, controller, board and rail fixings, jumper routing; D11); 0.5 A bus fuse (D17); radio at 500 kHz (D15); pictures redrawn"
 ---
 
 # GrainGuard prototype build plan
@@ -33,7 +37,7 @@ revisions:
 
 *Figure 1. Every component pulled apart and numbered in build order. The rope and cables are shortened, and the groups are not to scale with each other.*
 
-The prototype is one GrainGuard kit fitted to an existing 5.49 m (18 ft) grain bin with its aeration fan. Inside the empty bin, a 6 mm wire rope hangs from the bin's center hanger and carries six printed sensor pods. A bus cable runs from the pods out through the peak cap, over the roof and down the wall to a 2.3 m steel mast standing on the concrete pad 0.7 m from the wall and stayed to a wall stiffener. The mast carries a grey plastic box with the battery, charge controller and radio board, a 10 W solar panel, an antenna and a small radiation shield for the outside-air sensor. A temperature probe goes into the fan's transition duct, and a relay kit at the fan starter lets the controller switch the fan. Figure 1 shows the 20 components in the order you make or fit them. Eleven are made in a farm workshop: the pods (printed), the mast weldment, the stay, the wall bracket, the enclosure mounting plate, the drilled enclosure, the battery shelf, the panel bracket, the antenna bracket, the shield arm and the shield plates (printed). The rest are bought and fitted. The work is cutting and drilling steel and aluminium angle and sheet, one simple weldment (or a local fabricator), 3D printing in ASA, and wiring bought modules with screw terminals. The parts cost about USD 390 per bin, from the bill of materials.
+The prototype is one GrainGuard kit fitted to an existing 5.49 m (18 ft) grain bin with its aeration fan. Inside the empty bin, a 6 mm wire rope hangs from the bin's center hanger and carries six printed sensor pods. A bus cable runs from the pods out through the peak cap, over the roof and down the wall to a 2.3 m steel mast standing on the concrete pad 0.7 m from the wall and stayed to a wall stiffener. The mast carries a grey plastic box with the battery, charge controller and radio board, a 20 W solar panel, an antenna and a small radiation shield for the outside-air sensor. A temperature probe goes into the fan's transition duct, and a relay kit at the fan starter lets the controller switch the fan. Figure 1 shows the 20 components in the order you make or fit them. Eleven are made in a farm workshop: the pods (printed), the mast weldment, the stay, the wall bracket, the enclosure mounting plate, the drilled enclosure, the battery shelf, the panel bracket, the antenna bracket, the shield arm and the shield plates (printed). The rest are bought and fitted. The work is cutting and drilling steel and aluminium angle and sheet, one simple weldment (or a local fabricator), 3D printing in ASA, and wiring bought modules with screw terminals. The parts cost about USD 411 per bin, from the bill of materials. Every made part is cut, drilled, bent, printed or welded with farm-workshop tools, and nothing is welded to or cut in the bin's sheets except one gland hole in the peak cap (PR-015).
 
 > **Safety:** Grain bins kill people. Every task inside the bin is done with the bin **empty**, the unloading equipment and the fan locked out at their disconnects, a confined-space entry procedure and a trained person outside. Roof work needs fall protection and a dry, calm day. Welding galvanized steel gives off zinc fumes: grind the zinc off first and weld in open air. The fan starter carries mains voltage: only a licensed electrician fits and wires the relay kit. The 12 V lead-acid battery can deliver a high short-circuit current: keep its fuse out until section 6 says otherwise.
 
@@ -55,7 +59,10 @@ The concept showed what GrainGuard does; some of its parts could not be made or 
 | Radiation shield | Solid discs on a rod through the mast | Printed plates on three rods, under an angle arm on a mast clamp (Figure 22) | A shield that can be made and fixed |
 | Relay box and cables at the fan | Relay box floating beside the starter; two cables across the pad and through the fan duct | Relay box on the starter's post under the starter; both cables in a conduit along the wall foot and over the fan duct (Figure 27) | Nothing crosses open pad or passes through the fan |
 | Antenna | None | A whip on a bracket at the mast top (Figure 20) | The radio needs one; the radio calculation assumed it |
-| Battery fuse and surge protection | Required by the safety notes but not listed | A 5 A fuse at the battery and a surge protector on the bus (section 3.11) | Implements the safety case |
+| Battery fuse and surge protection | Required by the safety notes but not listed | A 5 A fuse at the battery, a 0.5 A fuse on the bus cable's 12 V feed and a surge protector on the bus (section 3.11) | Implements the safety case; the bus fuse protects the thin cable inside the bin (GGD-DDR-005) |
+| Enclosure vents | One membrane breather | Two labyrinth vents, one in the bottom face and one at the top of the left side wall (section 3.9) | Lets the battery's hydrogen out by natural draught (GGD-DDR-005) |
+| Mast position round the bin | Not stated | The mast stands on the south side of the bin, within 30 degrees of due south of its centre (step 5) | On the north side the bin shades the panel all winter (GGD-DDR-005) |
+| Gussets, stay lug and inner fixings | Drawn running into the pipe; no fixings for the charge controller, radio board and fuse strip; shelf screw heads under the battery | Gussets and lug cut to meet the pipe face; the controller on a flange with two M4 screws, the board on four M3 standoffs, the fuse strip on a short rail; countersunk shelf screws (sections 3.4, 3.10, 3.11) | Found by the detailed model of every part (GGD-DDR-005) |
 
 ## 3. Making the components
 
@@ -125,12 +132,12 @@ The rope passes through the pod's centre tube, which is closed off from the elec
 
 *Figure 6. Mast weldment making sketch (GGD-DWG-102).*
 
-**What it is and what it is made from.** The 2.3 m post that carries everything outside the bin. DN25 (1 in) galvanized steel pipe, 33.7 x 3.2 mm, welded to a 200 x 200 x 10 steel base plate with four 6 mm gussets and a 6 mm lug for the stay. If you do not weld, a local fabricator can make it from this sketch.
+**What it is and what it is made from.** The 2.3 m post that carries everything outside the bin. DN25 (1 in) galvanized steel tube, 33.7 x 3.2 mm (medium series, grade S195T or better), welded to a 200 x 200 x 10 steel base plate with four 6 mm gussets and a 6 mm lug for the stay. If you do not weld, a local fabricator can make it from this sketch.
 
 **How to make it.**
 
 1. Cut the pipe square to 2,290 long. Cut the base plate 200 x 200 and drill four 12 mm holes on a 150 square, 75 each way from the centre.
-2. Cut four gussets from 6 mm plate: right triangles 62 along the plate and 80 up the pipe. Cut the lug 70 x 50 from 6 mm plate and drill two 11 mm holes on its middle line, 2 below its centre height, 42 and 69 from the pipe axis when fitted.
+2. Cut four gussets from 6 mm plate: right triangles 60 along the plate and 78 up the pipe, so they meet the pipe's face. Cut the lug 68 x 50 from 6 mm plate (it reaches from the pipe's face to 85 from its axis) and drill two 11 mm holes on its middle line, 2 below its centre height, 42 and 69 from the pipe axis when fitted.
 3. Grind the zinc off the pipe for 25 at the bottom and round the lug position. Weld in open air, upwind of the fumes.
 4. Stand the pipe on the plate centre, square in both directions, and fillet weld all round.
 5. Weld a gusset on each side, in line with the plate edges.
@@ -191,7 +198,7 @@ The plate sits flat on the pad on four M10 anchors (step 5). The stay bolts to t
 
 **How it fits.** Two M10 bolts at each end, heads on the lug and on the bracket, nuts on the stay. Two bolts at each end make each joint rigid, so the stay holds the mast against wind both toward the wall and along it. The bus cable is tied along the stay's top leg.
 
-With the 20 W panel on top, the mast on its own is strong enough in a gust of up to about 30 m/s (65 mph), but not in a storm. Take the stay off only on a calm day with no strong wind forecast, and bolt it back on before you leave the site.
+With the 20 W panel on top, the mast on its own is strong enough in a gust of up to 30 m/s (65 mph), but not in a storm. Take the stay off only on a calm day with no gusts over 30 m/s forecast, and bolt it back on before you leave the site: refitting the stay is a hold point.
 
 **Check before moving on.** Hole pairs are 27 apart and the pairs 552 apart, within 1.
 
@@ -228,14 +235,14 @@ Six 1 in mast U-bolt clamps (M8), each with a pressed V-saddle and two nuts with
 
 *Figure 14. Enclosure drilling sketch (GGD-DWG-106), drawn upside down so the top view shows the bottom face.*
 
-**What it is.** A bought IP66 polycarbonate box about 280 x 230 x 130 with a gasketed lid, an inner mounting plate on four moulded bosses, and the maker's four external lugs. Seven holes go in its bottom face.
+**What it is.** A bought IP66 polycarbonate box about 280 x 230 x 130 with a gasketed lid, an inner mounting plate on four moulded bosses, and the maker's four external lugs. Seven holes go in its bottom face and one in its left side wall.
 
 **How to make it.**
 
 1. Stand the box upside down on its top on a soft cloth, lid side toward you. Tape the bottom face.
-2. Mark seven holes, measured from the back face and sideways from the centre line (right as seen from the lid). Back row, 29 from the back face: relay cable 90 left, probe lead 45 left, ambient lead on the centre line, antenna coax 45 right, panel lead 90 right. Front row, 89 from the back face: vent 45 left, bus cable 45 right.
-3. With a block of wood inside, pilot drill each hole 3 mm at low speed, then open to 12.2 with a step drill and light pressure. Polycarbonate cracks if forced and crazes with solvents: clean with soapy water only.
-4. Deburr inside and out; fit the six M12 glands and the M12 vent, sealing washers outside, nuts inside.
+2. Mark seven holes, measured from the back face and sideways from the centre line (right as seen from the lid). Back row, 29 from the back face: relay cable 90 left, probe lead 45 left, ambient lead on the centre line, antenna coax 45 right, panel lead 90 right. Front row, 89 from the back face: lower vent 45 left, bus cable 45 right. On the left side wall, mark one more hole for the upper vent, 60 from the back face with its centre 15 below the top.
+3. With a block of wood inside, pilot drill each hole 3 mm at low speed, then open to 12.2 (16.2 for the two vents) with a step drill and light pressure. Polycarbonate cracks if forced and crazes with solvents: clean with soapy water only.
+4. Deburr inside and out; fit the six M12 glands and the two M16 labyrinth vents (clear bore 10 mm or more), sealing washers outside, nuts inside. The vents let the battery's hydrogen out: never plug them.
 5. Fit the four lugs to the back corners, above and below the box, as the box maker describes.
 
 **How it fits.** The box hangs on the mounting plate by its lugs: one M5 screw each from the front, nut behind the plate (Figure 12). Each cable comes up into its gland from a loop below the box.
@@ -257,11 +264,11 @@ Six 1 in mast U-bolt clamps (M8), each with a pressed V-saddle and two nuts with
 **How to make it.**
 
 1. Cut 160 of angle and deburr.
-2. In the upright leg drill two 5.5 mm holes 25 up from the corner and 25 from each end.
+2. In the upright leg drill two 5.5 mm holes 25 up from the corner and 25 from each end, and countersink them 90 degrees to 10 across on the side the battery will stand against.
 3. Take the box's inner mounting plate out. Hold the shelf at its left side with the flat leg 26 above where the box floor will be, and drill the plate through the shelf's holes.
 4. Cut two slots 27 x 4 in the inner plate, above and below the battery position, 37 left of centre, for the strap.
 
-**How it fits.** Two M5 screws through the inner plate, nuts behind. The battery stands on the flat leg with its back on the upright leg; a hook-and-loop strap goes through the slots, over and under it.
+**How it fits.** Two M5 x 16 countersunk screws from the battery side, through the inner plate, washers and nuts behind; the heads sit flush, so the battery's back sits flat on the upright leg. The battery stands on the flat leg; a hook-and-loop strap goes through the slots, over and under it.
 
 **Check before moving on.** With the battery strapped in, tip the plate on its side: the battery does not move.
 
@@ -276,14 +283,16 @@ Six 1 in mast U-bolt clamps (M8), each with a pressed V-saddle and two nuts with
 | Radio and bus board | 915 MHz LoRa module of the nRF52840 plus SX1262 class on a carrier with an RS-485 transceiver, a 12 V to 3.3 V buck regulator and a switched 12 V output for the relay signal (868 MHz outside the Americas) |
 | Charge controller | 12 V PWM, 5 to 10 A, temperature compensation clamped at 15.0 V, adjustable low-voltage disconnect, 6 mA or less self-use |
 | Battery | 12 V 7 Ah sealed AGM, 151 x 65 x 98 |
-| Fuse and surge strip | Inline 5 A blade fuse holder; surge protector for a 12 V supply and an RS-485 pair; a small terminal strip; an earth terminal |
+| Fuse and surge strip | Inline 5 A blade fuse holder; a 0.5 A fuse for the bus cable's 12 V feed; surge protector for a 12 V supply and an RS-485 pair; a small terminal strip; an earth terminal; a 60 mm length of 35 mm top-hat rail |
+
+**How to mount it.** The charge controller hangs on its flange from two M4 x 8 screws into holes drilled and tapped in the inner plate; the radio board stands on four M3 x 10 nylon standoffs, screwed from the board side and from behind the plate; the fuse, surge protector and terminal strip clip onto the top-hat rail, held by two M4 x 8 screws. Set the radio to SF10 with a 500 kHz bandwidth, the setting the receiver uses too (the legal mode in the US band).
 
 **How to wire it.** Stranded copper, a ferrule on every screw terminal, every wire labelled:
 
 1. Battery positive, through the 5 A fuse at the terminal, to the charger's battery input: 1.0 mm² (17 AWG). Battery negative to the charger: 1.0 mm².
 2. Panel lead (through its gland) to the charger's panel input: 1.0 mm².
 3. Charger load output to the terminal strip: 0.75 mm²; strip to the board's 12 V input: 0.5 mm².
-4. Bus cable (through its gland) to the surge protector, then to the strip (12 V and 0 V) and the board's RS-485 terminals (A and B). Shield to the earth terminal at this end only.
+4. Bus cable (through its gland) to the surge protector, then to the strip (12 V through the 0.5 A fuse, and 0 V) and the board's RS-485 terminals (A and B). Shield to the earth terminal at this end only.
 5. Relay signal cable (2-core) from the board's switched 12 V output and 0 V: 0.5 mm².
 6. Probe lead (3-core) and ambient lead (4-core) to the board's sensor terminals.
 7. Antenna coax to the board's antenna connector, away from the power wires.
@@ -419,7 +428,7 @@ On the bench: membrane over the window, board in, cable ends through the glands 
 
 ![Step 2](05-build-plan/step-02.png)
 
-Lay the rope out straight. From its bottom end slide on a stop, then the bottom pod, then the next stop and pod, and so on. Set each stop with its screw so the pod tips are 940 apart and the bottom pod's tip is 50 above the rope end. Tie each jumper and the main run to the rope every 300.
+Lay the rope out straight. From its bottom end slide on a stop, then the bottom pod, then the next stop and pod, and so on. Set each stop with its screw so the pod tips are 940 apart and the bottom pod's tip is 50 above the rope end. Tie each jumper and the main run to the rope every 300; where a jumper passes a pod, keep it on the outside of the cable arriving from above, so the two lie side by side.
 
 ### Step 3: hang the rope from the center hanger (bin empty)
 
@@ -437,7 +446,7 @@ From the roof, with fall protection (S3): drill the peak cap and fit its gland (
 
 ![Step 5](05-build-plan/step-05.png)
 
-Stand the mast 700 from the wall, in line with the stiffener and with its lug facing the wall. Drill the pad through the plate holes, fit four M10 anchors, set the mast plumb with washers under the plate if needed, and tighten. Fit the pipe cap.
+Choose the mast's place on the south side of the bin, within 30 degrees of due south of the bin's centre (north side in the southern hemisphere), so the bin never shades the panel in winter, and check that no building or tree does either. Stand the mast 700 from the wall, in line with the stiffener and with its lug facing the wall. Drill the pad through the plate holes, fit four M10 anchors, set the mast plumb with washers under the plate if needed, and tighten. Fit the pipe cap.
 
 ### Step 6: wall bracket and stay
 
@@ -501,7 +510,7 @@ Lay the conduit from the mast base along the foot of the wall, up and over the t
 
 ## 5. First checks
 
-These are the checks a TRL 4 test report would record; this plan only lists them. Requirement numbers are those of GGD-REQ-001.
+These are the checks a TRL 4 test report would record; this plan only lists them. Requirement numbers are those of GGD-REQ-001 (R1 to R14), which are PR-001 to PR-014 in GGD-PRS-001.
 
 *Table 3. First checks.*
 
@@ -545,10 +554,10 @@ Stop at each point. Carry on only when everything listed is true.
 
 ## 8. Where the numbers come from
 
-- Model and constructability checks: `cad/src/model.py` (`python cad/src/model.py --check`, 374 checks); STEP and STL exports in `cad/step/` and `cad/stl/`.
+- Model and constructability checks: `cad/src/model.py` (`python cad/src/model.py --check`, 392 checks) and the detailed model of every part, fastener and weld, `cad/src/ggd_detail.py` (`python .kit/cad_check.py --export`); STEP files per part in `cad/step/A/` and STL in `cad/stl/`.
 - Pictures: `cad/src/build_plan_media.py`, using `.kit/build_views.py`; written to `docs/05-build-plan/` and `cad/drawings/GGD-DWG-101` to `GGD-DWG-111`.
-- General arrangement: `cad/drawings/GGD-DWG-001.pdf`, Rev P5.
-- Calculations: `docs/04-calcs/01-sizing.md` (GGD-CAL-001 v0.4) and `docs/04-calcs/sizing.py`; radio [E3], mast and stay [F4] to [F6], lengths [G1], cost [H1].
+- General arrangement: `cad/drawings/GGD-DWG-001.pdf`, Rev P7.
+- Calculations: `docs/04-calcs/01-sizing.md` (GGD-CAL-001 v0.7) and `docs/04-calcs/sizing.py`; radio [E3], mast and stay [F4] to [F6], lengths [G1], vents [G4], winter sun [G5], cost [H1].
 - Bill of materials: `bom/bom.csv`.
-- Decisions: `docs/decisions/0003-design-for-construction.md` (GGD-DDR-003), with GGD-DDR-001 and GGD-DDR-002.
-- Requirements: `docs/03-requirements.md` (GGD-REQ-001).
+- Decisions: `docs/decisions/0003-design-for-construction.md` (GGD-DDR-003) and `docs/decisions/0005-stem-check-fixes.md` (GGD-DDR-005), with GGD-DDR-001 and GGD-DDR-002.
+- Requirements: `docs/03-requirements.md` (GGD-PRS-001, formerly GGD-REQ-001).

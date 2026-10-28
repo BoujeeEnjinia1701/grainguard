@@ -187,13 +187,15 @@ say("D4", f"Battery 7 Ah AGM: {cap_wh:.0f} Wh; with the adjustable disconnect se
 usable_60 = cap_wh * 0.4 * 0.6
 say("D4", f"If the disconnect were raised to 60 % state of charge to protect the battery at -30 °C: {usable_60:.1f} Wh usable, {usable_60 / (0.003 * V * 24 + base):.1f} days continuous with 3 mA")
 PANEL_W = 20             # W, BOM line 8 (decided 2026-10-02); the model panel is 350 x 430 mm
+CHG_EFF = 0.85           # lead-acid charge (energy) efficiency, not in the 0.6 derating (independent review); the derating covers PWM mismatch, heat, dirt and wiring
 say("D5", f"Autonomy with no sun at -20 °C: {usable / dayc_2:.1f} days continuous fan at 10 mA; {usable / dayc_3:.1f} days continuous and {usable / day8_3:.1f} days at 8 h/day with 3 mA")
 for psh in (1.5, 2.5):
-    sol = PANEL_W * psh * 0.6
+    sol = PANEL_W * psh * 0.6 * CHG_EFF
     net = sol - dayc_3
-    say("D6", f"Winter solar, {PANEL_W} W panel, at {psh} peak sun hours, 60 % derating: {sol:.1f} Wh/day, net {net:.1f} Wh/day with the fan continuous; refill from 50 % ({cap_wh / 2:.0f} Wh) takes {cap_wh / 2 / net:.1f} days")
-panel_need = (cap_wh / 2 / 3 + dayc_3) / (1.5 * 0.6)
-say("D7", f"Panel needed to refill from 50 % in 3 days at 1.5 peak sun hours: {panel_need:.0f} W")
+    say("D6", f"Winter solar, {PANEL_W} W panel, at {psh} peak sun hours, 60 % derating and {CHG_EFF:.0%} charge efficiency: {sol:.1f} Wh/day into the battery, net {net:.1f} Wh/day with the fan continuous; refill from 50 % ({cap_wh / 2:.0f} Wh) takes {cap_wh / 2 / net:.1f} days (version 0.6, with no charge efficiency: {cap_wh / 2 / (PANEL_W * psh * 0.6 - dayc_3):.1f} days)")
+panel_need = (cap_wh / 2 / 3 + dayc_3) / (1.5 * 0.6 * CHG_EFF)
+say("D7", f"Panel needed to refill from 50 % in 3 days at 1.5 peak sun hours with the charge efficiency: {panel_need:.0f} W")
+refill_days = cap_wh / 2 / (PANEL_W * 1.5 * 0.6 * CHG_EFF - dayc_3)
 v_abs, comp = 14.4, 0.030  # V at 25 °C; V/°C for a 12 V AGM (-5 mV/°C per cell)
 for t in (-20, -30):
     say("D8", f"Temperature-compensated absorption voltage at {t} °C: {v_abs + comp * (25 - t):.2f} V without a clamp; {min(15.0, v_abs + comp * (25 - t)):.2f} V with the specified 15.0 V clamp")
@@ -201,26 +203,34 @@ for t in (-20, -30):
 # ---------------------------------------------------------------- E. radio
 f = 915e6
 lam = 3e8 / f
-ptx, sens, cable_db = 14, -132, 1.0
+ptx, cable_db = 14, 1.0
+SENS_125, SENS_500 = -132, -126   # dBm at SF10: 125 kHz (typical SX1262 figure) and 500 kHz (6 dB worse, four times the bandwidth)
+# The radio runs at SF10 with a 500 kHz bandwidth on one channel, the digital modulation route of 47 CFR 15.247(a)(2)
+# (6 dB bandwidth at least 500 kHz, no dwell limit). A fixed 125 kHz channel is neither a hopping system nor a
+# digital modulation system under 15.247 (STEM check S20, GGD-DEC-001 D15).
+sens = SENS_500
 budget = ptx - sens - 2 * cable_db
 fspl = lambda d: 20 * math.log10(d) + 20 * math.log10(f) - 147.55
 h1, h2 = round(D["ant_mid"] / 1000, 2), 2.0   # bin end: antenna centre on the mast (model, GGD-DDR-003)
 pel = lambda d: 40 * math.log10(d) - 20 * math.log10(h1 * h2)
 bldg = 20.0
-say("E1", f"Link budget {ptx} dBm, {sens} dBm (SF10, 125 kHz), 1 dB cable loss each end: {budget:.0f} dB")
-say("E2", f"Free-space loss at 2 km: {fspl(2000):.1f} dB, margin {budget - fspl(2000):.0f} dB (the TRL 2 figure)")
-say("E3", f"Plane-earth loss at 1 km with antennas at {h1} m and {h2} m: {pel(1000):.1f} dB (breakpoint {4 * h1 * h2 / lam:.0f} m); with {bldg:.0f} dB for one farm building the margin is {budget - pel(1000) - bldg:.1f} dB")
+say("E1", f"Link budget {ptx} dBm, {sens} dBm (SF10, 500 kHz; {SENS_125} dBm at 125 kHz), 1 dB cable loss each end: {budget:.0f} dB ({ptx - SENS_125 - 2 * cable_db:.0f} dB at 125 kHz)")
+say("E2", f"Free-space loss at 2 km: {fspl(2000):.1f} dB, margin {budget - fspl(2000):.0f} dB")
+say("E3", f"Plane-earth loss at 1 km with antennas at {h1} m and {h2} m: {pel(1000):.1f} dB (breakpoint {4 * h1 * h2 / lam:.0f} m); with {bldg:.0f} dB for one farm building the margin is {budget - pel(1000) - bldg:.1f} dB at 500 kHz ({budget + 6 - pel(1000) - bldg:.1f} dB at 125 kHz)")
 d_ok = 10 ** ((budget - bldg - 10 + 20 * math.log10(h1 * h2)) / 40)
 say("E4", f"Range with a 10 dB fade margin under the same model: {d_ok / 1000:.2f} km")
 
 
-def airtime(pl, sf=10, bw=125e3, cr=1, de=0, h=0, npre=8):
+def airtime(pl, sf=10, bw=500e3, cr=1, de=0, h=0, npre=8):
     ts = 2 ** sf / bw
     n = 8 + max(math.ceil((8 * pl - 4 * sf + 28 + 16 - 20 * h) / (4 * (sf - 2 * de))) * (cr + 4), 0)
     return (npre + 4.25) * ts + n * ts
 
 
-say("E5", f"Airtime at SF10, 125 kHz: {airtime(24) * 1000:.0f} ms for a 24-byte packet, {airtime(25) * 1000:.0f} ms for 25 bytes (400 ms dwell limit on US 915 MHz)")
+say("E5", f"Airtime at SF10, 500 kHz: {airtime(24) * 1000:.0f} ms for a 24-byte packet (at 125 kHz it would be {airtime(24, bw=125e3) * 1000:.0f} ms, inside the 0.4 s dwell limit a hopping system would have)")
+# power spectral density limit of the digital modulation route: 8 dBm in any 3 kHz
+psd = ptx - 10 * math.log10(500 / 3)
+say("E6", f"Power spectral density at {ptx} dBm spread over 500 kHz: {psd:.1f} dBm in 3 kHz against the 8 dBm limit of 15.247(e)")
 
 # ---------------------------------------------------------------- F. cable loads and mast
 g = 9.81
@@ -244,7 +254,8 @@ dyn = static * OVER
 say("F1", f"Janssen, K {K}, wall friction {MU_W}: vertical pressure at the floor {sv(depth) / 1000:.1f} kPa, lateral {K * sv(depth) / 1000:.1f} kPa")
 say("F2", f"Static drag: rope {rope_f:.0f} N, pods {sum(pod_fs):.0f} N (bottom pod {pod_fs[0]:.0f} N), total {static:.0f} N; with an unloading overpressure factor of {OVER:.1f}: {dyn:.0f} N")
 F_DES, MBL = 2500.0, 20000.0
-say("F3", f"Design pull-down force kept at {F_DES / 1000:.1f} kN ({F_DES / dyn:.1f} times the estimate); rope minimum breaking load {MBL / 1000:.0f} kN, factor {MBL / F_DES:.1f} against R10's 4")
+CLIP_EFF = 0.8      # wire rope clip termination efficiency (typical figure for correctly fitted clips; independent review)
+say("F3", f"Design pull-down force kept at {F_DES / 1000:.1f} kN ({F_DES / dyn:.1f} times the estimate); rope minimum breaking load {MBL / 1000:.0f} kN, {MBL * CLIP_EFF / 1000:.0f} kN at the clipped eye, factor {MBL * CLIP_EFF / F_DES:.1f} against R10's 4 ({MBL * CLIP_EFF / 4700:.1f} times the 4.7 kN measured on the largest commercial cable)")
 # mast wind check: pinned at the stay, cantilever above it
 VW, QW = 45.0, 0.5 * 1.2 * 45.0 ** 2
 pl = P["panel"]
@@ -258,33 +269,62 @@ m_stay = f_panel * arm_p + f_shield * arm_s
 do, di = P["mast_od"], P["mast_od"] - 2 * P["mast_wall"]
 Z = math.pi / 64 * (do ** 4 - di ** 4) / (do / 2) / 1e9
 sig = m_stay / Z / 1e6
-say("F4", f"Mast at {VW:.0f} m/s gust ({QW:.0f} Pa): panel {f_panel:.0f} N at {z_panel / 1000:.2f} m, shield {f_shield:.0f} N at {z_shield / 1000:.2f} m, moment at the stay {m_stay:.0f} N m; DN25 section modulus {Z * 1e6:.2f} cm³, stress {sig:.0f} MPa against 235 MPa yield ({235 / sig:.1f} times)")
+FY_PIPE = 195.0   # MPa, S195T, the grade of EN 10255 33.7 x 3.2 medium-series tube (STEM check S23, GGD-DEC-001 D12; was 235)
+FY_ANGLE = 235.0  # MPa, S235 galvanized angle
+say("F4", f"Mast at {VW:.0f} m/s gust ({QW:.0f} Pa): panel {f_panel:.0f} N at {z_panel / 1000:.2f} m, shield {f_shield:.0f} N at {z_shield / 1000:.2f} m, moment at the stay {m_stay:.0f} N m; DN25 section modulus {Z * 1e6:.2f} cm³, stress {sig:.0f} MPa against {FY_PIPE:.0f} MPa yield of S195T tube ({FY_PIPE / sig:.1f} times)")
 # F5: the stay now holds the mast in both directions (GGD-DDR-003): bolted with two M10 bolts at each end,
 # so wind along the wall bends it as a guided cantilever. Mast fixed at the base, propped at the stay.
 f_tot = f_panel + f_shield
 zs_ = P["stay_z"] / 1000
-r_stay = (f_panel * (z_panel / 1000) + f_shield * (z_shield / 1000)) / zs_     # prop force, simple lever about the base
+# prop force with the base welded (fixed) and the stay a pin: R = P (1 + 1.5 c / a) for a load P a distance c above
+# the prop at height a (independent review; a pinned base gives P (1 + c / a))
+r_stay = sum(F * (1 + 1.5 * (z / 1000 - zs_) / zs_) for F, z in ((f_panel, z_panel), (f_shield, z_shield)))
 L_stay = (-32.0 - (-P["mast_off"] + P["wall_t"] + P["stiff"][0] + 7)) / 1000
 a_, t_ = P["stay_angle"]
 I_x, W_x, I_v = 4.47e-8, 1.55e-6, 1.84e-8     # 40 x 40 x 4 equal angle (section tables): axis parallel to a leg, and weakest axis
 m_ang = r_stay * L_stay / 2
 s_ang = m_ang / W_x / 1e6
 P_cr = math.pi ** 2 * 200e9 * I_v / L_stay ** 2
-say("F5", f"Stay: prop force {r_stay:.0f} N from the mast; along the wall it bends as a guided cantilever {L_stay * 1000:.0f} mm long, {s_ang:.0f} MPa in the 40 x 40 x 4 angle against 235 MPa ({235 / s_ang:.1f} times); toward the wall it is a strut with buckling load {P_cr / 1000:.1f} kN ({P_cr / r_stay:.0f} times)")
+say("F5", f"Stay: prop force {r_stay:.0f} N from the mast; along the wall it bends as a guided cantilever {L_stay * 1000:.0f} mm long, {s_ang:.0f} MPa in the 40 x 40 x 4 angle against {FY_ANGLE:.0f} MPa ({FY_ANGLE / s_ang:.1f} times); toward the wall it is a strut with buckling load {P_cr / 1000:.1f} kN ({P_cr / r_stay:.0f} times)")
 # base plate anchors with the stay missing (worst case, stay removed for service): cantilever from the base
 m_cant = f_panel * z_panel / 1000 + f_shield * z_shield / 1000
 sig_c = m_cant / Z / 1e6
-t_anchor = m_cant / (2 * P["anchor_xy"] / 1000) / 2
-V_SERVICE = 30.0   # m/s gust allowed while the stay is off (service rule proposed 2026-10-02; the stay is refitted before any stronger wind)
+t_anchor = m_cant / (2 * P["anchor_xy"] / 1000) / 2 * math.sqrt(2)   # wind on the plate's diagonal loads one anchor most (independent review)
+V_SERVICE = 30.0   # m/s gust allowed while the stay is off (service rule, GGD-DEC-001 D12, decided under the standing instruction of 2026-10-23)
 f_scale = (V_SERVICE / VW) ** 2
 sig_s = sig_c * f_scale
-v_15 = VW * math.sqrt(235 / 1.5 / sig_c)
-say("F6", f"Stay off (service case) at the same gust: base moment {m_cant:.0f} N m, pipe stress {sig_c:.0f} MPa ({235 / sig_c:.1f} times yield), anchor pull {t_anchor / 1000:.2f} kN per M10 anchor")
-say("F6", f"Stay off with the 20 W panel: {sig_c:.0f} MPa at 45 m/s is over yield (0.9 times) and below the 1.5 times margin (157 MPa); the 1.5 times margin holds up to a {v_15:.0f} m/s gust; at the proposed {V_SERVICE:.0f} m/s service limit the pipe stress is {sig_s:.0f} MPa ({235 / sig_s:.1f} times yield) and the anchor pull {t_anchor * f_scale / 1000:.2f} kN")
+v_15 = VW * math.sqrt(FY_PIPE / 1.5 / sig_c)
+say("F6", f"Stay off (service case) at the same gust: base moment {m_cant:.0f} N m, pipe stress {sig_c:.0f} MPa ({FY_PIPE / sig_c:.1f} times the {FY_PIPE:.0f} MPa yield), anchor pull {t_anchor / 1000:.2f} kN on the worst M10 anchor (wind on the diagonal)")
+say("F6", f"Stay off with the 20 W panel: {sig_c:.0f} MPa at 45 m/s is over yield and below the 1.5 times margin ({FY_PIPE / 1.5:.0f} MPa); the 1.5 times margin holds up to a {v_15:.0f} m/s gust; at the {V_SERVICE:.0f} m/s service limit the pipe stress is {sig_s:.0f} MPa ({FY_PIPE / sig_s:.1f} times yield) and the anchor pull {t_anchor * f_scale / 1000:.2f} kN")
 
 # ---------------------------------------------------------------- G. cable lengths and environment
 say("G1", f"Rope hung length {D['rope_len'] / 1000:.2f} m; bus cable {D['cable_len'] / 1000:.1f} m (main run {D['cable_main'] / 1000:.1f} m, five jumpers {sum(D['cable_jumpers']) / 1000:.1f} m, ends 0.9 m; in-bin {D['in_bin_cable'] / 1000:.1f} m); conduit {D['conduit_len'] / 1000:.1f} m; peak {D['peak'] / 1000:.2f} m above the pad")
-say("G2", "AGM electrolyte freezes near -25 °C at 50 % state of charge and below -50 °C when full (typical tables; confirm on the datasheet); R9 asks for -30 °C")
+say("G2", "Lead-acid electrolyte freezes near -20 °C at 50 % state of charge and below -50 °C when full (BCI table for flooded cells; AGM electrolyte is denser and freezes a few degrees lower; confirm on the battery maker's datasheet); R9 asks for -30 °C")
+# freezing point against state of charge, BCI Battery Service Manual table as given by Trojan (flooded cells, SG 1.280 full;
+# AGM electrolyte is denser, so these are conservative): 40 % +5 F, 62 % -16 F, 85 % -62 F, 92 % -71.3 F
+FRZ = [(40, -15.0), (62, -26.7), (85, -52.2), (92, -57.4)]
+def t_freeze(soc):
+    for (a, ta), (b, tb) in zip(FRZ, FRZ[1:]):
+        if a <= soc <= b:
+            return ta + (tb - ta) * (soc - a) / (b - a)
+    return FRZ[0][1] if soc < FRZ[0][0] else FRZ[-1][1]
+for soc in (50, 65, 70):
+    use = cap_wh * (1 - soc / 100) * 0.6
+    use_n = cap_wh * (1 - soc / 100)
+    say("G3", f"Low-voltage disconnect at {soc} % state of charge: electrolyte freezes near {t_freeze(soc):.0f} °C (BCI table, interpolated); usable at -20 °C {use:.1f} Wh, {use / dayc_3:.1f} days with the fan continuous, if the 60 % cold derating also applies at this very low draw; {use_n:.1f} Wh, {use_n / dayc_3:.1f} days if it does not (R8 asks 5)")
+# battery hydrogen: natural ventilation of the enclosure, EN 50272-2 / IEC 62485-2 method
+N_CELL, I_GAS_BOOST, I_GAS_FLOAT = 6, 8.0, 1.0   # cells; mA per Ah for valve-regulated cells, boost and float (IEC 62485-2)
+q_boost = 0.05 * N_CELL * I_GAS_BOOST * 7 * 1e-3      # m³/h of air to keep hydrogen under the limit, safety factor included
+q_float = 0.05 * N_CELL * I_GAS_FLOAT * 7 * 1e-3
+a_need = 28 * q_boost                                  # cm², each of an inlet and an outlet opening
+VENT_BORE = 10.0                                       # mm, clear bore of each M16 labyrinth vent (GGD-DEC-001 D10)
+a_vent = math.pi * (VENT_BORE / 10) ** 2 / 4
+say("G4", f"Battery hydrogen (IEC 62485-2 method): air needed {q_boost * 1000:.1f} L/h while charging at boost ({q_float * 1000:.1f} L/h at float); natural-ventilation opening {a_need:.2f} cm² in and out; each M16 labyrinth vent has {a_vent:.2f} cm² ({a_vent / a_need:.1f} times); a membrane breather has no open area and does not count")
+# siting: the bin's winter shadow
+LAT = 42.0
+el = 90 - LAT - 23.44
+shadow = P["eave"] / 1000 / math.tan(math.radians(el))
+say("G5", f"Winter solstice noon sun at {LAT:.0f} °N: {el:.1f} ° above the horizon; the bin wall's shadow reaches {shadow:.1f} m, so a panel {P['mast_off'] / 1000:.1f} m from the wall on the north side is in shade all day; on the south side (mast within 30 ° of due south of the bin axis) the bin never shades it")
 
 # ---------------------------------------------------------------- H. cost
 rows = list(csv.DictReader((ROOT / "bom" / "bom.csv").open()))
@@ -301,7 +341,7 @@ say("H2", f"Farmhouse receiver, one per farm: ${sum(cost[k] for k in per_farm):.
 pr = sum(cost[k] for k in probe)
 say("H3", f"Plenum probe (item 14, in the kit since GGD-DDR-002): ${pr:.2f}")
 conc = 256.50   # concept kit at TRL 3 (GGD-CAL-001 v0.3), before the design for construction
-say("H4", f"Design for construction (GGD-DDR-003) and the 2026-10-02 decisions (20 W panel, adjustable-disconnect controller) added ${kit - conc:.2f} to the concept kit of ${conc:.2f}; largest lines: " + ", ".join(f"{k.split(' ', 1)[1]} ${v:.2f}" for k, v in sorted(cost.items(), key=lambda kv: -kv[1])[:4] if not k.startswith("12 ")))
+say("H4", f"Design for construction (GGD-DDR-003), the 2026-10-02 decisions (20 W panel, adjustable-disconnect controller) and the battery vents (GGD-DEC-001 D10) added ${kit - conc:.2f} to the concept kit of ${conc:.2f}; largest lines: " + ", ".join(f"{k.split(' ', 1)[1]} ${v:.2f}" for k, v in sorted(cost.items(), key=lambda kv: -kv[1])[:4] if not k.startswith("12 ")))
 
 # ---------------------------------------------------------------- I. requirement status
 REQ = [
@@ -311,9 +351,9 @@ REQ = [
     ("R4", "Fan decision rule", f"Logic as specified; fan heat measured by the plenum probe within ±{s_dt:.2f} °C, about ±{s_dt * (e1 - e2):.1f} points of EMC", "Rule, run and start limits", "Met"),
     ("R5", "Fail-safe control", "Normally open relay, stale-data timeout, hand position independent", "Stop in 60 s; hand runs fan", "Met"),
     ("R6", "Heating alert", f"Center core only, {100 * cov:.1f} % of the section; latency about 13 min", "Any pod, alarm in 15 min", "At risk"),
-    ("R7", "Radio link", f"{budget - pel(1000) - bldg:.1f} dB margin at 1 km with one building", "1 km, one building, 95 % delivery", "Met"),
-    ("R8", "Power autonomy", f"{usable / dayc_3:.1f} days continuous fan; refill from 50 % in {cap_wh / 2 / (PANEL_W * 1.5 * 0.6 - dayc_3):.1f} days with the {PANEL_W} W panel", "5 days; refill in 3 days", "Met" if cap_wh / 2 / (PANEL_W * 1.5 * 0.6 - dayc_3) <= 3 else "Not met"),
-    ("R9", "Environment", "AGM may freeze near -25 °C at 50 % charge; phosphine unverified", "-30 °C to +50 °C; IP66; one fumigation", "At risk"),
+    ("R7", "Radio link", f"{budget - pel(1000) - bldg:.1f} dB margin at 1 km with one building at SF10, 500 kHz", "1 km, one building, 10 dB margin, 95 % delivery", "Met" if budget - pel(1000) - bldg >= 10 else "Not met"),
+    ("R8", "Power autonomy", f"{usable / dayc_3:.1f} days continuous fan; refill from 50 % in {refill_days:.1f} days with the {PANEL_W} W panel and {CHG_EFF:.0%} charge efficiency, mast south of the bin", "5 days; refill in 3 days", "Met" if refill_days <= 3 else "Not met (recovery)"),
+    ("R9", "Environment", f"Electrolyte freezes near {t_freeze(50):.0f} °C at the 50 % disconnect (65 % proposed: {t_freeze(65):.0f} °C); vents {a_vent:.2f} cm² each; phosphine unverified", "-30 °C to +50 °C; IP66 with IP55 vents; one fumigation", "Not met"),
     ("R10", "Mechanical strength", f"Rope {MBL / F_DES:.0f} times 2.5 kN; estimate {dyn / 1000:.2f} kN; roof hanger rating per bin", "Rope 4 times; hanger rated", "Not verifiable at TRL 3"),
     ("R11", "Install without grain entry", "Empty-bin installation sequence", "No entry into a bin holding grain", "Met"),
     ("R12", "Electrical isolation", "12 V system, charge clamped at 15.0 V; relay input 2.5 kV", "15 V or less; 2.5 kV", "Met"),

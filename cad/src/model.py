@@ -1,14 +1,14 @@
 """GrainGuard parametric model (build123d), TRL 3, constructable design (GGD-DDR-003).
 
 Run from the repo root:
-    python cad/src/model.py            export STEP and STL into cad/step and cad/stl
-    python cad/src/model.py --check    run the constructability checks (overlaps and contacts)
+    python .kit/cad_check.py --export  kit 1.9 fidelity check (D3) of every option; STEP per part of the chosen
+                                       option in cad/step/A/ and an assembly STEP per option (cad/step/<option>-assembly.step)
+    python cad/src/model.py            part counts and masses per option, and STL of the chosen design into cad/stl
+    python cad/src/model.py --check    run the constructability checks of the design (overlaps and contacts)
 
-Exports:
-    grainguard-assembly.step / .stl   GrainGuard kit fitted to the reference bin (bin, fan and starter as reference)
-    cable-assembly.step / .stl        rope and its top fittings, six sensor pods with stops and glands, in-bin bus cable
-    sensor-pod.step / .stl            one sensor pod (printed body and lid, glands, rope stop, board)
-    mast-assembly.step / .stl         mast weldment, stay, enclosure and contents, panel, antenna, radiation shield
+STL (0.15 mm chord): grainguard-assembly (the whole kit), cable-assembly (rope, pods, bus cable), sensor-pod
+(one pod with its glands, screws and stop) and mast-assembly (mast, stay, enclosure and contents, panel,
+antenna, radiation shield).
 
 Axes: Z is the bin axis, pointing up, with the top of the concrete pad at z = 0. The mast stands at
 angle MAST_ANG about the bin axis. Mast parts are drawn in a mast frame (x radial, away from the bin;
@@ -228,6 +228,12 @@ def gland_xy(p=PARAMS):
             "panel": (x1, 90.0), "bus": (x2, 45.0), "vent": (x2, -45.0)}
 
 
+def vent_top(p=PARAMS):
+    """The upper labyrinth vent on the enclosure's left side wall (mast frame x, z): 60 from the box back
+    face, its centre 15 below the box top so its locknut meets the inside of the top (no gas pocket above it)."""
+    return 28.0 + p["enc_plate"][0] + 60.0, p["enc_z"] + p["enc"][2] / 2 - 15.0
+
+
 def panel_frame(p=PARAMS):
     """Origin (bend line, outer face) and unit vectors (along the slope, normal to the panel) in the mast frame."""
     t = math.radians(p["panel_tilt"])
@@ -251,10 +257,11 @@ def cable_routes(p=PARAMS, d=None):
     co, (gx, gy) = p["cable_off"], p["pod_gland"]
     top = p["pod_l"] / 2 + 18          # top of a lid gland above the pod center
     out = {"jumpers": []}
-    for k in range(1, p["pod_n"]):
+    cj = co + 8.0       # jumpers run 8 mm further out than the main run, so where one jumper arrives at a pod
+    for k in range(1, p["pod_n"]):    # and the next leaves it the two cables lie side by side (D3 model, GGD-DEC-001 D11)
         za, zb = pod_z[k], pod_z[k - 1]
-        out["jumpers"].append([(gx, -gy, za + top), (gx, -gy, za + top + 25), (co, -gy, za + top + 40),
-                               (co, -gy, zb + top + 40), (co, gy, zb + top + 40), (gx, gy, zb + top + 25), (gx, gy, zb + top)])
+        out["jumpers"].append([(gx, -gy, za + top), (gx, -gy, za + top + 25), (cj, -gy, za + top + 28),
+                               (cj, -gy, zb + top + 40), (cj, gy, zb + top + 40), (gx, gy, zb + top + 25), (gx, gy, zb + top)])
     S, n = cap_frame(p, {"peak": peak})
     inner = tuple(S[i] - 8 * n[i] for i in range(3))
     inner2 = tuple(S[i] - 30 * n[i] for i in range(3))
@@ -489,10 +496,11 @@ def build_components(p=PARAMS):
         for sy in (-1, 1):
             plate -= Pos(sx * a, sy * a, bp[2] / 2) * Cylinder(6, bp[2] + 2)
     gw, gh, gt = p["gusset"]
-    g = extrude(Plane.XZ * Polygon((15, bp[2]), (rm + gw, bp[2]), (15, bp[2] + gh), align=None), amount=gt / 2, both=True)
+    zg = bp[2] + gh * gw / (rm + gw - 15.0)      # gusset edge on the pipe face (D3 model: the gusset stops at the pipe, GGD-DEC-001 D11)
+    g = extrude(Plane.XZ * Polygon((rm, bp[2]), (rm + gw, bp[2]), (rm, zg), align=None), amount=gt / 2, both=True)
     gussets = fuse(Rot(0, 0, 90 * k) * g for k in range(4))
     stz = p["stay_z"]
-    lug = Pos(-50, 0, stz) * Box(70, 6, 50)
+    lug = Pos((-85 - rm) / 2, 0, stz) * Box(85 - rm, 6, 50)      # from the pipe face out to 85 from the axis (D11)
     for x in (-42, -69):
         lug -= Pos(x, 0, stz - 2) * Rot(90, 0, 0) * Cylinder(5.5, 10)
     C["mast"] = ("Mast weldment: pipe, base plate, gussets, stay lug", ml(pipe + plate + gussets + lug, p), 10)
@@ -552,7 +560,9 @@ def build_components(p=PARAMS):
     G = gland_xy(p)
     eb = ez - eh / 2
     for k, (x, y) in G.items():
-        body -= Pos(x, y, eb + 1.5) * Cylinder(6.1, 5)
+        body -= Pos(x, y, eb + 1.5) * Cylinder(8.1 if k == "vent" else 6.1, 5)
+    vx, vz = vent_top(p)
+    body -= Pos(vx, -ew / 2 + 1.5, vz) * Rot(90, 0, 0) * Cylinder(8.1, 5)
     lid = Pos(xb + bd + p["lid_d"] / 2, 0, ez) * Box(p["lid_d"], ew, eh) - Pos(xb + bd + (p["lid_d"] - 3) / 2 - 0.01, 0, ez) * Box(p["lid_d"] - 3, ew - 6, eh - 6)
     lugs = fuse(Pos(xb + 2, y, z) * (Box(4, 30, 30) - Rot(0, 90, 0) * Cylinder(2.75, 6)) for y, z in lugs_xy)
     C["enc_body"] = ("Enclosure body, drilled", ml(body, p), 4)
@@ -560,8 +570,12 @@ def build_components(p=PARAMS):
     lug_screws = fuse(Pos(0, y, z) * (Pos(26, 0, 0) * Rot(0, 90, 0) * Cylinder(2.5, 16) + Pos(xb + 4 + 1.5, 0, 0) * Rot(0, 90, 0) * Cylinder(4.5, 3)
                                        + Pos(26, 0, 0) * Rot(0, 90, 0) * Cylinder(4.5, 4)) for y, z in lugs_xy)
     C["enc_lugs"] = ("Enclosure lugs (4) and M5 screws", ml(lugs + lug_screws, p), 4)
-    C["box_glands"] = ("Glands (6) and vent in the box bottom",
-                       ml(fuse(Pos(x, y, eb) * Rot(180, 0, 0) * gland(t=3.0, bore=0 if k == "vent" else 3.0) for k, (x, y) in G.items()), p), 4)
+    # two M16 labyrinth vents, one in the bottom face and one high on the left side wall, so the battery's
+    # hydrogen can leave by natural draught (GGD-DEC-001 D10; STEM check S20, IEC 62485-2 vent area)
+    vents = Pos(*G["vent"], eb) * Rot(180, 0, 0) * gland(r_thread=8.0, r_dome=10.0, r_nut=12.0, t=3.0, bore=0)
+    vents += _oriented(gland(r_thread=8.0, r_dome=10.0, r_nut=12.0, t=3.0, bore=0), (vx, -ew / 2, vz), (0, -1, 0))
+    C["box_glands"] = ("Glands (6) in the box bottom and two labyrinth vents",
+                       ml(fuse([Pos(x, y, eb) * Rot(180, 0, 0) * gland(t=3.0) for k, (x, y) in G.items() if k != "vent"] + [vents]), p), 4)
     xi = xb + 3 + 10                   # front of the bosses: the bought mounting plate
     mplate = Pos(xi + 1, 0, ez) * Box(2, 200, 250)
     xm = xi + 2
@@ -570,6 +584,8 @@ def build_components(p=PARAMS):
         hole = Pos(xm - 2, yy, eb + 3 + 26 + 25) * Rot(0, 90, 0) * Cylinder(2.75, 12)
         shelf -= hole
         mplate -= hole
+        # 90 degree countersink on the battery side for an M5 countersunk screw (D3 model, GGD-DEC-001 D11)
+        shelf -= Pos(xm + 5 - 1.25, yy, eb + 3 + 26 + 25) * Rot(0, 90, 0) * Cone(2.55, 5.05, 2.5)
     C["mount_plate"] = ("Inner mounting plate (supplied with the box)", ml(mplate, p), 4)
     C["shelf"] = ("Battery shelf, 50 x 50 x 5 angle", ml(shelf, p), 6)
     bw, bwid, bh = p["battery"]
@@ -838,30 +854,63 @@ def check(p=PARAMS, verbose=True):
     return n, fails
 
 
+# ---------------- kit 1.9 interface (STANDARDS section 24) ----------------
+# Every concept option of GGD-OPT-001 is modelled at detail level D3 (P3): option A, the constructable design
+# above split into its made, bought, fastener and weld parts (cad/src/ggd_detail.py), and options B and C
+# (cad/src/ggd_options.py). python .kit/cad_check.py --export checks them and writes the STEP files.
+
+TITLE = "GrainGuard"
+OPTIONS = {
+    "A": "Center sensor cable with EMC fan control",
+    "B": "Headspace sensor head with CO2 watch",
+    "C": "Fan-side weather controller",
+}
+PRINCIPLES = {
+    "A": "Six T and RH pods on a rope down the bin axis read the grain itself; a solar controller on a mast runs the "
+         "fan only when the plenum air's equilibrium moisture will cool or dry the grain.",
+    "B": "No cable in the grain: a sensor head hung in the headspace reads the air leaving the grain (T, RH) and "
+         "its CO2, which rises when grain spoils; a wall-mounted solar controller runs the same fan rule.",
+    "C": "No sensor in the bin: a controller on the starter post runs the fan on outside-air EMC and counts fan "
+         "hours against a cooling-front model; powered by the relay kit's own 24 V supply.",
+}
+CHOSEN = "A"
+OPTION_VIEWS = {k: {"el": 18, "az": -60, "scale": "person", "keep_context": True, "ground_z": 0} for k in OPTIONS}
+ALLOWED_CONTACTS = [("weld", "Mast"), ("weld", "weld"), ("weld", "rail upright"), ("weld", "foot plate")]
+
+
+def components(option=CHOSEN):
+    """cad_parts.part() dicts for one option, in the bin frame (z = 0 on the pad), existing bin as context."""
+    if option == "A":
+        from ggd_detail import option_a
+        return option_a()
+    from ggd_options import option_b, option_c
+    return {"B": option_b, "C": option_c}[option]()
+
+
 def main():
-    from build123d import Compound, export_step, export_stl
+    import copy
+    from build123d import Compound, export_stl
     if "--check" in sys.argv:
         n, f = check()
         sys.exit(1 if f else 0)
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2] / ".kit"))
+    import cad_parts as cp
     out = Path(__file__).resolve().parents[1]
-    (out / "step").mkdir(exist_ok=True); (out / "stl").mkdir(exist_ok=True)
-    C = build_components()
+    (out / "stl").mkdir(exist_ok=True)
     D = derived()
-    mast_keys = ["mast", "anchors", "cap", "stay", "wall_bracket", "stay_bolts", "enc_plate", "enc_clamps", "enc_body", "enc_lid",
-                 "enc_lugs", "box_glands", "mount_plate", "shelf", "battery", "strap", "charger", "board", "protect",
-                 "panel_bracket", "panel_clamps", "panel", "panel_bolts", "ant_bracket", "ant_clamp", "antenna",
-                 "arm", "arm_clamp", "shield_plates", "shield_rods", "ambient"]
+    for opt in OPTIONS:
+        real = [q for q in components(opt) if q["kind"] != "context"]
+        print(f"option {opt}: {len(real)} parts, {sum(cp.mass_kg(q) for q in real):.1f} kg")
+    A = [q for q in components(CHOSEN) if q["kind"] != "context"]
     groups = {
-        "grainguard-assembly": assembly(C=C),
-        "cable-assembly": Compound([C[k][1] for k in ("rope", "rope_top", "pod_body", "pod_lid", "pod_glands",
-                                                               "pod_membrane", "pod_board", "pod_stop", "jumpers", "bus_in")]),
-        "sensor-pod": Compound(list(pod_parts().values())),
-        "mast-assembly": Compound([C[k][1] for k in mast_keys]),
+        "grainguard-assembly": A,
+        "cable-assembly": [q for q in A if q["group"] == "cable"],
+        "sensor-pod": [q for q in A if "(pod 1)" in q["name"]],
+        "mast-assembly": [q for q in A if q["group"] in ("mast", "enclosure", "internal")],
     }
-    for name, c in groups.items():
-        export_step(c, str(out / "step" / f"{name}.step"))
-        export_stl(c, str(out / "stl" / f"{name}.stl"), tolerance=0.5, angular_tolerance=0.3)
-    print("exported:", ", ".join(groups))
+    for name, qs in groups.items():
+        export_stl(Compound([copy.copy(q["shape"]) for q in qs]), str(out / "stl" / f"{name}.stl"), tolerance=0.15, angular_tolerance=0.3)
+    print("exported STL:", ", ".join(groups))
     print(f"grain depth {D['grain_depth']:.0f} mm, pod pitch {D['pod_pitch']:.0f} mm, rope {D['rope_len']:.0f} mm, "
           f"bus cable {D['cable_len'] / 1000:.1f} m (main run {D['cable_main'] / 1000:.1f} m, jumpers "
           f"{sum(D['cable_jumpers']) / 1000:.1f} m), conduit {D['conduit_len'] / 1000:.1f} m, peak {D['peak']:.0f} mm")

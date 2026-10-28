@@ -1,11 +1,11 @@
 ---
-doc_id: GGD-REQ-001
-title: GrainGuard requirements
+doc_id: GGD-PRS-001
+title: GrainGuard product requirements and specifications
 project: GrainGuard
-doc_type: Requirements
-version: "0.8"
+doc_type: Product requirements
+version: "0.9"
 status: Draft
-date: '2026-10-02'
+date: '2026-10-24'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -37,55 +37,55 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: R8 and R9 status notes record the 2026-10-02 decisions (GGD-DEC-001, items 2, 5 and 6); no status changed
-- version: "0.8"
+- version: "0.9"
   date: '2026-10-02'
   author: Amish Chadha
   change: Status from GGD-CAL-001 v0.6; R8 not met to met with the 20 W panel (stay-off service rule proposed); R13 USD 406.50 per bin
+- version: "0.9"
+  date: '2026-10-24'
+  author: Amish Chadha
+  change: "Kit 1.8 upgrade: migrated from GGD-REQ-001 to GGD-PRS-001; R1 to R14 become PR-001 to PR-014 with tolerance, units and the user need each traces to (GGD-URS-001); PR-015 added (retrofit and workshop build); status from GGD-CAL-001 v0.7 and the STEM check GGD-STM-001: PR-008 not met (winter recovery with the charge efficiency) and PR-009 not met (battery electrolyte at -30 °C), fixes proposed; PR-007 radio route (D15), PR-009 vents (D10), PR-012 wording (D14); cost USD 410.50"
 ---
 
-# GrainGuard requirements
+# GrainGuard product requirements and specifications
 
-These requirements were checked by calculation at TRL 3 in GGD-CAL-001. Targets are not yet validated with farmers and will be revised after co-design visits (see GGD-PRB-001). No requirement is now not met (R8, battery recovery, is met with the 20 W panel), three are at risk (R2, R6, R9) and two cannot be verified at TRL 3 (R3, R10); Table 2 gives the status of each. Version 0.3 recorded the decisions in GGD-DDR-001: R13 is redefined per bin with the farmhouse receiver costed per farm (D1), and R4 states how the plenum-air EMC is found (D3, D9). Version 0.4 records GGD-DDR-002: the plenum probe is in the base kit, so R4 uses the measured plenum temperature and is met on paper, and the $6.50 cost overrun it causes is accepted. Version 0.5 records the budget Amish approved on 2026-09-26. Version 0.6 follows the design for construction (GGD-DDR-003) and Amish's 2026-10-01 instruction that `budget_usd` is a hypothetical value-engineering target, not a limit: R13 is reported against that target. Value-engineering target: USD 260. Estimated cost of the constructable design: USD 389.50 per bin (USD 129.50 over the target) in version 0.6; USD 406.50 per bin (USD 146.50 over the target) from version 0.8, with the 20 W panel and an adjustable-disconnect charge controller.
+What the design must do, each traced to a user need in GGD-URS-001. On paper, GrainGuard meets eight of its fifteen product requirements; two are **not met** (PR-008, winter recovery: with a lead-acid charge efficiency the 20 W panel refills the battery in 3.5 days, not 3, GGD-DEC-001 open item 12; PR-009: with the low-voltage disconnect at the 50 % figure decided on 2026-10-02 the battery's electrolyte freezes near -20 °C, above the -30 °C asked, open item 11; both fixes proposed to Amish), two are at risk (PR-002 moisture, PR-006 heating away from the center), two can be verified only at TRL 4 (PR-003, PR-010), and cost (PR-013) is reported against the value-engineering target: USD 410.50 per bin against USD 260, USD 150.50 over. The targets are proposals until a co-design visit with a farmer and an extension specialist (GGD-DEC-001, item 4 of 2026-10-02). This document replaces GGD-REQ-001 (kit 1.8, STANDARDS section 22); each requirement keeps its target, verification and status, and its old number is in the "Was" column. Method: STANDARDS section 22.
 
 The **reference case** is a 5.49 m (18 ft) diameter corrugated steel bin with a 5.6 m eave above the pad, a full perforated floor 0.4 m above the pad and grain level with the eave (5.2 m deep): about 88.8 t (3,493 bu) of shelled corn stored at a target of 15.0 % moisture, wet basis, in the US Midwest (GGD-DDR-001, D11), with one existing aeration fan giving about 0.330 m³/s (699 cfm, 0.2 cfm/bu).
 
-*Table 1. Requirements.*
+Table 1. Product requirements and specifications (status from GGD-CAL-001 v0.7, Table 3, and GGD-STM-001).
 
-| ID | Requirement | Target | Verification (TRL 3 or later) |
-| --- | --- | --- | --- |
-| R1 | Grain temperature profile | 6 or more levels on one center cable, 1.0 m or less apart; ±0.3 °C; one reading every 10 min | Sensor datasheet; geometry check in the model |
-| R2 | Grain moisture estimate from interstitial air | Within ±0.8 percentage points, wet basis, for interstitial RH of 20 % to 75 % and grain at 0 °C to 30 °C, from readings taken 6 h or more after the fan stops | EMC error analysis with sensor tolerance; later comparison with oven or meter samples |
-| R3 | Ambient air measurement | ±0.3 °C and ±2 % RH inside a radiation shield; sampled every 5 min; decisions on 30 min averages | Datasheet and shield error estimate |
-| R4 | Fan decision rule | Automatic mode runs the fan only when the plenum-air EMC (from the ambient humidity ratio and the plenum temperature, measured by the plenum probe in the fan transition, BOM item 14) is at or below the target moisture (hold mode), or when plenum air is 5 °C or more below the mean grain temperature and its EMC is no more than 1.0 point above target (cool mode); minimum run 30 min, minimum off 15 min, 4 starts per hour or fewer | Logic review against extension guidance; later simulation over a season of weather data |
-| R5 | Fail-safe control | In automatic mode the fan stops within 60 s of controller power loss or when sensor data are more than 30 min old; the hand position of the hand-off-auto switch runs the fan with GrainGuard removed; fan running is confirmed by current within 30 s and a mismatch raises an alarm | Circuit review; later bench test |
-| R6 | Heating alert | Alarm at the farmhouse within 15 min when any pod rises 3 °C or more above its 7-day minimum with the fan off, or sits 5 °C or more above the bin median | Logic review; later heated-core test |
-| R7 | Radio link | Bin to farmhouse over 1 km or more with one farm building in the path; 95 % or more of packets delivered | Link budget; later site survey |
-| R8 | Power autonomy | 5 days or more with no solar input at -20 °C with the fan running continuously; recovers from 50 % charge to full in 3 winter days of 1.5 peak sun hours | Power budget |
-| R9 | Environment | Operate at -30 °C to +50 °C; controller IP66; pods dust-tight (IP6X) with a vapor-permeable membrane; survive one phosphine fumigation per season | Datasheets and design review; later exposure test |
-| R10 | Mechanical strength | Rope minimum breaking load 4 times or more the design pull-down force of 2.5 kN (estimate); roof hanger rated by the bin maker for the design force | Force estimate; bin maker's data |
-| R11 | Install and service without grain entry | Installed with the bin empty, from the roof manhole and floor under a confined-space and fall-protection procedure; no GrainGuard task needs anyone in a bin that holds grain | Installation sequence review |
-| R12 | Electrical isolation | Controller, cable and pods at 15 V DC or less; the relay kit is the only mains-connected item, installed by a licensed electrician, with 2.5 kV or more isolation between control input and contacts | Circuit review; relay datasheet |
-| R13 | Affordable | Parts cost per bin reported against the value-engineering target of USD 260 (a hypothetical control target, not a limit; Amish, 2026-10-01), with the farmhouse receiver (one per farm) costed per farm and excluded; priced options excluded | Priced BOM (`bom/bom.csv`) |
-| R14 | Local data | All readings and fan hours stored on the farm; no cloud account needed | Architecture review |
+| ID | Traces to | Category | Title | Requirement | Target | Tolerance | Units | Verification | Status | Was |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| PR-001 | UR-001 | Performance | Grain temperature profile | The kit shall measure grain temperature at 6 or more levels on one center cable, 1.0 m or less apart, every 10 min | 6 levels, 1.0 m pitch, 10 min | ±0.3 °C per sensor | levels, m, min | Analysis and inspection (GGD-CAL-001 C1, model), TRL 3 | Met on paper | R1 |
+| PR-002 | UR-002 | Performance | Grain moisture estimate | The kit shall estimate grain moisture from interstitial air for 20 % to 75 % RH and grain at 0 °C to 30 °C, from readings taken 6 h or more after the fan stops | 0.8 | ± (max) | percentage points, wet basis | Analysis (GGD-CAL-001 B5), TRL 3; comparison with oven or meter samples, TRL 4 | At risk | R2 |
+| PR-003 | UR-003 | Performance | Ambient air measurement | The kit shall measure outside air inside a radiation shield every 5 min and decide on 30 min averages | ±0.3 °C, ±2 % RH | max | °C, % RH | Datasheet and shield error estimate; shield error test, TRL 4 | To verify at TRL 4 | R3 |
+| PR-004 | UR-004 | Software | Fan decision rule | Automatic mode shall run the fan only when the plenum-air EMC, from the ambient humidity ratio and the measured plenum temperature, is at or below target (hold mode), or when plenum air is 5 °C or more below the mean grain temperature with an EMC no more than 1.0 point above target (cool mode); minimum run 30 min, minimum off 15 min | 4 starts per hour or fewer | max | starts/h | Logic review (GGD-CAL-001 B10), TRL 3; season simulation, TRL 4 | Met by design | R4 |
+| PR-005 | UR-005 | Safety | Fail-safe control | In automatic mode the fan shall stop within 60 s of controller power loss or of sensor data older than 30 min; the hand position runs the fan with GrainGuard removed; running is confirmed by current within 30 s | 60 | max | s | Circuit review, TRL 3; bench test, TRL 4 | Met by design | R5 |
+| PR-006 | UR-006 | Performance | Heating alert | The kit shall alarm at the farmhouse within 15 min when any pod rises 3 °C or more above its 7-day minimum with the fan off, or sits 5 °C or more above the bin median | 15 | max | min | Logic review (GGD-CAL-001 C4), TRL 3; heated-core test, TRL 4 | At risk | R6 |
+| PR-007 | UR-007, UR-017 | Electrical | Radio link | The bin station shall reach the farmhouse over 1 km or more with one farm building in the path with a 10 dB margin, deliver 95 % or more of packets, and operate under 47 CFR 15.247(a)(2) with a 500 kHz bandwidth (GGD-DEC-001 D15) | 1.0 km; 10 dB | min; min | km, dB | Link budget (GGD-CAL-001 E3 to E6), TRL 3; site survey, TRL 4 | Met on paper | R7 |
+| PR-008 | UR-008 | Electrical | Power autonomy | The station shall run 5 days or more with no solar input at -20 °C with the fan held on, and recover from 50 % charge to full in 3 winter days of 1.5 peak sun hours, with the mast sited south of the bin (GGD-DEC-001 D13) | 5 days; 3 days | min; max | days | Power budget (GGD-CAL-001 D5, D6, G5), TRL 3 | Not met | R8 |
+| PR-009 | UR-009 | Materials | Environment | The kit shall operate at -30 °C to +50 °C; controller IP66 with two labyrinth battery vents of IP55 or better (GGD-DEC-001 D10); pods dust-tight (IP6X) with a vapor-permeable membrane; survive one phosphine fumigation per season | -30 to +50 | range | °C | Datasheets and design review (GGD-CAL-001 G2 to G4), TRL 3; exposure test, TRL 4 | Not met | R9 |
+| PR-010 | UR-010 | Safety | Mechanical strength | The rope's minimum breaking load shall be 4 times or more the design pull-down force of 2.5 kN (estimate); the roof hanger shall be rated by the bin maker for the design force | 4 | min (factor) | ratio | Force estimate (GGD-CAL-001 F2, F3), TRL 3; bin maker's data per bin | To verify at TRL 4 | R10 |
+| PR-011 | UR-011 | Safety | Install and service without grain entry | The kit shall be installed with the bin empty, from the roof manhole and floor under a confined-space and fall-protection procedure, and no task shall need anyone in a bin that holds grain | 0 | max | entries into a bin holding grain | Installation sequence review (GGD-BLD-001), TRL 3 | Met by design | R11 |
+| PR-012 | UR-012 | Electrical | Electrical isolation | The battery bus, the controller's outputs, the bus cable and the pods shall run at 15 V DC or less, and the panel circuit below 30 V open circuit (extra-low voltage; GGD-DEC-001 D14); the relay kit is the only mains-connected item, installed by a licensed electrician, with 2.5 kV or more between control input and contacts | 15 V; 2.5 kV | max; min | V, kV | Circuit review and relay datasheet (GGD-CAL-001 D8), TRL 3 | Met by design | R12 |
+| PR-013 | UR-013 | Physical architecture | Cost per bin | The parts cost per bin shall be reported against the value-engineering target of USD 260 (a hypothetical control target, not a limit; Amish, 2026-10-01), with the farmhouse receiver costed per farm and priced options excluded | 260 | target | USD per bin | Priced BOM (`bom/bom.csv`; GGD-CAL-001 H1), TRL 3 | Over target | R13 |
+| PR-014 | UR-014 | Software | Local data | All readings and fan hours shall be stored on the farm; no cloud account shall be needed | 0 | max | cloud accounts | Architecture review, TRL 3 | Met by design | R14 |
+| PR-015 | UR-015, UR-016 | Physical architecture | Retrofit and workshop build | The kit shall fit an existing bin and fan with no welding or cutting of bin sheets and no change to the fan motor, and every made part shall be made with farm-workshop tools (saw, drill, welder or a local fabricator, 3D printer) from bought stock and modules | 0 | max | holes or welds in bin sheets (the peak cap gland excepted) | Inspection of the build plan (GGD-BLD-001) and the D3 model, TRL 3 | Met by design | |
 
-*Table 2. Status at TRL 3 (GGD-CAL-001 v0.6, Table 3).*
+Categories: physical architecture, performance, materials, usability, packaging and transport, safety, electrical, software. Status: met on paper, met by design, at risk, not met, over target, withdrawn, to verify at TRL 4.
 
-| ID | Status at TRL 3 | Basis |
+Table 2. Basis of the status of the requirements that are not plainly met.
+
+| Requirement | Status | Basis |
 | --- | --- | --- |
-| R8 | Met | Autonomy 7.7 days with the fan continuous and a 3 mA relay input; refill from 50 % takes 2.9 days with the 20 W panel decided on 2026-10-02 (7.3 days with 10 W). The stay-off mast check no longer holds at a 45 m/s gust, so a 30 m/s service limit is proposed, awaiting Amish (GGD-CAL-001 F6) |
-| R2 | At risk | Sensor-only error 0.23 points (SHT45) and 0.42 points (SHT40) worst case over 20 % to 75 % RH, 0.81 at the SHT40 maximum tolerance; equation fit error, drift and membrane lag not included |
-| R6 | At risk | Alarm latency about 13 min (met); only the center core, 3.3 % of the cross-section, is watched |
-| R9 | At risk | AGM electrolyte may freeze near -25 °C at 50 % charge, so the adjustable low-voltage disconnect is set to the 50 % figure at -20 °C, about 12.1 V (GGD-DEC-001, item 6); phosphine protection by conformal coating, unverified until a coated test board goes through one fumigation at TRL 4 (item 5) |
-| R3 | Not verifiable at TRL 3 | SHT45 meets the target; the radiation error of the shield needs a test |
-| R10 | Not verifiable at TRL 3 | Rope 8 times the 2.5 kN design force (estimate 2.08 kN); the roof hanger rating comes from the bin maker |
-| R4 | Met | Rule met by design; fan heat measured by the plenum probe within ±0.51 °C, so the plenum EMC is known within about ±0.5 points (GGD-CAL-001, B10) |
-| R1 | Met | Six pods at 0.94 m pitch; ±0.1 °C (SHT45) and ±0.2 °C (SHT40) typical |
-| R5 | Met | Normally open relay, stale-data timeout and hand-off-auto switch |
-| R7 | Met | 16.9 dB margin at 1 km past one farm building with the antenna on its mast bracket (plane-earth model); 24-byte packets fit the 400 ms dwell limit |
-| R11 | Met | Empty-bin installation sequence in GGD-PRC-001 |
-| R12 | Met | 12 V system with charging clamped at 15.0 V; optically isolated relay input |
-| R13 | Over the value-engineering target | USD 406.50 per bin for the constructable design (GGD-DDR-003 and the 2026-10-02 decisions), USD 146.50 over the USD 260 target; receiver USD 22.00 per farm. The concept kit was USD 256.50 |
-| R14 | Met | Farmhouse receiver stores data locally |
+| PR-002 | At risk | Sensor-only error 0.23 points (SHT45) and 0.42 points (SHT40) worst case over 20 % to 75 % RH, 0.81 at the SHT40 maximum tolerance; equation fit error, hysteresis, drift and membrane lag not included (STEM check S8) |
+| PR-006 | At risk | Alarm latency about 13 min (met); only the center core, 3.3 % of the cross-section, is watched |
+| PR-008 | Not met | Autonomy 7.7 days with the fan held on, if the relay input draws 3 mA or less (a purchase check); recovery from 50 % takes 3.5 days at 1.5 peak sun hours once a lead-acid charge efficiency of 85 % is included (2.9 days without it); about 23 W is needed; fix proposed to Amish: a 25 W panel (open item 12). Holds only with the mast south of the bin (D13). With the 70 % disconnect recommended for PR-009, autonomy is 7.7 days at the station's low draw or 4.6 days if the full cold derating applies |
+| PR-009 | Not met | With the disconnect at the 50 % figure, the electrolyte freezes near -20 °C (BCI table; AGM somewhat lower), so -30 °C is not survived; fix proposed to Amish: the 70 % figure, freezing near -36 °C (open item 11). Battery hydrogen now vents through two labyrinth vents (D10), so the box is IP66 except at the vents (IP55 or better, to confirm). Phosphine protection by conformal coating, unverified until a coated test board goes through one fumigation at TRL 4 |
+| PR-003 | To verify at TRL 4 | SHT45 meets the target; the radiation error of the shield needs a test |
+| PR-010 | To verify at TRL 4 | Rope 6.4 times the 2.5 kN design force at its clipped eye (80 % termination efficiency) and 3.4 times the 4.7 kN measured on the largest commercial cable; the roof hanger rating comes from the bin maker |
+| PR-013 | Over target | USD 410.50 per bin for the constructable design (GGD-DDR-003, the 2026-10-02 decisions and the vents of D10), USD 150.50 over the USD 260 target; receiver USD 22.00 per farm |
 
 ## Assumptions
 

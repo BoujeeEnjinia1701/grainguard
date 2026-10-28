@@ -2,13 +2,13 @@
 
 ![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827) [![DOI](https://zenodo.org/badge/1386351914.svg)](https://zenodo.org/badge/latestdoi/1386351914) [![REUSE compliant](https://github.com/BoujeeEnjinia1701/grainguard/actions/workflows/reuse.yml/badge.svg)](https://github.com/BoujeeEnjinia1701/grainguard/actions/workflows/reuse.yml) [![Archived in Software Heritage](https://archive.softwareheritage.org/badge/origin/https://github.com/BoujeeEnjinia1701/grainguard/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/BoujeeEnjinia1701/grainguard)
 
-**Area:** Agriculture · **TRL:** 3 of 9 (proof of concept on paper) · **Value-engineering target:** USD 260 per bin (estimated cost of the constructable design USD 406.50) · **Difficulty:** 2 of 5
+**Area:** Agriculture · **TRL:** 3 of 9 (proof of concept on paper) · **Value-engineering target:** USD 260 per bin (estimated cost of the constructable design USD 410.50) · **Difficulty:** 2 of 5
 
 Cable of moisture and temperature probes strung through the bin, plus a controller that runs aeration fans only when the air will cool or dry the grain.
 
 ![GrainGuard: grain bin sensor cable and aeration fan controller, product render](media/render-hero.png)
 
-[Exploded render](media/render-exploded.png) · [Detail render](media/render-detail.png) · [Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement GGD-DWG-001 (PDF)](cad/drawings/GGD-DWG-001.pdf) · [Sizing calculations](docs/04-calcs/01-sizing.md) · [Prototype build plan](docs/05-build-plan.md) · [Design decisions](docs/06-design-decisions.md) · [Review note](docs/REVIEW.md)
+[Exploded render](media/render-exploded.png) · [Detail render](media/render-detail.png) · [Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement GGD-DWG-001 (PDF)](cad/drawings/GGD-DWG-001.pdf) · [STEM check GGD-STM-001](docs/01b-stem-check.md) · [Concept options GGD-OPT-001](docs/02a-concept-options.md) · [User requirements](docs/03a-user-requirements.md) · [Product requirements](docs/03-requirements.md) · [Traceability](docs/03b-traceability.md) · [Sizing note GGD-CAL-001](docs/04-calcs/01-sizing.md) · [Prototype build plan](docs/05-build-plan.md) · [Decisions](docs/06-design-decisions.md) · [Review note](docs/REVIEW.md)
 
 ## Concept rationale
 
@@ -54,9 +54,19 @@ Stored grain spoils when bins are aerated at the wrong times. Humid fall air can
 
 ## Concept
 
-One cable of six temperature and humidity pods hangs down the center of an existing bin. A solar-powered 12 V controller beside the bin compares the grain with the outside air, allows for the fan's own heat, and switches the existing fan through a small relay kit only when the air will cool or dry the grain. It reports to a farmhouse receiver by LoRa radio. TRL 3 calculations for an 18 ft (5.49 m) bin of about 88.8 t of corn: a sensor-induced moisture error of 0.23 to 0.42 points and 7.7 days of winter battery autonomy with no sun. Value-engineering target: USD 260 per bin. Estimated cost of the constructable design: USD 406.50 per bin (USD 146.50 over the target), with the farmhouse receiver costed per farm. The kit includes a USD 9.50 plenum probe that measures the fan's own heat ([GGD-DDR-002](docs/decisions/0002-recommendations-accepted.md)). The 20 W panel refills the battery from half charge in 2.9 winter days, so power is met on paper; see [docs/04-calcs/01-sizing.md](docs/04-calcs/01-sizing.md).
+One cable of six temperature and humidity pods hangs down the center of an existing bin. A solar-powered 12 V controller beside the bin compares the grain with the outside air, allows for the fan's own heat, and switches the existing fan through a small relay kit only when the air will cool or dry the grain. It reports to a farmhouse receiver by LoRa radio. TRL 3 calculations for an 18 ft (5.49 m) bin of about 88.8 t of corn: a sensor-induced moisture error of 0.23 to 0.42 points and 7.7 days of winter battery autonomy with no sun. Value-engineering target: USD 260 per bin. Estimated cost of the constructable design: USD 410.50 per bin (USD 150.50 over the target), with the farmhouse receiver costed per farm. The kit includes a USD 9.50 plenum probe that measures the fan's own heat ([GGD-DDR-002](docs/decisions/0002-recommendations-accepted.md)). Two requirements are not met on paper and have fixes with Amish: the 20 W panel refills the battery from half charge in 3.5 winter days, not 3, once the battery's charge efficiency is counted (a 25 W panel is proposed), and at the battery's 50 % disconnect setting its electrolyte could freeze at -30 °C (the 70 % figure is proposed); see [docs/04-calcs/01-sizing.md](docs/04-calcs/01-sizing.md).
 
 Full design precis: [docs/02-concept.md](docs/02-concept.md)
+
+## STEM check
+
+Thirty-three claims for the design are checked ([GGD-STM-001](docs/01b-stem-check.md)): nineteen are within known science, twelve wait for measurements at TRL 4 or a purchase check (the moisture estimate, the probe and shield accuracy, the radio on a real farm, phosphine, grain dust and others), and two fail with a fix proposed to Amish (the battery's freezing point and the winter refill). Seven details failed along the way and were fixed under Amish's standing instruction: two vents let the battery's hydrogen out of the sealed box, the mast tube is checked at its real S195T grade with the stay taken off only in gusts under 30 m/s, the mast stands south of the bin so the bin never shades the panel, the radio uses a 500 kHz bandwidth (the legal mode in the US band), the plenum probe is zeroed against the outside-air sensor, and a 0.5 A fuse protects the thin bus cable inside the bin. An independent reviewer recomputed the results and its findings are recorded.
+
+## Concept options
+
+![Three ways to run a bin's aeration fan on measured air, side by side at one scale](media/options.png)
+
+Three working principles are scored against the user requirements ([GGD-OPT-001](docs/02a-concept-options.md)): option A, the center sensor cable described here (193 of 245), option C, a fan-side weather controller with no sensor in the bin (192), and option B, a headspace sensor head with a CO₂ watch and no cable in the grain (186). They are within 10 % of each other, so the choice is with Amish without a pick, and option A stays the design of record; only option A measures the grain itself. All three are modelled at the same level of detail.
 
 ## Key components
 
@@ -72,7 +82,7 @@ The working bill of materials is in [bom/bom.csv](bom/bom.csv).
 
 ## Building the prototype
 
-The prototype build plan ([docs/05-build-plan.md](docs/05-build-plan.md)) shows how to make and fit every component, in order, with a making sketch for each made part, close-ups of the joints and a picture for every assembly step. Writing it made the design buildable: the pods became printed, openable bodies on rope stops, the mast a welded and stayed weldment, and every part on the mast got a clamp or bracket ([GGD-DDR-003](docs/decisions/0003-design-for-construction.md)). The work is metal cutting and drilling, one simple weldment, 3D printing and low-voltage wiring; the relay kit at the fan starter is fitted by a licensed electrician. Open decisions are kept in the [design decisions register](docs/06-design-decisions.md).
+The prototype build plan ([docs/05-build-plan.md](docs/05-build-plan.md)) shows how to make and fit every component, in order, with a making sketch for each made part, close-ups of the joints and a picture for every assembly step. Writing it made the design buildable: the pods became printed, openable bodies on rope stops, the mast a welded and stayed weldment, and every part on the mast got a clamp or bracket ([GGD-DDR-003](docs/decisions/0003-design-for-construction.md)). The work is metal cutting and drilling, one simple weldment, 3D printing and low-voltage wiring; the relay kit at the fan starter is fitted by a licensed electrician. Open decisions are kept in the [design decisions register](docs/06-design-decisions.md). The model in `cad/src/` draws every part, bolt, nut, washer, screw and weld of all three concept options (kit 1.9, detail level D3: 331 parts for option A), and STEP files of every made and bought part of option A are in `cad/step/A/`.
 
 ![GrainGuard prototype: every component, pulled apart and numbered in build order](docs/05-build-plan/overview.png)
 
@@ -84,7 +94,7 @@ The prototype build plan ([docs/05-build-plan.md](docs/05-build-plan.md)) shows 
 
 | Folder | Contents |
 | --- | --- |
-| `docs/` | Problem, concept, requirements, calculations and design decisions |
+| `docs/` | Problem, STEM check, concept and concept options, user and product requirements, traceability, calculations, build plan, decisions, regulatory, feasibility, risk, market and plan |
 | `cad/src/` | build123d Python source, the source of truth for all geometry |
 | `cad/step/`, `cad/stl/` | Exported models for FreeCAD, other CAD tools and printing |
 | `cad/drawings/` | 2D sketches and dimensioned drawings |

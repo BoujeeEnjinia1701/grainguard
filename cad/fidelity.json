@@ -1,0 +1,47 @@
+{
+ "level": "D3",
+ "stage": "P3",
+ "hash": "dffc2c702a9b89b6",
+ "options": {
+  "A": {
+   "title": "Center sensor cable with EMC fan control",
+   "parts": 331,
+   "made_or_bought": 165,
+   "fasteners": 147,
+   "welds": 19,
+   "bare": [],
+   "bare_share": 0.0,
+   "interference": [],
+   "mass_kg": 27.7,
+   "step_files": 165
+  },
+  "B": {
+   "title": "Headspace sensor head with CO2 watch",
+   "parts": 275,
+   "made_or_bought": 109,
+   "fasteners": 150,
+   "welds": 16,
+   "bare": [],
+   "bare_share": 0.0,
+   "interference": [],
+   "mass_kg": 18.9,
+   "step_files": 0
+  },
+  "C": {
+   "title": "Fan-side weather controller",
+   "parts": 111,
+   "made_or_bought": 66,
+   "fasteners": 45,
+   "welds": 0,
+   "bare": [],
+   "bare_share": 0.0,
+   "interference": [],
+   "mass_kg": 7.3,
+   "step_files": 0
+  }
+ },
+ "failures": [],
+ "warnings": [],
+ "passed": true,
+ "seconds": 230.4
+}

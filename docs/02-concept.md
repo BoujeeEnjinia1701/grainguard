@@ -3,9 +3,9 @@ doc_id: GGD-PRC-001
 title: GrainGuard design precis
 project: GrainGuard
 doc_type: Design precis
-version: "0.9"
+version: "0.10"
 status: Draft
-date: '2026-10-02'
+date: '2026-10-24'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -45,11 +45,15 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: 'Follow-ups carried out: 20 W panel in the design, R8 met, kit USD 406.50, stay-off service rule proposed (GGD-CAL-001 v0.6)'
+- version: "0.10"
+  date: '2026-10-24'
+  author: Amish Chadha
+  change: 'Kit 1.8 and 1.9 upgrade: concept option A of GGD-OPT-001; STEM check fixes D10 (battery vents), D12 (mast tube S195T, stay-off rule), D13 (mast south of the bin), D15 (500 kHz radio), D16 (probe zeroing), D17 (bus fuse); proposals for the disconnect setting and the panel size; kit USD 410.50; requirements now GGD-PRS-001'
 ---
 
 # GrainGuard design precis
 
-GrainGuard hangs one cable of six temperature and humidity pods down the center of an existing grain bin, measures the outside air beside the bin, and switches the existing aeration fan through a small relay kit only when the air entering the grain will cool it or dry it. A solar-powered 12 V controller on a mast by the bin makes the decision and reports to a receiver in the farmhouse by LoRa radio. The TRL 3 calculations (GGD-CAL-001) for an 18 ft (5.49 m) bin of about 88.8 t of corn give a sensor-induced moisture error of 0.23 to 0.42 points and 7.7 days of battery autonomy with no sun. Value-engineering target: USD 260. Estimated cost of the constructable design (GGD-DDR-003 and the 2026-10-02 decisions): USD 406.50 per bin (USD 146.50 over the target). The kit includes a USD 9.50 plenum probe, which measures the fan's own heat (worth about one point of moisture per degree; GGD-DDR-002). The 20 W panel decided on 2026-10-02 refills the battery from half charge in 2.9 winter days, so power (R8) is met on paper; it also puts more load on the mast, so the stay is taken off only in calm weather.
+GrainGuard hangs one cable of six temperature and humidity pods down the center of an existing grain bin, measures the outside air beside the bin, and switches the existing aeration fan through a small relay kit only when the air entering the grain will cool it or dry it. A solar-powered 12 V controller on a mast by the bin makes the decision and reports to a receiver in the farmhouse by LoRa radio. The TRL 3 calculations (GGD-CAL-001) for an 18 ft (5.49 m) bin of about 88.8 t of corn give a sensor-induced moisture error of 0.23 to 0.42 points and 7.7 days of battery autonomy with no sun. Value-engineering target: USD 260. Estimated cost of the constructable design (GGD-DDR-003, the 2026-10-02 decisions and the battery vents of GGD-DEC-001 D10): USD 410.50 per bin (USD 150.50 over the target). GrainGuard is option A of three concept options (GGD-OPT-001); all three score within 10 %, so the choice is with Amish and this design stays the design of record until he decides. The kit includes a USD 9.50 plenum probe, which measures the fan's own heat (worth about one point of moisture per degree; GGD-DDR-002). The 20 W panel decided on 2026-10-02 refills the battery from half charge in 3.5 winter days once the battery's charge efficiency is counted, so the recovery half of PR-008 is not met and a 25 W panel is proposed to Amish (GGD-DEC-001, open item 12); the panel only gets winter sun if the mast stands south of the bin (D13), and the stay is taken off only in gusts under 30 m/s (D12). With the low-voltage disconnect at the 50 % figure the battery could freeze at -30 °C; the 70 % figure is proposed (open item 11).
 
 ![Hero render](../media/hero.png)
 
@@ -61,7 +65,7 @@ GrainGuard hangs one cable of six temperature and humidity pods down the center 
 2. **Sense the air.** An SHT45 in a louvered radiation shield on the mast measures outside air. Heating does not change the air's humidity ratio, so the controller finds the plenum RH from the ambient humidity ratio and the plenum temperature, which is ambient plus the fan heat. The plenum probe (item 14), a temperature probe in the fan transition, measures the plenum temperature, so the fan heat (about 1.0 °C for a 0.40 kW fan, 0.5 to 2.7 °C across common fans, GGD-CAL-001 section A) is measured rather than assumed. The controller records the rise during each run and uses the last measured rise to decide whether to start the fan.
 3. **Decide.** Every 10 min, on 30 min averages, the controller applies the rule below and asks for the fan on or off.
 4. **Switch.** A 12 V signal line runs to an interposing relay kit in or beside the existing fan starter. Its optically isolated input draws 3 mA or less, and its relay, powered by its own 24 V supply, closes the starter's control circuit. A hand-off-auto switch keeps manual control, and a current transformer on one fan lead confirms that the fan runs.
-5. **Report.** The controller sends readings, fan state and fan hours by LoRa, in packets of 24 bytes or less, to a small receiver in the farmhouse, which shows the bin status, logs data locally and raises heating and fault alarms.
+5. **Report.** The controller sends readings, fan state and fan hours by LoRa (SF10, 500 kHz bandwidth, the digital modulation mode of 47 CFR 15.247; GGD-DEC-001 D15), in packets of 24 bytes or less, to a small receiver in the farmhouse, which shows the bin status, logs data locally and raises heating and fault alarms.
 
 ![Air and control flow](../media/flow.png)
 
@@ -88,13 +92,13 @@ Numbers match the exploded view (Figure 3), drawing GGD-DWG-001 and `bom/bom.csv
 | 1 | Suspension wire rope and hanger | 6 mm galvanized 7x19 rope, 6.6 m hung, thimble, clips, shackle | Hangs from the bin maker's rated center hanger only |
 | 2 | Sensor pods (6) | 2a: SHT45 (bottom and top, two); 2b: SHT40 (middle four); PTFE membrane, bus microcontroller, RS-485, potted pod 76 mm by 140 mm | 0.94 m apart; bottom pod 0.25 m above the floor, top pod 0.25 m below a level surface |
 | 3 | Bus cable | 4-core shielded UV-rated cable, 18.5 m, 12 V and RS-485 | A main run and five pod jumpers; up the rope, out through a gland in the peak cap, over the roof, down the wall, along the stay; 16.8 m from the model |
-| 4 | Controller enclosure | IP66 polycarbonate, about 280 x 230 x 130 mm | On the mast, shaded side of the bin |
-| 5 | LoRa microcontroller and bus board | nRF52840 plus SX1262 class module, RS-485 transceiver, buck regulator | 915 MHz in the Americas |
+| 4 | Controller enclosure | IP66 polycarbonate, about 280 x 230 x 130 mm, with two M16 labyrinth vents (bottom and top of the side wall) for battery hydrogen (D10) | On the mast, which stands south of the bin (D13) |
+| 5 | LoRa microcontroller and bus board | nRF52840 plus SX1262 class module, RS-485 transceiver, buck regulator; SF10, 500 kHz bandwidth (D15); zeroes the plenum probe against the ambient sensor with the fan off (D16) | 915 MHz in the Americas |
 | 6 | Battery | 12 V 7 Ah AGM lead-acid | Accepts charge below 0 °C; capacity open (GGD-DDR-001, O2) |
 | 7 | Solar charge controller | 12 V PWM, temperature compensation clamped at 15.0 V, adjustable low-voltage disconnect set to the battery maker's 50 % figure at -20 °C (about 12.1 V), 6 mA or less self-use | Clamp keeps the system at 15 V or less (R12) |
-| 8 | Solar panel | 20 W, about 430 x 350 mm (decided on 2026-10-02, GGD-DEC-001, item 2); with the stay off the mast alone holds it only in gusts under about 30 m/s (GGD-CAL-001 F6); tilted 45 degrees, facing away from the bin | On top of the mast, out of the wall's shade (decided by Amish on 2026-09-27, GGD-DDR-002) |
+| 8 | Solar panel | 20 W, about 430 x 350 mm (decided on 2026-10-02, GGD-DEC-001, item 2; 25 W proposed, open item 12); with the stay off the mast alone holds it only in gusts under 30 m/s, so the stay comes off only then (D12); tilted 45 degrees, facing away from the bin | On top of the mast, out of the wall's shade (decided by Amish on 2026-09-27, GGD-DDR-002), with the mast south of the bin (D13) |
 | 9 | Ambient sensor | SHT45 in a louvered radiation shield on a 330 mm arm | 1.8 m above the pad, away from the bin wall's reflected heat |
-| 10 | Mast and brackets | DN25 (33.7 x 3.2 mm) galvanized pipe, 2.3 m, welded to a base plate anchored to the pad; one angle stay bolted to a bracket on a wall stiffener; six mast clamps | No drilling of bin sheets (GGD-DDR-003) |
+| 10 | Mast and brackets | DN25 (33.7 x 3.2 mm) galvanized S195T tube, 2.3 m, welded to a base plate anchored to the pad; one angle stay bolted to a bracket on a wall stiffener; six mast clamps | No drilling of bin sheets (GGD-DDR-003) |
 | 11 | Interposing relay kit | DIN 24 V supply, relay with optically isolated 12 V input of 3 mA or less, hand-off-auto switch, current transformer | Only mains-connected item; licensed electrician installs |
 | 12 | Farmhouse receiver | ESP32 plus LoRa with display and Wi-Fi | One per farm, costed per farm; not shown in the model |
 | 13 | Hardware and consumables | Ties, anchors, sealant, conformal coating | Not shown |
@@ -125,11 +129,11 @@ All numbers below come from GGD-CAL-001, which also gives the status of every re
 | Sensor-induced EMC error, worst case 20 % to 75 % RH | 0.23 points (SHT45), 0.42 points (SHT40) [B5] | R2 at risk |
 | Hot spot coverage, one center cable | 3.3 % of the cross-section [C2] | R6 at risk |
 | Daily energy, fan continuous | 3.28 Wh [D3] | |
-| Autonomy with no sun at -20 °C, fan continuous | 7.7 days [D5] | R8 autonomy met |
-| Refill from 50 % at 1.5 winter peak sun hours | 2.9 days with the 20 W panel decided on 2026-10-02 (7.3 days with 10 W) [D6]; a panel of about 19 W meets 3 days | R8 recovery met |
-| Radio margin at 1 km past one building | 16.9 dB [E3] | R7 met |
-| Cable pull-down estimate; rope factor on 2.5 kN | 2.08 kN; 8.0 [F2], [F3] | R10 rope met; hanger per bin |
-| Per-bin kit, constructable design; receiver per farm | USD 406.50; USD 22.00 [H1], [H2] | R13: USD 146.50 over the USD 260 value-engineering target |
+| Autonomy with no sun at -20 °C, fan continuous | 7.7 days with a relay input of 3 mA or less [D5] | PR-008 autonomy met |
+| Refill from 50 % at 1.5 winter peak sun hours | 3.5 days with the 20 W panel and 85 % charge efficiency [D6]; a panel of about 23 W meets 3 days [D7] | PR-008 recovery not met; 25 W proposed |
+| Radio margin at 1 km past one building | 10.9 dB at SF10 and 500 kHz [E3] | PR-007 met |
+| Cable pull-down estimate; rope factor on 2.5 kN at the clipped eye | 2.08 kN (unverified); 6.4 [F2], [F3] | PR-010 rope met; hanger per bin |
+| Per-bin kit, constructable design; receiver per farm | USD 410.50; USD 22.00 [H1], [H2] | PR-013: USD 150.50 over the USD 260 value-engineering target |
 
 The fan heat was the largest uncertainty at TRL 3: an error of 1 °C in an assumed value shifts the decision by about one point of EMC, more than the whole sensor error. The plenum probe measures it for $9.50 and cuts that error to about ±0.5 points.
 
@@ -145,7 +149,7 @@ Every choice below was decided by Amish on 2026-09-25 by adopting the TRL 2 reco
 - **Plenum sensing** (GGD-DDR-001 D9; GGD-DDR-002). The lowest-cost form, a temperature-only probe, did not fit in the former $250 budget, but Amish adopted it into the base kit, since no other USD 9.50 buys as much decision accuracy.
 - **Control rule, modes and default targets** as set out above (D3).
 - **Headspace CO₂ sensor as an option**, not in the base kit (D10).
-- **Cost** (D1): per bin with the farmhouse receiver costed per farm, reported against a value-engineering target of USD 260 (Amish, 2026-10-01). The concept kit was USD 256.50; the constructable design (GGD-DDR-003) with the 2026-10-02 decisions is USD 406.50, USD 146.50 over the target.
+- **Cost** (D1): per bin with the farmhouse receiver costed per farm, reported against a value-engineering target of USD 260 (Amish, 2026-10-01). The concept kit was USD 256.50; the constructable design (GGD-DDR-003) with the 2026-10-02 decisions and the battery vents is USD 410.50, USD 150.50 over the target.
 - **Relay input of 3 mA or less and charging clamped at 15.0 V**, set in GGD-CAL-001 to meet R8 autonomy and R12 at no cost (GGD-DDR-002).
 
 ## Safety
@@ -157,17 +161,19 @@ Every choice below was decided by Amish on 2026-09-25 by adopting the TRL 2 reco
 - **Automatic fan start.** The fan can start at any time in automatic mode. Mark the fan and starter "Starts automatically", lock out at the disconnect before touching the fan, transition or plenum, and never rely on GrainGuard being "off" for safety. Keep guards on the fan inlet.
 - **Mains voltage.** The fan starter carries 230 V single-phase or 208 V to 480 V three-phase. Only a licensed electrician installs the relay kit (item 11), with isolation of at least 2.5 kV between the 12 V input and the relay contacts. GrainGuard's own box, cable and pods are 12 V DC.
 - **Roof load.** Grain drags on the cable during unloading. Hang the rope only from a hanger the bin maker rates for cable loads; an unrated roof can buckle. Unload from the center first, as the bin maker requires.
-- **Lightning and surges.** A tall steel bin attracts lightning, and the cable enters from the roof. Bond the rope and cable shield to the bin, add surge protection on the bus at the controller, and keep the signal cable to the starter short.
+- **Lightning and surges.** A tall steel bin attracts lightning, and the cable enters from the roof. Bond the rope and cable shield to the bin, add surge protection on the bus at the controller, fuse the bus cable's 12 V feed at 0.5 A (D17), and keep the signal cable to the starter short.
 - **Fumigants.** Phosphine is highly toxic and corrodes copper and electronics ([FAO fumigation manual](https://www.fao.org/4/x5042e/x5042e0a.htm)). Only certified applicators fumigate. GrainGuard does not measure phosphine and must not be used to decide when a bin is safe to enter. The pod boards are conformally coated for the prototype; a coated test board is left in the bin through one fumigation at TRL 4, and sealed connectors follow if it shows copper corrosion (GGD-DEC-001, item 5).
 - **Grain dust.** Dust in the headspace can burn or explode. The pods run at 12 V and a few milliamps, but the design has not been assessed against hazardous-location rules; keep all connections outside the bin sealed and never open pods inside a dusty bin.
 - **Plenum probe.** Fitting the probe means drilling one 12 mm hole for a gland in the fan transition. Lock out the fan at the disconnect first, keep hands out of the transition, and fit the probe downstream of the fan, never near the impeller.
-- **Battery.** The 12 V AGM battery can deliver high short-circuit current and vents hydrogen if overcharged. Fuse it at the terminal and use a temperature-compensated charger with its voltage clamped at 15.0 V. A lead-acid battery left partly discharged can freeze and crack at about -25 °C, so the controller's adjustable low-voltage disconnect is set to the battery maker's 50 % figure at -20 °C, about 12.1 V (GGD-DEC-001, item 6; confirmed at TRL 4).
+- **Battery.** The 12 V AGM battery can deliver high short-circuit current and gives off hydrogen when charged hard. Fuse it at the terminal, use a temperature-compensated charger with its voltage clamped at 15.0 V, and keep both labyrinth vents of the box clear so the gas can leave (D10). A lead-acid battery left partly discharged can freeze and crack: at the battery maker's 50 % figure (decided on 2026-10-02, GGD-DEC-001 item 6) the electrolyte freezes near -20 °C, so the 70 % figure, freezing near -36 °C, is proposed to Amish (open item 11).
 
 ## Open questions
 
 The open decisions and the items to confirm when parts are bought are kept in the design decisions register, [GGD-DEC-001](06-design-decisions.md); the build plan is [GGD-BLD-001](05-build-plan.md).
 
-- Battery and panel capacity for the recovery half of R8: decided by Amish, 2026-10-02 (GGD-DEC-001, item 2): a 20 W panel, provided the mast check with the stay off is rerun for it and still passes. The rerun does not pass at a 45 m/s gust (0.9 times yield); a 30 m/s service limit for the stay-off case is proposed, awaiting Amish (GGD-CAL-001 F6).
+- Battery and panel capacity for the recovery half of R8: decided by Amish, 2026-10-02 (GGD-DEC-001, item 2): a 20 W panel, provided the mast check with the stay off is rerun for it and still passes. It does not pass at a 45 m/s gust, so the stay comes off only in gusts under 30 m/s (D12, decided under Amish's standing instruction of 2026-10-23, closing open item 9). With the charge efficiency counted the 20 W panel refills in 3.5 days; a 25 W panel is proposed (open item 12).
+- Concept selection between options A, B and C (GGD-OPT-001, open item 10): all within 10 %, with Amish without a pick.
+- The battery's disconnect setting against -30 °C (open item 11): the 70 % figure proposed.
 - First host farm and electrician: decided by Amish, 2026-10-02 (GGD-DEC-001, item 4): recruit them through a land-grant extension grain-storage specialist, for example at Purdue University or Iowa State University.
 - Pitch wording against the cool-mode rewet bound: decided by Amish, 2026-10-02 (GGD-DEC-001, item 3): the pitch says only "cool it or dry it", and the cool-mode allowance is kept.
 - Confirm the control rule's defaults and target moisture values with the extension specialist and the host farmer before automatic mode is first used (GGD-DEC-001, item 8, decided 2026-10-02).
@@ -175,6 +181,6 @@ The open decisions and the items to confirm when parts are bought are kept in th
 - Phosphine protection: decided 2026-10-02 (GGD-DEC-001, item 5): conformal coating, proven on a test board through one fumigation at TRL 4.
 - Low-voltage disconnect setting: decided 2026-10-02 (GGD-DEC-001, item 6): the battery maker's 50 % figure at -20 °C, about 12.1 V, confirmed at TRL 4.
 - Which bin makers rate their roof hangers for cable loads.
-- LoRa coverage on a real farm with the bin in the path.
+- LoRa coverage on a real farm with the bin and a summer corn crop in the path (10.9 dB of margin on paper at 1 km).
 
 Concept media: [blueprint sheet](../media/concept-blueprint.pdf), [interactive 3D model](../media/viewer.html). General arrangement: [GGD-DWG-001](../cad/drawings/GGD-DWG-001.pdf).

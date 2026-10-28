@@ -1,6 +1,7 @@
 """GrainGuard concept media (TRL 3), generated from the parametric model.
 
-Run from the repo root:  python cad/src/concept_media.py
+Run from the repo root:  python cad/src/concept_media.py          (all concept media, then the web model)
+                         python cad/src/concept_media.py --web    (only media/model.glb, from the D3 model)
 Takes the reference bin and the GrainGuard parts from cad/src/model.py (PARAMS), and renders
 the media set with .kit/concept.py. Existing farm equipment (bin, grain, fan, starter) is grey
 or tan with no BOM number; GrainGuard parts are colored and numbered to match bom/bom.csv.
@@ -20,6 +21,32 @@ from model import PARAMS as P, build_components, build_parts, derived, reference
 from sheets import safe_project_views  # noqa: E402
 
 drawing.project_views = safe_project_views   # skip degenerate edges; the kit is unchanged
+
+
+def _web_glb():
+    """media/model.glb for the web viewer from the D3 model of the chosen option (every part, fastener and weld,
+    named and coloured) with the existing bin, fan and starter, at a 1 mm / 0.3 rad tessellation so the file stays
+    small. The concept renders below still use the grouped parts."""
+    import copy
+    import model as MM
+    from build123d import Compound, Color, export_gltf
+    import matplotlib.colors as mcol
+    kids = []
+    for q in MM.components(MM.CHOSEN):
+        if q["name"].startswith(("Stored shelled corn", "Concrete pad")):
+            continue
+        sh = copy.copy(q["shape"])
+        sh.color = Color(*mcol.to_rgb(q["color"]))
+        sh.label = q["name"]
+        kids.append(sh)
+    export_gltf(Compound(children=kids), str(concept.ROOT / "media" / "model.glb"), binary=True,
+                linear_deflection=1.0, angular_deflection=0.3)
+    print("wrote media/model.glb from the D3 model,", len(kids), "parts")
+
+
+if "--web" in sys.argv:
+    _web_glb()
+    sys.exit(0)
 
 D = derived(P)
 ref = reference_parts()
@@ -64,7 +91,7 @@ KEY = ["5.49 m (18 ft) bin, 3,493 bu (88.8 t) corn (reference case)",
        f"6 T and RH pods at {D['pod_pitch']:.0f} mm pitch on one center cable",
        "Fan runs only if plenum-air EMC suits the mode; fan heat measured",
        "12 V solar controller; 7.7 days with no sun; no mains inside",
-       "Kit $406.50 per bin (value-engineering target $260)"]
+       "Kit $410.50 per bin (value-engineering target $260)"]
 
 render_all(
     parts, project="GrainGuard", title="Bin aeration controller concept", dwg_no="GGD-DWG-010",
@@ -75,24 +102,7 @@ render_all(
                      ("Through grain", "0.33 m³/s, 75 to 119 h"), ("Pods confirm", "front passed, fan off")]},
 )
 
-# ---------------- web model at a lighter tessellation ----------------
-# The kit exports model.glb at very fine tessellation; with the cables, glands and clamps of the
-# constructable design that file grows past 14 MB. Re-export the same parts, colours and names at a
-# 1 mm / 0.3 rad tessellation, which looks the same in the viewer.
-def _light_glb(ps):
-    from build123d import Compound, Color, export_gltf
-    import matplotlib.colors as mcol
-    kids = []
-    for p in ps:
-        sh = p.shape
-        sh.color = Color(*mcol.to_rgb(p.color))
-        sh.label = p.name
-        kids.append(sh)
-    export_gltf(Compound(children=kids), str(concept.ROOT / "media" / "model.glb"), binary=True,
-                linear_deflection=1.0, angular_deflection=0.3)
-
-
-_light_glb(parts)
+# media/model.glb is written from the D3 model by a separate run: python cad/src/concept_media.py --web
 
 # ---------------- cutaway ----------------
 # The kit cutaway cuts at the mean part center, which would leave grain in front of the cable.
